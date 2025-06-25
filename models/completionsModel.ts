@@ -17,8 +17,8 @@ export interface CompletionOfChallenge {
   challengeTitle: string //challenges.title
   challengeDescription: string //challenges.description
   xp_reward: number
-  attribute: 'STR' | 'DEX' | 'INT'
-  difficulty: 'EASY' | 'MEDIUM' | 'HARD' | 'RAND'
+  attribute: 'str' | 'dex' | 'int'
+  difficulty: 'easy' | 'medium' | 'hard' | 'rand'
 }
 
 // For when adding to DB
