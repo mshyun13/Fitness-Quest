@@ -32,6 +32,16 @@ export async function up(knex) {
       table.enum('attribute', ['str', 'dex', 'int'])
       table.enum('difficulty', ['easy', 'medium', 'hard', 'rand'])
     })
+    .createTable('achievements', (table) => {
+      table.increments('id').primary()
+      table.string('title')
+      table.string('description')
+      table.integer('reward')
+    })
+    .createTable('achievements_user', (table) => {
+      table.integer('id').references('id').inTable('achievements')
+      table.integer('user_id').references('id').inTable('users')
+    })
 }
 
 export async function down(knex) {
@@ -39,4 +49,6 @@ export async function down(knex) {
     .dropTable('users')
     .dropTable('completions')
     .dropTable('challenges')
+    .dropTable('achievements')
+    .dropTable('achievements_user')
 }
