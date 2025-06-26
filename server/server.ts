@@ -3,7 +3,6 @@ import * as Path from 'node:path'
 import userRoutes from './routes/users.ts'
 import completionsRoute from './routes/completionsRoute.ts'
 import challengesRoutes from './routes/challenges'
-
 const server = express()
 
 server.use(express.json())
