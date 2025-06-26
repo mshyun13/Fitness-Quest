@@ -1,7 +1,6 @@
 import { Router } from 'express'
-import checkJwt, { JwtRequest } from '../auth0.ts'
+//import checkJwt, { JwtRequest } from '../auth0.ts'
 // import { StatusCodes } from 'http-status-codes'
-
 import * as db from '../db/users.ts'
 
 const router = Router()
@@ -26,8 +25,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req: JwtRequest, res, next) => {
-  console.log('router', req.body)
+router.post('/', async (req, res, next) => {
   // if (!req.auth?.sub) {
   //   res.sendStatus(StatusCodes.UNAUTHORIZED)
   //   return
@@ -37,8 +35,29 @@ router.post('/', async (req: JwtRequest, res, next) => {
     const id = await db.addUser(req.body)
     // const { auth_id, name, class } = req.body
     // const id = await db.addUser({ auth_id, name, class })
-    console.log('router id', id)
-    res.sendStatus(201)
+    res.sendStatus(201).json({ id: id })
+    // res
+    //   .setHeader('Location', `${req.baseUrl}/${id}`)
+    //   .sendStatus(StatusCodes.CREATED)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.patch('/:id', async (req, res, next) => {
+  // if (!req.auth?.sub) {
+  //   res.sendStatus(StatusCodes.UNAUTHORIZED)
+  //   return
+  // }
+
+  try {
+    const id = await db.updateUser(req.body)
+    if (!id) {
+      console.log('DB Error: no ID')
+      res.sendStatus(404)
+      return
+    }
+    res.sendStatus(200)
     // res
     //   .setHeader('Location', `${req.baseUrl}/${id}`)
     //   .sendStatus(StatusCodes.CREATED)

@@ -1,5 +1,6 @@
 // import { useFruits } from '../hooks/useFruits.ts'
 import Home from './Home.tsx'
+import Profile from './Profile.tsx'
 import LoginButton from './LoginButton.tsx'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         </h1>
         <LoginButton />
         <Home />
+        <Profile />
         {/* <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul> */}
       </div>
     </>
