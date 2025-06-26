@@ -29,7 +29,7 @@ router.get(
 router.post(
   '/',
   /* checkJwt,*/ async (req: JwtRequest, res) => {
-    const userId = 'github|204113180'
+    const userId = '2'
     // const userId = req.auth?.sub - Switch to this for Auth0
 
     if (!userId) {

@@ -35,7 +35,7 @@ export function useCompletions(): UseCompletionsResult {
       //   return;
       // }
     } else {
-      userId = 'github|204113180'
+      userId = '2'
       console.log('getCompletions: Hardcoded user, userId:', userId)
     }
 
