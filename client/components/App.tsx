@@ -1,20 +1,7 @@
 import { useFruits } from '../hooks/useFruits.ts'
-import { useUsers, useUser } from '../hooks/useUsers.ts'
 
 function App() {
   const { data } = useFruits()
-  const { data: allUsers } = useUsers()
-  const { data: user } = useUser({ id: 2 })
-  const addUser = useUsers()
-
-  // addUser.add.mutate({
-  //   auth_id: 'abcd',
-  //   name: 'test',
-  //   class: 'warrior',
-  // })
-
-  // console.log('component', user)
-  // console.log('component all users', allUsers)
 
   return (
     <>
