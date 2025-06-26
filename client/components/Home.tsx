@@ -5,7 +5,6 @@ import ActivityLog from './ActivityLog'
 
 function Home() {
   const { data } = useChallenges()
-  console.log(data)
 
   const [activityLog, setActivityLog] = useState(false)
   const toggleActivityLog = () => {
@@ -21,7 +20,7 @@ function Home() {
             data.map((challenge) => (
               <li key={challenge.id}>
                 <p>
-                  {`Title: ${challenge.title}, Description: ${challenge.description}, Xp_reward: ${challenge.xp_reward}, Attribute: ${challenge.attribute}, Difficultiy: ${challenge.difficulty}`}
+                  {`Title: ${challenge.title}, Description: ${challenge.description}, Xp_reward: ${challenge.xp_reward}, Attribute: ${challenge.attribute}, Difficulty: ${challenge.difficulty}`}
                 </p>
               </li>
             ))}
