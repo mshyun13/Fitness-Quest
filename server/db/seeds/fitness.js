@@ -6,7 +6,8 @@ export async function seed(knex) {
   // Inserts seed entries
   await knex('users').insert([
     {
-      id: 'google-oauth2|102349456663427950864',
+      id: 1,
+      auth_id: 'google-oauth2|102349456663427950864',
       name: 'Callum',
       xp: 56,
       level: 99,
@@ -19,7 +20,8 @@ export async function seed(knex) {
       appearance: 3,
     },
     {
-      id: 'github|204113180',
+      id: 2,
+      auth_id: 'github|204113180',
       name: 'Ben',
       xp: 20,
       level: 99,
@@ -32,7 +34,8 @@ export async function seed(knex) {
       appearance: 3,
     },
     {
-      id: 'google-oauth2|103269307431160616510',
+      id: 3,
+      auth_id: 'google-oauth2|103269307431160616510',
       name: 'Mark',
       xp: 77,
       level: 99,
