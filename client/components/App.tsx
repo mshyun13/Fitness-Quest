@@ -1,20 +1,16 @@
-// import { useFruits } from '../hooks/useFruits.ts'
-import Home from './Home.tsx'
-import Profile from './Profile.tsx'
+import { Outlet } from 'react-router'
+import Nav from './Nav.tsx'
 
 function App() {
-  // const { data } = useFruits()
-
   return (
     <>
-      <div className="app">
-        <h1 className="text-3xl font-bold underline">
-          Fullstack Boilerplate - with Fruits!
-        </h1>
-        <Home />
-        <Profile />
-        {/* <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul> */}
-      </div>
+      <header>
+        <h1 className="text-center text-2xl underline">Fit Quest</h1>
+        <Nav />
+      </header>
+      <main>
+        <Outlet />
+      </main>
     </>
   )
 }
