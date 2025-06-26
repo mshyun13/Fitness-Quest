@@ -1,4 +1,4 @@
-import { User, UserData } from '../../models/users.ts'
+import { UpdateUser, User, UserData } from '../../models/users.ts'
 import db from './connection.ts'
 
 export async function getAllUsers() {
@@ -12,7 +12,12 @@ export async function getUserById(id: number) {
 }
 
 export async function addUser(data: UserData) {
-  console.log('db', data)
   const [id] = await db('users').insert(data)
   return id
+}
+
+export async function updateUser(data: UpdateUser) {
+  if (!data.id) return
+  const res = await db('users').where('id', data.id).update(data)
+  return res
 }

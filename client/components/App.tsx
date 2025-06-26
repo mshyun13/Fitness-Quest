@@ -1,5 +1,6 @@
 // import { useFruits } from '../hooks/useFruits.ts'
 import Home from './Home.tsx'
+import Profile from './Profile.tsx'
 
 function App() {
   // const { data } = useFruits()
@@ -11,6 +12,7 @@ function App() {
           Fullstack Boilerplate - with Fruits!
         </h1>
         <Home />
+        <Profile />
         {/* <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul> */}
       </div>
     </>

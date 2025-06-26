@@ -4,14 +4,14 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { addUser, getAllUsers, getUserById } from '../apis/users.ts'
+import { addUser, getAllUsers, getUserById, updateUser } from '../apis/users.ts'
 
 export function useUsers() {
   const query = useQuery({ queryKey: ['users'], queryFn: getAllUsers })
   return {
     ...query,
-    // Extra queries go here e.g. addFruit: useAddFruit()
     add: useAddUser(),
+    update: useUpdateUser(),
   }
 }
 
@@ -23,7 +23,6 @@ export function useUser({ id }: ID) {
   const query = useQuery({ queryKey: ['user'], queryFn: () => getUserById(id) })
   return {
     ...query,
-    // Extra queries go here e.g. addFruit: useAddFruit()
   }
 }
 
@@ -43,4 +42,8 @@ export function useUsersMutation<TData = unknown, TVariables = unknown>(
 
 function useAddUser() {
   return useUsersMutation(addUser)
+}
+
+function useUpdateUser() {
+  return useUsersMutation(updateUser)
 }
