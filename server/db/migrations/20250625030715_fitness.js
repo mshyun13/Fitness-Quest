@@ -4,17 +4,18 @@
 export async function up(knex) {
   return knex.schema
     .createTable('users', (table) => {
-      table.string('id').primary().unique()
+      table.increments('id').primary()
+      table.string('auth_id').unique()
       table.string('name')
-      table.integer('xp')
-      table.integer('level')
-      table.string('rank')
-      table.integer('str')
-      table.integer('dex')
-      table.integer('int')
-      table.integer('missed')
+      table.integer('xp').defaultTo(0)
+      table.integer('level').defaultTo(0)
+      table.string('rank').defaultTo('beginner')
+      table.integer('str').defaultTo(0)
+      table.integer('dex').defaultTo(0)
+      table.integer('int').defaultTo(0)
+      table.integer('missed').defaultTo(0)
       table.string('class')
-      table.integer('appearance')
+      table.integer('appearance').defaultTo(0)
     })
     .createTable('completions', (table) => {
       table.increments('id').primary()
