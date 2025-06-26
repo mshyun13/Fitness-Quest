@@ -1,5 +1,6 @@
 // import { useFruits } from '../hooks/useFruits.ts'
 import Home from './Home.tsx'
+import LoginButton from './LoginButton.tsx'
 
 function App() {
   // const { data } = useFruits()
@@ -10,6 +11,7 @@ function App() {
         <h1 className="text-3xl font-bold underline">
           Fullstack Boilerplate - with Fruits!
         </h1>
+        <LoginButton />
         <Home />
         {/* <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul> */}
       </div>
