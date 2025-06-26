@@ -1,8 +1,16 @@
 import { useChallenge, useChallenges } from '../hooks/useChallenges'
+import { useState } from 'react'
+
+import ActivityLog from './ActivityLog'
 
 function Home() {
   const { data } = useChallenges()
   console.log(data)
+
+  const [activityLog, setActivityLog] = useState(false)
+  const toggleActivityLog = () => {
+    setActivityLog(!activityLog)
+  }
 
   return (
     <>
@@ -19,6 +27,12 @@ function Home() {
             ))}
         </ul>
       </div>
+
+      <button onClick={toggleActivityLog}>
+        {activityLog ? 'Hide' : 'Show'}
+      </button>
+
+      {activityLog && <ActivityLog />}
     </>
   )
 }
