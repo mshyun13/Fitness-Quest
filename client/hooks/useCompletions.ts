@@ -11,6 +11,7 @@ interface UseCompletionsResult {
 }
 
 export function useCompletions(): UseCompletionsResult {
+  console.log('useCompletions: Hook rendered')
   const [completions, setCompletions] = useState<CompletionOfChallenge[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -18,12 +19,13 @@ export function useCompletions(): UseCompletionsResult {
   const { isAuthenticated, user /*getAccessTokenSilently*/ } = useAuth0()
 
   const getCompletions = async () => {
+    console.log('getCompletions: Function called')
     let userId: string | undefined = undefined
     // let accessToken: string | undefined = undefined
 
     if (isAuthenticated && user?.sub) {
       userId = user.sub
-
+      console.log('getCompletions: Authenticated user, userId:', userId)
       // try {
       //   accessToken = await getAccessTokenSilently();
       // } catch (tokenError) {
@@ -34,9 +36,11 @@ export function useCompletions(): UseCompletionsResult {
       // }
     } else {
       userId = 'github|204113180'
+      console.log('getCompletions: Hardcoded user, userId:', userId)
     }
 
     if (!userId) {
+      console.log('getCompletions: No userId available, stopping.')
       setLoading(false)
       setError('Unauthenticated bro!')
       return
@@ -46,9 +50,12 @@ export function useCompletions(): UseCompletionsResult {
     setError(null)
 
     try {
+      console.log('getCompletions: Calling API function for userId:', userId)
       const data = await getCompletionsApi(userId /*, getAccessTokenSilently */)
+      console.log('getCompletions: API call successful, data received:', data)
       setCompletions(data)
     } catch (err) {
+      console.error('getCompletions: API call failed:', err)
       if (err instanceof Error) {
         setError(err.message)
       } else {
@@ -57,10 +64,17 @@ export function useCompletions(): UseCompletionsResult {
       console.error('Failed to get completions:', err)
     } finally {
       setLoading(false)
+      console.log('getCompletions: Function finished.')
     }
   }
 
   useEffect(() => {
+    console.log(
+      'useEffect: Triggered. isAuthenticated:',
+      isAuthenticated,
+      'user:',
+      user,
+    )
     if (isAuthenticated || user === undefined) {
       getCompletions()
     }

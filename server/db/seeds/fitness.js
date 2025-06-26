@@ -3,6 +3,8 @@ export async function seed(knex) {
   await knex('users').del()
   await knex('challenges').del()
   await knex('completions').del()
+  await knex('achievements').del()
+  await knex('achievements_user').del()
 
   // Inserts seed entries
   await knex('users').insert([
@@ -80,10 +82,26 @@ export async function seed(knex) {
 
   await knex('completions').insert([
     {
-      user_id: 'github|204113180',
+      user_id: 2,
       challenge_id: 1,
       completed_at: knex.fn.now(),
       status: 'completed',
+    },
+  ])
+
+  await knex('achievements').insert([
+    {
+      id: 1,
+      title: 'First Time for Everything',
+      description: 'leveled up for the first time',
+      reward: 20,
+    },
+  ])
+
+  await knex('achievements_user').insert([
+    {
+      id: 1,
+      user_id: 1,
     },
   ])
 }

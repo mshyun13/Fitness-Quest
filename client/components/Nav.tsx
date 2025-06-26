@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import LoginButton from './LoginButton'
 
 export default function Nav() {
   return (
@@ -6,7 +7,7 @@ export default function Nav() {
       <Link to="/">Home</Link>
       <Link to="/profile">Profile</Link>
       <Link to="/log">Activity Log</Link>
-      <Link to="/login">Login</Link>
+      <LoginButton />
     </div>
   )
 }
