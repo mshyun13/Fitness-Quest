@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { CompletionOfChallenge } from '../../models/completionsModel'
 import { useAuth0 } from '@auth0/auth0-react'
+import { getCompletions as getCompletionsApi } from '../apis/completions'
 
 interface UseCompletionsResult {
   completions: CompletionOfChallenge[]
@@ -45,19 +46,7 @@ export function useCompletions(): UseCompletionsResult {
     setError(null)
 
     try {
-      const headers: HeadersInit = {}
-      // if (accessToken) {
-      //   headers['Authorization'] = `Bearer ${accessToken}`;
-      // }
-
-      const response = await fetch(`/api/v1/completions/${userId}`, {
-        headers: headers,
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! ${response.status}`)
-      }
-      const data: CompletionOfChallenge[] = await response.json()
+      const data = await getCompletionsApi(userId /*, getAccessTokenSilently */)
       setCompletions(data)
     } catch (err) {
       if (err instanceof Error) {
