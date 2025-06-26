@@ -24,10 +24,9 @@ export function addUser(data: UserData) {
     })
 }
 
-export function updateUser(data: UpdateUser) {
+export function updateUser(data: UpdateUser): Promise<unknown> {
   if (!data.id) {
     console.log('API Error: No ID')
-    return
   }
   return request
     .patch(rootUrl + `/users/${data.id}`)
