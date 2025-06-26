@@ -2,6 +2,7 @@ export async function seed(knex) {
   // Deletes ALL existing entries
   await knex('users').del()
   await knex('challenges').del()
+  await knex('completions').del()
 
   // Inserts seed entries
   await knex('users').insert([
@@ -71,6 +72,15 @@ export async function seed(knex) {
       xp_reward: 40,
       attribute: 'int',
       difficulty: 'hard',
+    },
+  ])
+
+  await knex('completions').insert([
+    {
+      user_id: 'github|204113180',
+      challenge_id: 1,
+      completed_at: knex.fn.now(),
+      status: 'completed',
     },
   ])
 }
