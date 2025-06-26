@@ -6,6 +6,10 @@ export async function getCompletions(
   userId: string,
   // getAccessTokenSilently?: GetAccessTokenSilently
 ): Promise<CompletionOfChallenge[]> {
+  console.log(
+    'completionsApi.getCompletions: API function entered for userId:',
+    userId,
+  )
   // let accessToken: string | undefined = undefined;
   // if (getAccessTokenSilently) {
   //   try {
@@ -23,17 +27,30 @@ export async function getCompletions(
   //   headers['Authorization'] = `Bearer ${accessToken}`;
   // }
 
+  console.log(
+    'completionsApi.getCompletions: About to fetch from /api/v1/completions/' +
+      userId,
+  )
   const response = await fetch(`/api/v1/completions/${userId}`, {
     method: 'GET',
     headers: headers,
   })
+  console.log(
+    'completionsApi.getCompletions: Fetch response received, status:',
+    response.status,
+  )
 
   if (!response.ok) {
     const errorData = await response.text()
+    console.error(
+      'completionsApi.getCompletions: Fetch failed, error data:',
+      errorData,
+    )
     throw new Error(`HTTP error! ${response.status} - ${errorData}`)
   }
 
   const data: CompletionOfChallenge[] = await response.json()
+  console.log('completionsApi.getCompletions: Data parsed:', data)
   return data
 }
 
