@@ -87,6 +87,18 @@ export async function seed(knex) {
       completed_at: knex.fn.now(),
       status: 'completed',
     },
+    {
+      user_id: '2',
+      challenge_id: 2,
+      completed_at: knex.fn.now(),
+      status: 'missed',
+    },
+    {
+      user_id: '2',
+      challenge_id: 3,
+      completed_at: knex.fn.now(),
+      status: 'completed',
+    },
   ])
 
   await knex('achievements').insert([
