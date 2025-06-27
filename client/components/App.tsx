@@ -4,11 +4,13 @@ import Nav from './Nav.tsx'
 function App() {
   return (
     <>
-      <header>
-        <h1 className="text-center text-2xl underline">Fit Quest</h1>
+      <header className="select-none border-b-2 border-green-700 bg-gray-900 p-4 font-mono text-green-300">
+        <h1 className="pt-2 text-center font-['Real_Tatoem',_serif] text-6xl text-gray-200">
+          Fit Quest
+        </h1>
         <Nav />
       </header>
-      <main>
+      <main className="h-[87vh] bg-gray-900 pt-10 text-center text-white">
         <Outlet />
       </main>
     </>
