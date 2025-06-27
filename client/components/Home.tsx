@@ -24,7 +24,7 @@ function Home() {
   const { data: challenges, isLoading, isError } = useChallenges()
 
   // ---------- //
-  const currentUserId = 1
+  const currentUserId = 2
   const {
     data: dbUser,
     isLoading: dbUserLoading,
@@ -85,7 +85,7 @@ function Home() {
         : 'bg-blue-600'
 
   return (
-    <section className="flex min-h-screen flex-col items-center justify-start bg-gray-900 p-4 pt-16 font-mono text-green-300">
+    <section className="flex flex-col items-center justify-start bg-gray-900 pt-8 font-mono text-green-300">
       <div className="flex w-full flex-grow items-center justify-center">
         <div className="w-full max-w-4xl text-center">
           {/* Notification */}
