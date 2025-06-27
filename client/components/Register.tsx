@@ -47,19 +47,38 @@ function Register() {
 
   return (
     <>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Name: </label>
-        <input type="text" id="name" value={newName} onChange={handleChange} />
-        <label>Preferred Class: </label>
-        <input
-          type="text"
-          id="class"
-          value={newClass}
-          onChange={handleChange}
-        />
-        <button type="submit">Register</button>
-      </form>
+      <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
+        <h2 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
+          Register
+        </h2>
+        <div className="justify-items-center">
+          <form onSubmit={handleSubmit} className="mb-4 flex w-96 flex-col">
+            <label className="mb-2">Name: </label>
+            <input
+              type="text"
+              id="name"
+              value={newName}
+              onChange={handleChange}
+              className="mb-2 text-black"
+            />
+            <label className="mb-2">Preferred Class: </label>
+            <input
+              type="text"
+              id="class"
+              value={newClass}
+              onChange={handleChange}
+              className="mb-2 text-black"
+            />
+            <button
+              type="submit"
+              className="mb-4 cursor-pointer rounded border border-gray-600 bg-gray-700 p-4 shadow
+                               transition duration-200 hover:bg-gray-600"
+            >
+              Register
+            </button>
+          </form>
+        </div>
+      </div>
     </>
   )
 }
