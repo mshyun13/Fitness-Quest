@@ -2,7 +2,7 @@ import { useUsers, useUser } from '../hooks/useUsers.ts'
 
 function Profile() {
   const { data: allUsers } = useUsers()
-  const { data: user } = useUser({ id: 1 })
+  const { data: user } = useUser({ id: 2 })
   const mutateUser = useUsers()
 
   // mutateUser.add.mutate({

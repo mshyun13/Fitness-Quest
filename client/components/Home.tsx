@@ -139,11 +139,11 @@ function Home() {
                       {challenge.title}
                     </p>
                     <p className="text-lg text-gray-300">
-                      <strong className="text-green-100">Attribute:</strong>{' '}
+                      <strong className="text-green-100"></strong>{' '}
                       {challenge.attribute.toUpperCase()}
                     </p>
                     <p className="text-lg text-gray-300">
-                      <strong className="text-green-100">Difficulty:</strong>{' '}
+                      <strong className="text-green-100"></strong>{' '}
                       {challenge.difficulty.charAt(0).toUpperCase() +
                         challenge.difficulty.slice(1)}
                     </p>
