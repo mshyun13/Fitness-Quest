@@ -40,3 +40,29 @@ export function getLevelFromTotalXp(totalXp: number): number {
   }
   return level
 }
+
+// Calculates XP needed from users current XP to reach the next level
+export function getXpNeededForNextLevel(currentLevel: number): number {
+  return calculateXpToCompleteLevel(currentLevel)
+}
+
+// Calculates the percentage progress towards the next level
+export function getProgressTowardsNextLevel(
+  currentXp: number,
+  currentLevel: number,
+): number {
+  const xpAtCurrentLevelStart = getXpForLeveling(currentLevel)
+  const xpNeededToCompleteCurrentLevel =
+    calculateXpToCompleteLevel(currentLevel)
+
+  if (xpNeededToCompleteCurrentLevel <= 0) {
+    return 100 // Stops divide by 0
+  }
+
+  const xpGainedInCurrentLevel = currentXp - xpAtCurrentLevelStart
+  const progress =
+    (xpGainedInCurrentLevel / xpNeededToCompleteCurrentLevel) * 100
+
+  // Won't go past 100 per progress bar
+  return Math.min(100, Math.max(0, progress))
+}
