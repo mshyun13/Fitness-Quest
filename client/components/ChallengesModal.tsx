@@ -1,17 +1,58 @@
 import React from 'react'
 import { Challenge } from '../../models/challenge'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { addCompletionApi } from '../apis/completions'
+import { CompletionResult } from '../../models/completionsModel'
 
 interface ChallengeModalProps {
   challenge: Challenge
   onClose: () => void
+  currentUserId: number
 }
 
 const ChallengeModal: React.FC<ChallengeModalProps> = ({
   challenge,
   onClose,
+  currentUserId,
 }) => {
   if (!challenge) {
     return null
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const queryClient = useQueryClient()
+
+  // Mutation to add a completed challenge
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const completeChallengeMutation = useMutation<
+    CompletionResult,
+    Error,
+    { userId: number; challengeId: number; status: 'completed' | 'missed' }
+  >({
+    mutationFn: addCompletionApi,
+    onSuccess: (data) => {
+      console.log('Challenge completion successful:', data)
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+      onClose()
+      alert(
+        `Challenge completed! You are now Level ${data.userNewLevel} with ${data.userNewXp} XP.`,
+      )
+      if (data.levelUpHappened) {
+        alert('Congratulations! You leveled up!')
+      }
+    },
+    onError: (error) => {
+      console.error('Failed to complete challenge:', error)
+      alert(`Error completing challenge: ${error.message}`)
+    },
+  })
+
+  const handleCompleteChallenge = () => {
+    completeChallengeMutation.mutate({
+      userId: currentUserId,
+      challengeId: challenge.id,
+      status: 'completed',
+    })
   }
 
   return (
@@ -49,9 +90,21 @@ const ChallengeModal: React.FC<ChallengeModalProps> = ({
           </p>
         </div>
         <div className="mt-6 text-center">
-          <button className="rounded bg-blue-600 px-6 py-2 font-bold text-white transition duration-200 hover:bg-blue-700">
-            Complete Challenge
+          <button
+            onClick={handleCompleteChallenge}
+            disabled={completeChallengeMutation.isPending}
+            className="rounded bg-blue-600 px-6 py-2 font-bold text-white transition duration-200 hover:bg-blue-700"
+          >
+            {completeChallengeMutation.isPending
+              ? 'Completing...'
+              : 'Complete Challenge'}
           </button>
+
+          {completeChallengeMutation.isError && (
+            <p className="mt-2 text-red-500">
+              Error: {completeChallengeMutation.error?.message}
+            </p>
+          )}
         </div>
       </div>
     </div>
