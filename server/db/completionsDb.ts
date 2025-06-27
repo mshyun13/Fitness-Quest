@@ -2,19 +2,12 @@ import connection from './connection'
 import {
   CompletionOfChallenge,
   NewCompletion,
+  CompletionResult,
 } from '../../models/completionsModel'
 import { getLevelFromTotalXp } from '../utils/xpLogic'
 import { getSingleChallenge } from './challenges'
+import { User } from '../../models/users'
 
-interface CompletionResult {
-  completionId: number
-  userNewXp: number
-  userNewLevel: number
-  levelUpHappened: boolean
-  message: string
-}
-
-// Gets completion and challenge data for a user
 export async function getCompletionsByUserId(
   userId: number,
 ): Promise<CompletionOfChallenge[]> {
@@ -25,7 +18,6 @@ export async function getCompletionsByUserId(
       'completions.id as completionId',
       'completions.completed_at',
       'completions.status',
-
       'challenges.id as challengeId',
       'challenges.title as challengeTitle',
       'challenges.description as challengeDescription',
@@ -33,10 +25,9 @@ export async function getCompletionsByUserId(
       'challenges.attribute',
       'challenges.difficulty',
     )
-    .orderBy('completions.completed_at', 'desc') // Most recent will show first
+    .orderBy('completions.completed_at', 'desc')
 }
 
-// For when adding to DB
 export async function addCompletion(
   newCompletion: NewCompletion,
 ): Promise<number[]> {
@@ -55,44 +46,68 @@ export async function processChallengeCompletion(
 ): Promise<CompletionResult> {
   return connection.transaction(async (trx) => {
     let levelUpHappened = false
-    let xpGain = 0
 
-    // Get challenge XP reward (only if status is 'completed')
-    if (status === 'completed') {
-      const challenge = await getSingleChallenge(challengeId, trx)
-
-      if (!challenge) {
-        throw new Error('Challenge not found')
-      }
-      xpGain = challenge.xp_reward
-    }
-
-    // Get users current XP and level
     const user = await trx('users')
       .where('id', userId)
-      .select('xp', 'level')
+      .select('xp', 'level', 'str', 'dex', 'int')
       .first()
 
     if (!user) {
       throw new Error('User not found')
     }
 
-    // Calculate new XP and level
-    const newXp = user.xp + xpGain
-    const newLevel = getLevelFromTotalXp(newXp)
+    const updatedUser: Partial<User> = { ...user } as User
 
-    if (newLevel > user.level) {
-      levelUpHappened = true
+    if (status === 'completed') {
+      const challenge = await getSingleChallenge(challengeId, trx)
+
+      if (!challenge) {
+        throw new Error('Challenge not found')
+      }
+
+      updatedUser.xp = (updatedUser.xp || 0) + challenge.xp_reward
+      const newCalculatedLevel = getLevelFromTotalXp(updatedUser.xp)
+
+      if (newCalculatedLevel > (user.level || 0)) {
+        levelUpHappened = true
+        updatedUser.level = newCalculatedLevel
+      }
+
+      const attributeToUpdate = challenge.attribute.toLowerCase() as
+        | 'str'
+        | 'dex'
+        | 'int'
+
+      const currentAttributeValue = user[attributeToUpdate] || 0
+      let newAttributeValue = currentAttributeValue + 1
+
+      if (newAttributeValue > 100) {
+        const bonusXpFromAttribute = newAttributeValue - 100
+        newAttributeValue = 1
+
+        updatedUser.xp = (updatedUser.xp || 0) + bonusXpFromAttribute
+
+        const reCalculatedLevel = getLevelFromTotalXp(updatedUser.xp)
+        if (reCalculatedLevel > (updatedUser.level || 0)) {
+          levelUpHappened = true
+          updatedUser.level = reCalculatedLevel
+        }
+      }
+
+      updatedUser[attributeToUpdate] = newAttributeValue
     }
 
-    // Update users XP and level in DB
-    await trx('users').where('id', userId).update({
-      xp: newXp,
-      level: newLevel,
-    })
+    await trx('users')
+      .where('id', userId)
+      .update({
+        xp: updatedUser.xp || 0,
+        level: updatedUser.level || 0,
+        str: updatedUser.str || 0,
+        dex: updatedUser.dex || 0,
+        int: updatedUser.int || 0,
+      })
 
-    // Add the completion record
-    const [completionId] = await trx('completions').insert({
+    const [_completionId] = await trx('completions').insert({
       user_id: userId,
       challenge_id: challengeId,
       status: status,
@@ -100,13 +115,9 @@ export async function processChallengeCompletion(
     })
 
     return {
-      completionId,
-      userNewXp: newXp,
-      userNewLevel: newLevel,
-      levelUpHappened,
-      message: levelUpHappened
-        ? 'Challenge completed & leveled up!'
-        : 'Challenge completed!',
+      userNewXp: updatedUser.xp!,
+      userNewLevel: updatedUser.level!,
+      levelUpHappened: levelUpHappened,
     }
   })
 }
