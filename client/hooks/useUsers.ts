@@ -4,7 +4,14 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { addUser, getAllUsers, getUserById, updateUser } from '../apis/users.ts'
+import {
+  addUser,
+  addUserByAuth0,
+  getAllUsers,
+  getUserByAuth0,
+  getUserById,
+  updateUser,
+} from '../apis/users.ts'
 import { useAuth0 } from '@auth0/auth0-react'
 
 export function useUsers() {
@@ -56,9 +63,9 @@ export function useUserByAuth0() {
 
   const query = useQuery({
     queryKey: ['user'],
-    queryFn: () => {
-      const token = getAccessTokenSilently()
-      return getUserByAuth0({ token })
+    queryFn: async () => {
+      const token = await getAccessTokenSilently()
+      return getUserByAuth0(token)
     },
     enabled: !!user,
   })
