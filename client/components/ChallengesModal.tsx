@@ -4,16 +4,23 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { addCompletionApi } from '../apis/completions'
 import { CompletionResult } from '../../models/completionsModel'
 
+type SetAppNotification = (
+  message: string,
+  type?: 'success' | 'error' | 'info',
+) => void
+
 interface ChallengeModalProps {
   challenge: Challenge
   onClose: () => void
   currentUserId: number
+  setAppNotification: SetAppNotification
 }
 
 const ChallengeModal: React.FC<ChallengeModalProps> = ({
   challenge,
   onClose,
   currentUserId,
+  setAppNotification,
 }) => {
   if (!challenge) {
     return null
@@ -33,17 +40,18 @@ const ChallengeModal: React.FC<ChallengeModalProps> = ({
     onSuccess: (data) => {
       console.log('Challenge completion successful:', data)
       queryClient.invalidateQueries({ queryKey: ['user'] })
+      queryClient.invalidateQueries({ queryKey: ['challenges'] })
       onClose()
-      alert(
+      setAppNotification(
         `Challenge completed! You are now Level ${data.userNewLevel} with ${data.userNewXp} XP.`,
       )
       if (data.levelUpHappened) {
-        alert('Congratulations! You leveled up!')
+        setAppNotification('Congratulations! You leveled up!')
       }
     },
     onError: (error) => {
       console.error('Failed to complete challenge:', error)
-      alert(`Error completing challenge: ${error.message}`)
+      setAppNotification(`Error completing challenge: ${error.message}`)
     },
   })
 

@@ -1,9 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useChallenges } from '../hooks/useChallenges'
 import ChallengesModal from './ChallengesModal'
 import { Challenge } from '../../models/challenge'
 import { useUser } from '../hooks/useUsers'
 // import { useAuth0 } from '@auth0/auth0-react'
+
+type NotificationType = 'success' | 'error' | 'info'
+
+interface AppNotification {
+  message: string
+  type: NotificationType
+}
 
 function Home() {
   //  const {
@@ -30,6 +37,27 @@ function Home() {
     null,
   )
 
+  const [appNotification, setAppNotificationState] =
+    useState<AppNotification | null>(null)
+
+  // Function to set and auto-clear notifications
+  const setAppNotification = (
+    message: string,
+    type: NotificationType = 'info',
+  ) => {
+    setAppNotificationState({ message, type })
+  }
+
+  // Clear notifications
+  useEffect(() => {
+    if (appNotification) {
+      const timer = setTimeout(() => {
+        setAppNotificationState(null)
+      }, 2500)
+      return () => clearTimeout(timer)
+    }
+  }, [appNotification])
+
   const handleCardClick = (challenge: Challenge) => {
     setSelectedChallenge(challenge)
     setShowModal(true)
@@ -48,10 +76,28 @@ function Home() {
     return <p>Error Loading Challenges</p>
   }
 
+  // Notification CSS
+  const notificationClass =
+    appNotification?.type === 'success'
+      ? 'bg-green-600'
+      : appNotification?.type === 'error'
+        ? 'bg-red-600'
+        : 'bg-blue-600'
+
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center bg-gray-900 p-4 font-mono text-green-300">
+    <section className="flex min-h-screen flex-col items-center justify-start bg-gray-900 p-4 pt-16 font-mono text-green-300">
       <div className="flex w-full flex-grow items-center justify-center">
         <div className="w-full max-w-4xl text-center">
+          {/* Notification */}
+          {appNotification && (
+            <div
+              className={`mx-auto mb-4 rounded p-3 text-white ${notificationClass}`}
+              style={{ maxWidth: 'fit-content' }}
+            >
+              <p>{appNotification.message}</p>
+            </div>
+          )}
+
           <h1 className="mb-6 text-5xl font-bold text-green-400">
             Welcome,{' '}
             {
@@ -68,6 +114,9 @@ function Home() {
               </p>
               <p className="text-xl text-green-200">
                 XP: <strong className="text-green-500">{dbUser.xp}</strong>
+              </p>
+              <p className="text-xl text-green-200">
+                Rank: <strong className="text-green-500">{dbUser.rank}</strong>
               </p>
             </div>
           )}
@@ -116,6 +165,7 @@ function Home() {
           challenge={selectedChallenge}
           onClose={handleCloseModal}
           currentUserId={currentUserId}
+          setAppNotification={setAppNotification}
         />
       )}
     </section>
