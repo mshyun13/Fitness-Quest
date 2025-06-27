@@ -3,15 +3,27 @@ import { useChallenges } from '../hooks/useChallenges'
 import ChallengeModal from './ChallengesModal'
 import { Challenge } from '../../models/challenge'
 import { useUser } from '../hooks/useUsers'
+// import { useAuth0 } from '@auth0/auth0-react'
 
 function Home() {
-  const currentUserId = 2
+  //  const {
+  //     user: auth0User,
+  //     isAuthenticated,
+  //     isLoading: auth0Loading,
+  //     loginWithRedirect,
+  //     logout,
+  //   } = useAuth0()
+
   const { data: challenges, isLoading, isError } = useChallenges()
+
+  // ---------- //
+  const currentUserId = 1
   const {
-    data: user,
-    isLoading: userLoading,
-    isError: userError,
+    data: dbUser,
+    isLoading: dbUserLoading,
+    isError: dbUserError,
   } = useUser({ id: currentUserId })
+  // ---------- //
 
   const [showModal, setShowModal] = useState(false)
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
@@ -28,11 +40,11 @@ function Home() {
     setSelectedChallenge(null)
   }
 
-  if (isLoading || userLoading) {
+  if (isLoading || dbUserLoading /*|| auth0Loading*/) {
     return <p>Loading Challenges...</p>
   }
 
-  if (isError || userError) {
+  if (isError || dbUserError) {
     return <p>Error Loading Challenges</p>
   }
 
@@ -41,7 +53,11 @@ function Home() {
       <div className="flex w-full flex-grow items-center justify-center">
         <div className="w-full max-w-4xl text-center">
           <h1 className="mb-6 text-5xl font-bold text-green-400">
-            Welcome, {user?.name || 'User'}
+            Welcome,{' '}
+            {
+              /*isAuthenticated ? (auth0User?.name || auth0User?.nickname || 'User') :*/ dbUser?.name ||
+                'User'
+            }
           </h1>
 
           <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl">
