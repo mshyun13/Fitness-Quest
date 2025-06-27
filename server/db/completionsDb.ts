@@ -60,6 +60,7 @@ export async function processChallengeCompletion(
     // Get challenge XP reward (only if status is 'completed')
     if (status === 'completed') {
       const challenge = await getSingleChallenge(challengeId, trx)
+
       if (!challenge) {
         throw new Error('Challenge not found')
       }

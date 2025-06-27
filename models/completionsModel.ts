@@ -27,3 +27,12 @@ export interface NewCompletion {
   challengeId: number
   status: 'completed' | 'missed'
 }
+
+// New results for level and XP
+export interface CompletionResult {
+  completionId: number
+  userNewXp: number
+  userNewLevel: number
+  levelUpHappened: boolean
+  message: string
+}
