@@ -7,7 +7,7 @@ function Profile() {
   const mutateUser = useUsers()
   const { data: allAchievements } = useAchievements()
 
-  console.log('comp', allAchievements)
+  // console.log('comp', allAchievements)
 
   // mutateUser.add.mutate({
   //   auth_id: 'abcd',
@@ -104,37 +104,20 @@ function Profile() {
           {' '}
           Achievements
         </h3>
-        {/* <div className="mt-10 flex flex-wrap items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300"> */}
-        <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
-          <p className="text-sm">
-            <img
-              src={`/achievements/achievement${allAchievements[0]?.id}.webp`}
-              alt="character"
-              className="h-auto w-20"
-            />
-            {allAchievements[0]?.title}
-          </p>
-          <img
-            src="/achievement.webp"
-            alt="character"
-            className="h-auto w-20"
-          />
-          <img
-            src="/achievement.webp"
-            alt="character"
-            className="h-auto w-20"
-          />
-          <img
-            src="/achievement.webp"
-            alt="character"
-            className="h-auto w-20"
-          />
-          <img
-            src="/achievement.webp"
-            alt="character"
-            className="h-auto w-20"
-          />
-        </div>
+        {allAchievements ? (
+          <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
+            <p className="text-xs">
+              <img
+                src={`/achievements/achievement${allAchievements[0]?.id}.webp`}
+                alt="achievement"
+                className="h-auto w-20"
+              />
+              {allAchievements[0]?.title}
+            </p>
+          </div>
+        ) : (
+          <p>No achievements</p>
+        )}
       </div>
     </>
   )
