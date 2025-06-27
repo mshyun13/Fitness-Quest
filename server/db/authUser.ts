@@ -12,7 +12,7 @@ export interface AuthUser {
   dex: number
   int: number
   missed: number
-  // class: string
+  class: string
   appearance: number
 }
 
@@ -32,7 +32,7 @@ export async function createUser(user: AuthUser) {
     dex: user.dex,
     int: user.int,
     missed: user.missed,
-    // class: user.class,
+    class: user.class,
     appearance: user.appearance,
   })
 }

@@ -39,8 +39,6 @@ function Register() {
     navigate('/')
   }
 
-  console.log(user.data)
-
   useEffect(() => {
     if (user.data) {
       navigate('/')

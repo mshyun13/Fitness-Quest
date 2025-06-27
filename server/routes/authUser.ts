@@ -23,20 +23,7 @@ router.get('/', checkJwt, async (req: JwtRequest, res, next) => {
 router.post('/', checkJwt, async (req: JwtRequest, res, next) => {
   try {
     const auth_id = String(req.auth?.sub)
-    const { name, xp, level, rank, str, dex, int, missed, appearance } =
-      req.body
-    const user = {
-      auth_id,
-      name,
-      xp,
-      level,
-      rank,
-      str,
-      dex,
-      int,
-      missed,
-      appearance,
-    }
+    const user = { ...req.body, auth_id: auth_id }
     await db.createUser(user)
     res.sendStatus(201)
   } catch (e) {
