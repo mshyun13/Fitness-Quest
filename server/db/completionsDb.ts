@@ -8,6 +8,7 @@ import { getLevelFromTotalXp } from '../utils/xpLogic'
 import { getSingleChallenge } from './challenges'
 import { User } from '../../models/users'
 
+// Gets users completed challenges, joins challenge details
 export async function getCompletionsByUserId(
   userId: number,
 ): Promise<CompletionOfChallenge[]> {
@@ -28,6 +29,7 @@ export async function getCompletionsByUserId(
     .orderBy('completions.completed_at', 'desc')
 }
 
+// Adds new completed challenge to DB
 export async function addCompletion(
   newCompletion: NewCompletion,
 ): Promise<number[]> {
@@ -39,6 +41,7 @@ export async function addCompletion(
   })
 }
 
+// Gets challenges a user has completed today
 export async function getChallengesDoneToday(
   userId: number,
 ): Promise<number[]> {
@@ -53,6 +56,7 @@ export async function getChallengesDoneToday(
     .then((rows) => rows.map((row) => row.challenge_id))
 }
 
+// Proesses challenge completion or miss, updating user stats in a transaction
 export async function processChallengeCompletion(
   userId: number,
   challengeId: number,
@@ -61,6 +65,7 @@ export async function processChallengeCompletion(
   return connection.transaction(async (trx) => {
     let levelUpHappened = false
 
+    // Gets users current stats in the transaction
     const user = await trx('users')
       .where('id', userId)
       .select('xp', 'level', 'str', 'dex', 'int')
@@ -72,6 +77,7 @@ export async function processChallengeCompletion(
 
     const updatedUser: Partial<User> = { ...user } as User
 
+    // Gets completed challenges
     if (status === 'completed') {
       const challenge = await getSingleChallenge(challengeId, trx)
 
@@ -79,38 +85,44 @@ export async function processChallengeCompletion(
         throw new Error('Challenge not found')
       }
 
-      updatedUser.xp = (updatedUser.xp || 0) + challenge.xp_reward
-      const newCalculatedLevel = getLevelFromTotalXp(updatedUser.xp)
+      updatedUser.xp = (updatedUser.xp || 0) + challenge.xp_reward // Adds challenge xp
+      const newCalculatedLevel = getLevelFromTotalXp(updatedUser.xp) // Calculates new level based on new xp total
 
+      // Checks for level-up
       if (newCalculatedLevel > (user.level || 0)) {
         levelUpHappened = true
         updatedUser.level = newCalculatedLevel
       }
 
+      // Determines which attribute to update
       const attributeToUpdate = challenge.attribute.toLowerCase() as
         | 'str'
         | 'dex'
         | 'int'
 
       const currentAttributeValue = user[attributeToUpdate] || 0
-      let newAttributeValue = currentAttributeValue + 1
+      let newAttributeValue = currentAttributeValue + 1 // adds to the relevant attribute
 
+      // When str, dex or int get to 100, clear the bar and start again
       if (newAttributeValue > 100) {
-        const bonusXpFromAttribute = newAttributeValue - 100
+        const bonusXpFromAttribute = newAttributeValue - 100 // bonus xp for filling the bar
         newAttributeValue = 1
 
-        updatedUser.xp = (updatedUser.xp || 0) + bonusXpFromAttribute
+        updatedUser.xp = (updatedUser.xp || 0) + bonusXpFromAttribute // add bonus xp
 
-        const reCalculatedLevel = getLevelFromTotalXp(updatedUser.xp)
+        const reCalculatedLevel = getLevelFromTotalXp(updatedUser.xp) // recalculate level to account for bonus xp
+
+        // Checks for another level-up because of bonus xp
         if (reCalculatedLevel > (updatedUser.level || 0)) {
           levelUpHappened = true
           updatedUser.level = reCalculatedLevel
         }
       }
 
-      updatedUser[attributeToUpdate] = newAttributeValue
+      updatedUser[attributeToUpdate] = newAttributeValue // Assigns new attribute values
     }
 
+    // Update users xp in DB within transaction
     await trx('users')
       .where('id', userId)
       .update({
@@ -121,6 +133,7 @@ export async function processChallengeCompletion(
         int: updatedUser.int || 0,
       })
 
+    // Inserts completion into DB within transaction
     const [_completionId] = await trx('completions').insert({
       user_id: userId,
       challenge_id: challengeId,
@@ -128,6 +141,7 @@ export async function processChallengeCompletion(
       completed_at: connection.fn.now(),
     })
 
+    // returns newly calculated results
     return {
       userNewXp: updatedUser.xp!,
       userNewLevel: updatedUser.level!,
