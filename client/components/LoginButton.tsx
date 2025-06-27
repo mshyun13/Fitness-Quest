@@ -16,7 +16,7 @@ export default function LoginButton() {
     <>
       <IfAuthenticated>
         <button onClick={handleSignOut}>Sign Out</button>
-        {user && <p>Welcome {user.name}</p>}
+        {/* {user && <p>Welcome {user.name}</p>} */}
       </IfAuthenticated>
       <IfNotAuthenticated>
         <button onClick={handleSignIn}>Sign In</button>
