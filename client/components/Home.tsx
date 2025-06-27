@@ -3,9 +3,11 @@ import { useChallenges } from '../hooks/useChallenges'
 import ChallengeModal from './ChallengesModal'
 import { Challenge } from '../../models/challenge'
 import { useUser } from '../hooks/useUsers'
+// import { useAuth0 } from '@auth0/auth0-react'
 
 function Home() {
   const currentUserId = 2
+  // const { user } = useAuth0()
   const { data: challenges, isLoading, isError } = useChallenges()
   const {
     data: user,
