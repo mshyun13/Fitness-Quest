@@ -8,7 +8,7 @@ export async function up(knex) {
       table.string('auth_id').unique()
       table.string('name')
       table.integer('xp').defaultTo(0)
-      table.integer('level').defaultTo(0)
+      table.integer('level').defaultTo(1)
       table.string('rank').defaultTo('beginner')
       table.integer('str').defaultTo(0)
       table.integer('dex').defaultTo(0)
@@ -19,7 +19,7 @@ export async function up(knex) {
     })
     .createTable('completions', (table) => {
       table.increments('id').primary()
-      table.string('user_id').references('id').inTable('users')
+      table.integer('user_id').references('id').inTable('users')
       table.integer('challenge_id').references('id').inTable('challenges')
       table.datetime('completed_at')
       table.enum('status', ['completed', 'missed'])
