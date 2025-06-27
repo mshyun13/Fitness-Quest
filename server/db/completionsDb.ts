@@ -46,12 +46,13 @@ export async function getChallengesDoneToday(
   userId: number,
 ): Promise<number[]> {
   const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  // today.setHours(0, 0, 0, 0)
+  console.log(today.toString())
 
   return connection('completions')
     .where('user_id', userId)
     .where('status', 'completed')
-    .where('completed_at', '>=', today.toISOString()) // Filter for daily completions only
+    .where('completed_at', '>=', today) // Filter for daily completions only
     .select('challenge_id')
     .then((rows) => rows.map((row) => row.challenge_id))
 }
