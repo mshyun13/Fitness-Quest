@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useChallenges } from '../hooks/useChallenges'
-import ChallengeModal from './ChallengesModal'
+import ChallengesModal from './ChallengesModal'
 import { Challenge } from '../../models/challenge'
 import { useUser } from '../hooks/useUsers'
 // import { useAuth0 } from '@auth0/auth0-react'
@@ -112,9 +112,10 @@ function Home() {
 
       {/* Modal Conditional Render */}
       {showModal && selectedChallenge && (
-        <ChallengeModal
+        <ChallengesModal
           challenge={selectedChallenge}
           onClose={handleCloseModal}
+          currentUserId={currentUserId}
         />
       )}
     </section>
