@@ -57,16 +57,16 @@ export async function processChallengeCompletion(
     let levelUpHappened = false
     let xpGain = 0
 
-    // 1. Get challenge XP reward (only if status is 'completed')
+    // Get challenge XP reward (only if status is 'completed')
     if (status === 'completed') {
-      const challenge = await getSingleChallenge(challengeId).transacting(trx)
+      const challenge = await getSingleChallenge(challengeId, trx)
       if (!challenge) {
         throw new Error('Challenge not found')
       }
       xpGain = challenge.xp_reward
     }
 
-    // 2. Get user's current XP and level
+    // Get users current XP and level
     const user = await trx('users')
       .where('id', userId)
       .select('xp', 'level')
@@ -76,7 +76,7 @@ export async function processChallengeCompletion(
       throw new Error('User not found')
     }
 
-    // 3. Calculate new XP and level
+    // Calculate new XP and level
     const newXp = user.xp + xpGain
     const newLevel = getLevelFromTotalXp(newXp)
 
@@ -84,13 +84,13 @@ export async function processChallengeCompletion(
       levelUpHappened = true
     }
 
-    // 4. Update user's XP and level in the database
+    // Update users XP and level in DB
     await trx('users').where('id', userId).update({
       xp: newXp,
       level: newLevel,
     })
 
-    // 5. Add the completion record
+    // Add the completion record
     const [completionId] = await trx('completions').insert({
       user_id: userId,
       challenge_id: challengeId,
@@ -104,8 +104,8 @@ export async function processChallengeCompletion(
       userNewLevel: newLevel,
       levelUpHappened,
       message: levelUpHappened
-        ? 'Challenge completed and leveled up!'
-        : 'Challenge completed.',
+        ? 'Challenge completed & leveled up!'
+        : 'Challenge completed!',
     }
   })
 }
