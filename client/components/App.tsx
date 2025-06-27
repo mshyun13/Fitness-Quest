@@ -10,7 +10,7 @@ function App() {
         </h1>
         <Nav />
       </header>
-      <main className="h-[87vh] bg-gray-900 pt-10 text-center text-white">
+      <main className="h-[87vh] bg-gray-900 text-center text-white">
         <Outlet />
       </main>
     </>

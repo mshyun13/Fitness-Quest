@@ -1,4 +1,7 @@
-import { CompletionOfChallenge } from '../../models/completionsModel.ts'
+import {
+  CompletionOfChallenge,
+  CompletionResult,
+} from '../../models/completionsModel.ts'
 
 // type GetAccessTokenSilently = (opts?: any) => Promise<string>
 
@@ -56,12 +59,12 @@ export async function getCompletions(
 
 export async function addCompletionApi(
   newCompletion: {
-    userId: string
+    userId: number
     challengeId: number
     status: 'completed' | 'missed'
   },
   // getAccessTokenSilently?: GetAccessTokenSilently,
-): Promise<number> {
+): Promise<CompletionResult> {
   // let accessToken: string | undefined = undefined
   // if (getAccessTokenSilently) {
   //   try {
@@ -89,6 +92,6 @@ export async function addCompletionApi(
     throw new Error(`HTTP error! ${response.status} - ${errorData}`)
   }
 
-  const result = await response.json()
-  return result.id
+  const result: CompletionResult = await response.json()
+  return result
 }

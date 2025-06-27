@@ -1,8 +1,14 @@
 import { useUsers, useUser } from '../hooks/useUsers.ts'
+import {
+  getLevelFromTotalXp,
+  getXpNeededForNextLevel,
+  getProgressTowardsNextLevel,
+  getXpForLeveling,
+} from '../../server/utils/xpLogic.ts'
 
 function Profile() {
   const { data: allUsers } = useUsers()
-  const { data: user } = useUser({ id: 1 })
+  const { data: user } = useUser({ id: 2 })
   const mutateUser = useUsers()
 
   // mutateUser.add.mutate({
@@ -19,6 +25,20 @@ function Profile() {
 
   // console.log('component', user)
   // console.log('component all users', allUsers)
+
+  const currentLevel = getLevelFromTotalXp(user?.xp || 0)
+  const progressPercentage = getProgressTowardsNextLevel(
+    user?.xp || 0,
+    currentLevel,
+  )
+  const xpNeededForNextLevel = getXpNeededForNextLevel(currentLevel)
+
+  const xpAtCurrentLevel = getXpForLeveling(currentLevel)
+  const xpGainedInCurrentLevel = (user?.xp || 0) - xpAtCurrentLevel
+  const actualXpRemaining = Math.max(
+    0,
+    xpNeededForNextLevel - xpGainedInCurrentLevel,
+  )
 
   return (
     <>
@@ -41,15 +61,18 @@ function Profile() {
             <p>Rank: </p>
             <p className="text-center capitalize text-white">{user?.rank}</p>
             <p>Level: </p>
-            <p className="text-center text-white">{user?.level}</p>
+            <p className="text-center text-white">{currentLevel}</p>
             <p>XP:</p>{' '}
             <div className="relative max-h-4">
-              <p className="absolute z-20 m-0 ml-10 text-white">{user?.xp}</p>
+              <p className="absolute z-20 m-0 ml-10 text-white">
+                {/* figure out CSS */}
+                {user?.xp || 0} XP ({actualXpRemaining}) to next level
+              </p>
               <div
                 className={`relative z-0 h-4 w-full translate-y-1 bg-gray-700`}
               >
                 <div
-                  style={{ width: `${user?.xp}%` }}
+                  style={{ width: `${progressPercentage}%` }}
                   // work out based on next level xp
                   className={`z-10 h-4 bg-green-700`}
                 ></div>
