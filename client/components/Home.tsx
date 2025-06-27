@@ -60,6 +60,18 @@ function Home() {
             }
           </h1>
 
+          {dbUser && (
+            <div className="mx-auto my-4 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl">
+              <p className="text-xl text-green-200">
+                Level:{' '}
+                <strong className="text-green-500">{dbUser.level}</strong>
+              </p>
+              <p className="text-xl text-green-200">
+                XP: <strong className="text-green-500">{dbUser.xp}</strong>
+              </p>
+            </div>
+          )}
+
           <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl">
             <h2 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
               Daily Challenges
