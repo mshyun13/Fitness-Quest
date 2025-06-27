@@ -37,6 +37,7 @@ function Home() {
     null,
   )
 
+  // Notification for completing challenge and leveling up
   const [appNotification, setAppNotificationState] =
     useState<AppNotification | null>(null)
 
@@ -58,11 +59,13 @@ function Home() {
     }
   }, [appNotification])
 
+  // Selecting a challenge
   const handleCardClick = (challenge: Challenge) => {
     setSelectedChallenge(challenge)
     setShowModal(true)
   }
 
+  // Close modal
   const handleCloseModal = () => {
     setShowModal(false)
     setSelectedChallenge(null)
@@ -82,7 +85,7 @@ function Home() {
       ? 'bg-green-600'
       : appNotification?.type === 'error'
         ? 'bg-red-600'
-        : 'bg-blue-600'
+        : 'bg-blue-600' // info notification color
 
   return (
     <section className="flex flex-col items-center justify-start bg-gray-900 pt-8 font-mono text-green-300">
