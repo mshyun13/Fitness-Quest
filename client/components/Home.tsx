@@ -1,9 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useChallenges } from '../hooks/useChallenges'
-import ChallengeModal from './ChallengesModal'
+import ChallengesModal from './ChallengesModal'
 import { Challenge } from '../../models/challenge'
 import { useUser } from '../hooks/useUsers'
 // import { useAuth0 } from '@auth0/auth0-react'
+
+type NotificationType = 'success' | 'error' | 'info'
+
+interface AppNotification {
+  message: string
+  type: NotificationType
+}
 
 function Home() {
   //  const {
@@ -17,7 +24,7 @@ function Home() {
   const { data: challenges, isLoading, isError } = useChallenges()
 
   // ---------- //
-  const currentUserId = 1
+  const currentUserId = 2
   const {
     data: dbUser,
     isLoading: dbUserLoading,
@@ -30,11 +37,35 @@ function Home() {
     null,
   )
 
+  // Notification for completing challenge and leveling up
+  const [appNotification, setAppNotificationState] =
+    useState<AppNotification | null>(null)
+
+  // Function to set and auto-clear notifications
+  const setAppNotification = (
+    message: string,
+    type: NotificationType = 'info',
+  ) => {
+    setAppNotificationState({ message, type })
+  }
+
+  // Clear notifications
+  useEffect(() => {
+    if (appNotification) {
+      const timer = setTimeout(() => {
+        setAppNotificationState(null)
+      }, 2500)
+      return () => clearTimeout(timer)
+    }
+  }, [appNotification])
+
+  // Selecting a challenge
   const handleCardClick = (challenge: Challenge) => {
     setSelectedChallenge(challenge)
     setShowModal(true)
   }
 
+  // Close modal
   const handleCloseModal = () => {
     setShowModal(false)
     setSelectedChallenge(null)
@@ -48,10 +79,28 @@ function Home() {
     return <p>Error Loading Challenges</p>
   }
 
+  // Notification CSS
+  const notificationClass =
+    appNotification?.type === 'success'
+      ? 'bg-green-600'
+      : appNotification?.type === 'error'
+        ? 'bg-red-600'
+        : 'bg-blue-600' // info notification color
+
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center bg-gray-900 p-4 font-mono text-green-300">
+    <section className="flex flex-col items-center justify-start bg-gray-900 pt-8 font-mono text-green-300">
       <div className="flex w-full flex-grow items-center justify-center">
         <div className="w-full max-w-4xl text-center">
+          {/* Notification */}
+          {appNotification && (
+            <div
+              className={`mx-auto mb-4 rounded p-3 text-white ${notificationClass}`}
+              style={{ maxWidth: 'fit-content' }}
+            >
+              <p>{appNotification.message}</p>
+            </div>
+          )}
+
           <h1 className="mb-6 text-5xl font-bold text-green-400">
             Welcome,{' '}
             {
@@ -59,6 +108,21 @@ function Home() {
                 'User'
             }
           </h1>
+
+          {dbUser && (
+            <div className="mx-auto my-4 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl">
+              <p className="text-xl text-green-200">
+                Level:{' '}
+                <strong className="text-green-500">{dbUser.level}</strong>
+              </p>
+              <p className="text-xl text-green-200">
+                XP: <strong className="text-green-500">{dbUser.xp}</strong>
+              </p>
+              <p className="text-xl text-green-200">
+                Rank: <strong className="text-green-500">{dbUser.rank}</strong>
+              </p>
+            </div>
+          )}
 
           <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl">
             <h2 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
@@ -78,11 +142,11 @@ function Home() {
                       {challenge.title}
                     </p>
                     <p className="text-lg text-gray-300">
-                      <strong className="text-green-100">Attribute:</strong>{' '}
+                      <strong className="text-green-100"></strong>{' '}
                       {challenge.attribute.toUpperCase()}
                     </p>
                     <p className="text-lg text-gray-300">
-                      <strong className="text-green-100">Difficulty:</strong>{' '}
+                      <strong className="text-green-100"></strong>{' '}
                       {challenge.difficulty.charAt(0).toUpperCase() +
                         challenge.difficulty.slice(1)}
                     </p>
@@ -100,9 +164,11 @@ function Home() {
 
       {/* Modal Conditional Render */}
       {showModal && selectedChallenge && (
-        <ChallengeModal
+        <ChallengesModal
           challenge={selectedChallenge}
           onClose={handleCloseModal}
+          currentUserId={currentUserId}
+          setAppNotification={setAppNotification}
         />
       )}
     </section>
