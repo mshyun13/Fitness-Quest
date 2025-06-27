@@ -38,11 +38,15 @@ export function updateUser(data: UpdateUser): Promise<unknown> {
 
 // get user by auth0 ID
 
-export async function getUserByAuth0(token: string) {
+interface Token {
+  token: string
+}
+
+export async function getUserByAuth0({ token }: Token) {
   return await request
-    .get(`${rootUrl}/users`)
+    .get(`${rootUrl}/authuser`)
     .set('Authorization', `Bearer ${token}`)
-    .then((res) => (res.body.username ? res.body.username : null))
+    .then((res) => (res.body[0].name ? res.body[0].name : null))
 }
 
 // add user with auth0 ID
@@ -65,7 +69,7 @@ interface NewUserData {
 
 export function addUserByAuth0({ newUser, token }: NewUserData) {
   return request
-    .post(`${rootUrl}/users`)
+    .post(`${rootUrl}/authuser`)
     .set('Authorization', `Bearer ${token}`)
     .send(newUser)
     .then((res) => res.body.user)

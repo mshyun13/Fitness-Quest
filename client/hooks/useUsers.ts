@@ -65,9 +65,11 @@ export function useUserByAuth0() {
     queryKey: ['user'],
     queryFn: async () => {
       const token = await getAccessTokenSilently()
-      return getUserByAuth0(token)
+      return getUserByAuth0({ token })
     },
     enabled: !!user,
+    refetchOnWindowFocus: false,
+    retry: false,
   })
 
   return {

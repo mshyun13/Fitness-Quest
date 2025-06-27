@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router'
+import { useUserByAuth0 } from '../hooks/useUsers'
 
 const newUserData = {
   name: '',
@@ -18,6 +19,7 @@ const newUserData = {
 function Register() {
   const [newUser, setNewUser] = useState(newUserData)
   const { getAccessTokenSilently } = useAuth0()
+  const user = useUserByAuth0()
   const navigate = useNavigate()
 
   const { name: newName, class: newClass } = newUser
@@ -30,14 +32,20 @@ function Register() {
     })
   }
 
-  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-    const token = getAccessTokenSilently()
-    evt.preventDefault
-    //getUser matching with Auth0 id
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
+    const token = await getAccessTokenSilently()
+    evt.preventDefault()
+    user.add.mutate({ newUser, token })
     navigate('/')
   }
 
-  console.log(newUser)
+  console.log(user.data)
+
+  useEffect(() => {
+    if (user.data) {
+      navigate('/')
+    }
+  }, [user.data, navigate])
 
   return (
     <>
@@ -52,6 +60,7 @@ function Register() {
           value={newClass}
           onChange={handleChange}
         />
+        <button type="submit">Register</button>
       </form>
     </>
   )
