@@ -65,6 +65,7 @@ function Profile() {
             <p>XP:</p>{' '}
             <div className="relative max-h-4">
               <p className="absolute z-20 m-0 ml-10 text-white">
+                {/* figure out CSS */}
                 {user?.xp || 0} XP ({actualXpRemaining}) to next level
               </p>
               <div

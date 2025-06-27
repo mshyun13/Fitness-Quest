@@ -41,6 +41,7 @@ const ChallengeModal: React.FC<ChallengeModalProps> = ({
       console.log('Challenge completion successful:', data)
       queryClient.invalidateQueries({ queryKey: ['user'] })
       queryClient.invalidateQueries({ queryKey: ['challenges'] })
+      queryClient.invalidateQueries({ queryKey: ['completions'] })
       onClose()
       setAppNotification(
         `Challenge completed! You are now Level ${data.userNewLevel} with ${data.userNewXp} XP.`,
