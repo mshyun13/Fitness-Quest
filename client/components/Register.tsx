@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { ChangeEventHandler, useEffect, useState } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router'
 import { useUserByAuth0 } from '../hooks/useUsers'
@@ -22,14 +22,31 @@ function Register() {
   const user = useUserByAuth0()
   const navigate = useNavigate()
 
+  const [newCharacter, setCharacter] = useState('')
+
   const { name: newName, class: newClass } = newUser
 
-  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    evt:
+      | React.ChangeEvent<HTMLInputElement>
+      | ChangeEventHandler<HTMLSelectElement>,
+  ) => {
     const { id, value } = evt.target
     setNewUser({
       ...newUser,
       [id]: value,
     })
+  }
+
+  const handleCharacterChange = (
+    evt: ChangeEventHandler<HTMLSelectElement>,
+  ) => {
+    const { id, value } = evt.target
+    setNewUser({
+      ...newUser,
+      [id]: value,
+    })
+    setCharacter(value)
   }
 
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
@@ -38,6 +55,9 @@ function Register() {
     user.add.mutate({ newUser, token })
     navigate('/')
   }
+
+  console.log(newCharacter)
+  console.log(newUser)
 
   useEffect(() => {
     if (user.data) {
@@ -53,7 +73,9 @@ function Register() {
         </h2>
         <div className="justify-items-center">
           <form onSubmit={handleSubmit} className="mb-4 flex w-96 flex-col">
-            <label className="mb-2">Name: </label>
+            <label htmlFor="name" className="mb-2">
+              Name:{' '}
+            </label>
             <input
               type="text"
               id="name"
@@ -61,14 +83,50 @@ function Register() {
               onChange={handleChange}
               className="mb-2 text-black"
             />
-            <label className="mb-2">Preferred Class: </label>
-            <input
+
+            <label htmlFor="class" className="mb-2">
+              Class:{' '}
+            </label>
+            {/* <input
               type="text"
               id="class"
               value={newClass}
               onChange={handleChange}
               className="mb-2 text-black"
+            /> */}
+            <select
+              id="class"
+              onChange={handleChange}
+              className="mb-2 text-black"
+            >
+              <option value="" disabled selected>
+                Select your option
+              </option>
+              <option value={'warrior'}>warrior</option>
+              <option value={'rogue'}>rogue</option>
+              <option value={'mage'}>mage</option>
+            </select>
+
+            <label htmlFor="character" className="mb-2">
+              Character:{' '}
+            </label>
+            <select
+              id="character"
+              onChange={handleCharacterChange}
+              className="mb-2 text-black"
+            >
+              <option value="" disabled selected>
+                Select your option
+              </option>
+              <option value={'warrior'}>Warrior</option>
+            </select>
+
+            <img
+              src={`${newCharacter}.webp`}
+              alt="new character"
+              className="mb-2"
             />
+
             <button
               type="submit"
               className="mb-4 cursor-pointer rounded border border-gray-600 bg-gray-700 p-4 shadow
