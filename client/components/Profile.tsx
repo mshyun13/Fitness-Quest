@@ -8,7 +8,7 @@ import {
 
 function Profile() {
   const { data: allUsers } = useUsers()
-  const { data: user } = useUser({ id: 2 })
+  const { data: user } = useUser({ id: 4 })
   const mutateUser = useUsers()
 
   // mutateUser.add.mutate({
