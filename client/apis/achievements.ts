@@ -20,7 +20,6 @@ export function addAchievements(data: AddAchievements): Promise<unknown> {
     .post(rootUrl + '/achievements')
     .send(data)
     .then((res) => {
-      console.log('api', res.body)
       return res.body
     })
 }

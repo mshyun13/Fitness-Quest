@@ -21,6 +21,5 @@ export async function getAchievementsById(id: number) {
 
 export async function addAchievements(data: AddAchievements) {
   const res = await db('achievements_user').insert(data)
-  console.log('db', res)
   return res
 }
