@@ -1,7 +1,6 @@
 import connection from './connection'
 import {
   CompletionOfChallenge,
-  NewCompletion,
   CompletionResult,
 } from '../../models/completionsModel'
 import { calculateXpToCompleteLevel, checkLevelUp } from '../utils/xpLogic'
@@ -31,12 +30,14 @@ export async function getCompletionsByUserId(
 
 // Adds new completed challenge to DB
 export async function addCompletion(
-  newCompletion: NewCompletion,
+  userId: number,
+  challengeId: number,
+  status: 'completed' | 'missed',
 ): Promise<number[]> {
   return connection('completions').insert({
-    user_id: newCompletion.userId,
-    challenge_id: newCompletion.challengeId,
-    status: newCompletion.status,
+    user_id: userId,
+    challenge_id: challengeId,
+    status: status,
     completed_at: new Date(),
   })
 }

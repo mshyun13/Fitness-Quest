@@ -3,6 +3,7 @@ import { Challenge } from '../../models/challenge'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { addCompletionApi } from '../apis/completions'
 import { CompletionResult } from '../../models/completionsModel'
+import { useAuth0 } from '@auth0/auth0-react'
 
 type SetAppNotification = (
   message: string,
@@ -12,31 +13,29 @@ type SetAppNotification = (
 interface ChallengeModalProps {
   challenge: Challenge
   onClose: () => void
-  currentUserId: number
   setAppNotification: SetAppNotification
 }
 
 const ChallengeModal: React.FC<ChallengeModalProps> = ({
   challenge,
   onClose,
-  currentUserId,
   setAppNotification,
 }) => {
   if (!challenge) {
     return null
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const queryClient = useQueryClient()
+  const { getAccessTokenSilently } = useAuth0()
 
   // Mutation to add a completed challenge
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const completeChallengeMutation = useMutation<
     CompletionResult,
     Error,
-    { userId: number; challengeId: number; status: 'completed' | 'missed' }
+    { challengeId: number; status: 'completed' | 'missed' }
   >({
-    mutationFn: addCompletionApi,
+    mutationFn: (newCompletion) =>
+      addCompletionApi(newCompletion, getAccessTokenSilently),
     onSuccess: (data) => {
       console.log('Challenge completion successful:', data)
       queryClient.invalidateQueries({ queryKey: ['user'] })
@@ -45,20 +44,23 @@ const ChallengeModal: React.FC<ChallengeModalProps> = ({
       onClose()
       setAppNotification(
         `Challenge completed! You are now Level ${data.userNewLevel} with ${data.userNewXp} XP.`,
+        'success',
       )
       if (data.levelUpHappened) {
-        setAppNotification('Congratulations! You leveled up!')
+        setAppNotification('Congratulations! You leveled up!', 'info')
       }
     },
     onError: (error) => {
       console.error('Failed to complete challenge:', error)
-      setAppNotification(`Error completing challenge: ${error.message}`)
+      setAppNotification(
+        `Error completing challenge: ${error.message}`,
+        'error',
+      )
     },
   })
 
   const handleCompleteChallenge = () => {
     completeChallengeMutation.mutate({
-      userId: currentUserId,
       challengeId: challenge.id,
       status: 'completed',
     })
