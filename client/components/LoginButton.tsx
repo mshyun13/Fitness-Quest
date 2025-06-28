@@ -5,13 +5,17 @@ export default function LoginButton() {
   const { logout, loginWithRedirect } = useAuth0()
 
   const handleSignOut = () => {
-    logout()
+    logout({
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
+    })
   }
 
   const handleSignIn = () => {
     loginWithRedirect({
       authorizationParams: {
-        redirect_uri: `${window.location.origin}/register`,
+        redirect_uri: `${window.location.origin}/auth-landing`,
       },
     })
   }

@@ -5,30 +5,16 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import {
-  addUser,
   addUserByAuth0,
   getAllUsers,
   getUserByAuth0,
-  getUserById,
-  updateUser,
+  updateUserByAuth0,
 } from '../apis/users.ts'
 import { useAuth0 } from '@auth0/auth0-react'
+import { User } from '../../models/users.ts'
 
 export function useUsers() {
   const query = useQuery({ queryKey: ['users'], queryFn: getAllUsers })
-  return {
-    ...query,
-    add: useAddUser(),
-    update: useUpdateUser(),
-  }
-}
-
-interface ID {
-  id: number
-}
-
-export function useUser({ id }: ID) {
-  const query = useQuery({ queryKey: ['user'], queryFn: () => getUserById(id) })
   return {
     ...query,
   }
@@ -46,14 +32,6 @@ export function useUsersMutation<TData = unknown, TVariables = unknown>(
   })
 
   return mutation
-}
-
-function useAddUser() {
-  return useUsersMutation(addUser)
-}
-
-function useUpdateUser() {
-  return useUsersMutation(updateUser)
 }
 
 // get User by auth0 ID
@@ -75,6 +53,7 @@ export function useUserByAuth0() {
   return {
     ...query,
     add: useAddUserByAuth0(),
+    update: useUpdateUserByAuth0(),
   }
 }
 
@@ -96,4 +75,17 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
 
 export function useAddUserByAuth0() {
   return useUserMutation(addUserByAuth0)
+}
+
+export function useUpdateUserByAuth0() {
+  const { getAccessTokenSilently } = useAuth0()
+
+  const mutationFn: MutationFunction<
+    number,
+    Partial<Omit<User, 'id' | 'auth_id'>>
+  > = async (updates) => {
+    const token = await getAccessTokenSilently()
+    return updateUserByAuth0(updates, token)
+  }
+  return useUserMutation(mutationFn)
 }
