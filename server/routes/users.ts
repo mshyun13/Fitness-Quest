@@ -1,6 +1,6 @@
 import { Router } from 'express'
-//import checkJwt, { JwtRequest } from '../auth0.ts'
-// import { StatusCodes } from 'http-status-codes'
+import checkJwt, { JwtRequest } from '../auth0.ts'
+import { StatusCodes } from 'http-status-codes'
 import * as db from '../db/users.ts'
 
 const router = Router()
@@ -15,54 +15,68 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const id = Number(req.params.id)
-    const user = await db.getUserById(id)
-    res.json({ user: user })
-  } catch (err) {
-    next(err)
+router.get('/currentuser', checkJwt, async (req: JwtRequest, res) => {
+  const authId = req.auth?.sub
+
+  if (!authId) {
+    res.sendStatus(401)
+    return
   }
-})
-
-router.post('/', async (req, res, next) => {
-  // if (!req.auth?.sub) {
-  //   res.sendStatus(StatusCodes.UNAUTHORIZED)
-  //   return
-  // }
-
   try {
-    const id = await db.addUser(req.body)
-    // const { auth_id, name, class } = req.body
-    // const id = await db.addUser({ auth_id, name, class })
-    res.sendStatus(201).json({ id: id })
-    // res
-    //   .setHeader('Location', `${req.baseUrl}/${id}`)
-    //   .sendStatus(StatusCodes.CREATED)
-  } catch (err) {
-    next(err)
-  }
-})
+    const user = await db.getUserByAuthId(authId)
 
-router.patch('/:id', async (req, res, next) => {
-  // if (!req.auth?.sub) {
-  //   res.sendStatus(StatusCodes.UNAUTHORIZED)
-  //   return
-  // }
-
-  try {
-    const id = await db.updateUser(req.body)
-    if (!id) {
-      console.log('DB Error: no ID')
+    if (user) {
+      res.json({ user: user })
+    } else {
       res.sendStatus(404)
-      return
     }
-    res.sendStatus(200)
-    // res
-    //   .setHeader('Location', `${req.baseUrl}/${id}`)
-    //   .sendStatus(StatusCodes.CREATED)
   } catch (err) {
-    next(err)
+    console.error('Error getting user', err)
+    res.status(500)
+  }
+})
+
+router.post('/', checkJwt, async (req: JwtRequest, res) => {
+  const auth_id = req.auth?.sub
+  if (!auth_id) {
+    res.sendStatus(StatusCodes.UNAUTHORIZED)
+    return
+  }
+
+  try {
+    const { name, class: userClass } = req.body
+    const newUserId = await db.addUser({ auth_id, name, class: userClass })
+
+    res.status(201).json({ id: newUserId })
+  } catch (err) {
+    console.error('Error adding new user', err)
+
+    if (err instanceof Error && err.message.includes('SQLITE_CONSTRAINT')) {
+      res.status(409).json({ message: 'Already a user bro!' })
+    } else {
+      res.status(500)
+    }
+  }
+})
+
+router.patch('/currentuser', checkJwt, async (req: JwtRequest, res) => {
+  const authId = req.auth?.sub
+  if (!authId) {
+    res.sendStatus(StatusCodes.UNAUTHORIZED)
+    return
+  }
+
+  try {
+    const updatedRows = await db.updateUserByAuthId(authId, req.body)
+
+    if (updatedRows) {
+      res.sendStatus(200)
+    } else {
+      res.sendStatus(404)
+    }
+  } catch (err) {
+    console.error('Error updating user', err)
+    res.status(500)
   }
 })
 
