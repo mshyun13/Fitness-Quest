@@ -37,7 +37,7 @@ export async function addCompletion(
     user_id: newCompletion.userId,
     challenge_id: newCompletion.challengeId,
     status: newCompletion.status,
-    completed_at: connection.fn.now(),
+    completed_at: new Date(),
   })
 }
 
@@ -46,8 +46,7 @@ export async function getChallengesDoneToday(
   userId: number,
 ): Promise<number[]> {
   const today = new Date()
-  // today.setHours(0, 0, 0, 0)
-  console.log(today.toString())
+  today.setHours(0, 0, 0, 0)
 
   return connection('completions')
     .where('user_id', userId)
@@ -139,7 +138,7 @@ export async function processChallengeCompletion(
       user_id: userId,
       challenge_id: challengeId,
       status: status,
-      completed_at: connection.fn.now(),
+      completed_at: new Date(),
     })
 
     // returns newly calculated results

@@ -96,11 +96,21 @@ export async function seed(knex) {
       description: 'leveled up for the first time',
       reward: 20,
     },
+    {
+      id: 2,
+      title: 'test',
+      description: 'test achievement',
+      reward: 0,
+    },
   ])
 
   await knex('achievements_user').insert([
     {
       id: 1,
+      user_id: 1,
+    },
+    {
+      id: 2,
       user_id: 1,
     },
   ])
