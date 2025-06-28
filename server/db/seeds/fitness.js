@@ -24,7 +24,7 @@ export async function seed(knex) {
     },
     {
       id: 2,
-      auth_id: 'github|204113180',
+      auth_id: 'google-oauth2|102141106120855017585',
       name: 'Ben',
       xp: 0,
       level: 1,
@@ -96,11 +96,21 @@ export async function seed(knex) {
       description: 'leveled up for the first time',
       reward: 20,
     },
+    {
+      id: 2,
+      title: 'test',
+      description: 'test achievement',
+      reward: 0,
+    },
   ])
 
   await knex('achievements_user').insert([
     {
       id: 1,
+      user_id: 1,
+    },
+    {
+      id: 2,
       user_id: 1,
     },
   ])

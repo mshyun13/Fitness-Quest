@@ -1,4 +1,8 @@
+import { useAuth0 } from '@auth0/auth0-react'
+import { useUserByAuth0 } from '../hooks/useUsers.ts'
+import { useAchievements, useAchievementsById } from '../hooks/achievements.ts'
 import { useUsers, useUser } from '../hooks/useUsers.ts'
+
 import {
   getLevelFromTotalXp,
   getXpNeededForNextLevel,
@@ -7,10 +11,30 @@ import {
 } from '../../server/utils/xpLogic.ts'
 
 function Profile() {
-  const { data: allUsers } = useUsers()
-  const { data: user } = useUser({ id: 2 })
-  const mutateUser = useUsers()
 
+  const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
+
+  const {
+    data: user,
+    isLoading: dbUserLoading,
+    isError: dbUserError,
+  } = useUserByAuth0()
+
+  if (auth0Loading || dbUserLoading) {
+    return <p>Loading Profile...</p>
+  }
+
+  if (dbUserError) {
+    return <p>Error Loading Profile</p>
+  }
+
+  if (!isAuthenticated) {
+    return <p>Please log in to view your Profile</p>
+  }
+
+  if (!user) {
+    return <p>Profile not found</p>
+  }
   // mutateUser.add.mutate({
   //   auth_id: 'abcd',
   //   name: 'test',
@@ -18,7 +42,7 @@ function Profile() {
   // })
 
   // function updateUser() {
-  //   mutateUser.update.mutate({ id: 5, xp: 100, int: 3, dex: 20 })
+  //   mutateUser.update.mutate({ id: 1, xp: 10, str: 70, dex: 50, int: 12 })
   // }
 
   // <button onClick={updateUser}>updateUser</button>
@@ -64,54 +88,61 @@ function Profile() {
             <p className="text-center text-white">{currentLevel}</p>
             <p>XP:</p>{' '}
             <div className="relative max-h-4">
-              <p className="absolute z-20 m-0 ml-10 text-white">
-                {/* figure out CSS */}
-                {user?.xp || 0} XP ({actualXpRemaining}) to next level
-              </p>
               <div
                 className={`relative z-0 h-4 w-full translate-y-1 bg-gray-700`}
               >
                 <div
-                  style={{ width: `${progressPercentage}%` }}
-                  // work out based on next level xp
-                  className={`z-10 h-4 bg-green-700`}
+                  style={{
+                    width: `${(user?.xp / Math.floor(user?.xp + actualXpRemaining)) * 100}%`,
+                  }}
+                  className={`z-10 h-4 overflow-hidden bg-green-700`}
                 ></div>
+                <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
+                  {user?.xp + '/' + Math.floor(user?.xp + actualXpRemaining) ||
+                    0}
+                </p>
               </div>
             </div>
             <p>Str:</p>{' '}
             <div className="relative max-h-4">
-              <p className="absolute z-20 m-0 ml-10 text-white">{user?.str}</p>
               <div
                 className={`relative z-0 h-4 w-full translate-y-1 bg-gray-700`}
               >
                 <div
-                  style={{ width: `${user?.str}%` }}
+                  style={{ width: `${user?.str > 100 ? 100 : user?.str}%` }}
                   className={`z-10  h-4 bg-green-700`}
                 ></div>
+                <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
+                  {'LVL ' + user?.str}
+                </p>
               </div>
             </div>
             <p>Dex:</p>{' '}
             <div className="relative max-h-4">
-              <p className="absolute z-20 m-0 ml-10 text-white">{user?.dex}</p>
               <div
                 className={`relative z-0 h-4 w-full translate-y-1 bg-gray-700`}
               >
                 <div
-                  style={{ width: `${user?.dex}%` }}
-                  className={`z-10 h-4 bg-green-700`}
+                  style={{ width: `${user?.dex > 100 ? 100 : user?.dex}%` }}
+                  className={`z-10 h-4 overflow-hidden bg-green-700`}
                 ></div>
+                <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
+                  {'LVL ' + user?.dex}
+                </p>
               </div>
             </div>
             <p>Int:</p>{' '}
             <div className="relative max-h-4">
-              <p className="absolute z-20 m-0 ml-10 text-white">{user?.int}</p>
               <div
                 className={`relative z-0 h-4 w-full translate-y-1 bg-gray-700`}
               >
                 <div
-                  style={{ width: `${user?.int}%` }}
-                  className={`z-10 h-4 bg-green-700`}
+                  style={{ width: `${user?.int > 100 ? 100 : user?.int}%` }}
+                  className={`z-10 h-4 overflow-hidden bg-green-700`}
                 ></div>
+                <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
+                  {'LVL ' + user?.int}
+                </p>
               </div>
             </div>
           </div>
@@ -123,37 +154,20 @@ function Profile() {
           {' '}
           Achievements
         </h3>
-        {/* <div className="mt-10 flex flex-wrap items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300"> */}
-        <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
-          <p className="text-sm">
-            <img
-              src="/achievement.webp"
-              alt="character"
-              className="h-auto w-20"
-            />
-            First time for everything
-          </p>
-          <img
-            src="/achievement.webp"
-            alt="character"
-            className="h-auto w-20"
-          />
-          <img
-            src="/achievement.webp"
-            alt="character"
-            className="h-auto w-20"
-          />
-          <img
-            src="/achievement.webp"
-            alt="character"
-            className="h-auto w-20"
-          />
-          <img
-            src="/achievement.webp"
-            alt="character"
-            className="h-auto w-20"
-          />
-        </div>
+        {allAchievements ? (
+          <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
+            <p className="text-xs">
+              <img
+                src={`/achievements/achievement${allAchievements[0]?.id}.webp`}
+                alt="achievement"
+                className="h-auto w-20"
+              />
+              {allAchievements[0]?.title}
+            </p>
+          </div>
+        ) : (
+          <p>No achievements</p>
+        )}
       </div>
     </>
   )
