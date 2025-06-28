@@ -3,6 +3,7 @@ import { useUserByAuth0 } from '../hooks/useUsers.ts'
 import { useAchievementsById } from '../hooks/achievements.ts'
 import { getXpNeededForNextLevel } from '../../server/utils/xpLogic.ts'
 import { AchievementsData } from '../../models/achievements.ts'
+import { useEffect } from 'react'
 
 function Profile() {
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
@@ -13,7 +14,16 @@ function Profile() {
     isError: dbUserError,
   } = useUserByAuth0()
 
-  const { data: userAchievements } = useAchievementsById(user?.id || 0)
+  const { data: userAchievements, refetch } = useAchievementsById(user?.id || 0)
+
+  useEffect(() => {
+    refetch()
+    return () => {
+      userAchievements
+    }
+  }, [refetch, user, userAchievements])
+
+  // const { data: userAchievements } = useAchievementsById(user?.id || 0)
 
   if (auth0Loading || dbUserLoading) {
     return <p>Loading Profile...</p>
