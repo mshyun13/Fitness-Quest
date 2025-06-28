@@ -23,8 +23,6 @@ function Profile() {
     }
   }, [refetch, user, userAchievements])
 
-  // const { data: userAchievements } = useAchievementsById(user?.id || 0)
-
   if (auth0Loading || dbUserLoading) {
     return <p>Loading Profile...</p>
   }
