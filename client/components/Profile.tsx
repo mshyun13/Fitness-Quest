@@ -1,17 +1,25 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers.ts'
-import { useAchievements, useAchievementsById } from '../hooks/achievements.ts'
-import { useUsers, useUser } from '../hooks/useUsers.ts'
+import { useAchievementsById } from '../hooks/achievements.ts'
+// import { useUsers, useUser } from '../hooks/useUsers.ts'
+import { getXpNeededForNextLevel } from '../../server/utils/xpLogic.ts'
 
-import {
-  getLevelFromTotalXp,
-  getXpNeededForNextLevel,
-  getProgressTowardsNextLevel,
-  getXpForLeveling,
-} from '../../server/utils/xpLogic.ts'
+// const { data: allUsers } = useUsers()
+// const { data: user } = useUser({ id: 2 })
+// const mutateUser = useUsers()
+// const { data: allAchievements } = useAchievements()
+// const { data: userAchievements } = useAchievementsById(2)
+
+// const mutateAch = useAchievementsById(2)
+
+// function addAch() {
+//   mutateAch.add.mutate({
+//     id: 2,
+//     user_id: 2,
+//   })
+// }
 
 function Profile() {
-
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
 
   const {
@@ -19,6 +27,8 @@ function Profile() {
     isLoading: dbUserLoading,
     isError: dbUserError,
   } = useUserByAuth0()
+
+  const { data: userAchievements } = useAchievementsById(user?.id || 0)
 
   if (auth0Loading || dbUserLoading) {
     return <p>Loading Profile...</p>
@@ -35,6 +45,7 @@ function Profile() {
   if (!user) {
     return <p>Profile not found</p>
   }
+
   // mutateUser.add.mutate({
   //   auth_id: 'abcd',
   //   name: 'test',
@@ -42,7 +53,7 @@ function Profile() {
   // })
 
   // function updateUser() {
-  //   mutateUser.update.mutate({ id: 1, xp: 10, str: 70, dex: 50, int: 12 })
+  //   mutateUser.update.mutate({ id: 2, xp: 0, level: 1, str: 0, dex: 0, int: 0 })
   // }
 
   // <button onClick={updateUser}>updateUser</button>
@@ -50,22 +61,23 @@ function Profile() {
   // console.log('component', user)
   // console.log('component all users', allUsers)
 
-  const currentLevel = getLevelFromTotalXp(user?.xp || 0)
-  const progressPercentage = getProgressTowardsNextLevel(
-    user?.xp || 0,
-    currentLevel,
-  )
-  const xpNeededForNextLevel = getXpNeededForNextLevel(currentLevel)
+  //const currentLevel = getLevelFromTotalXp(user?.xp || 0)
+  // const progressPercentage = getProgressTowardsNextLevel(
+  //   user?.xp || 0,
+  //   currentLevel,
+  // )
+  const xpNeededForNextLevel = getXpNeededForNextLevel(user?.level)
 
-  const xpAtCurrentLevel = getXpForLeveling(currentLevel)
-  const xpGainedInCurrentLevel = (user?.xp || 0) - xpAtCurrentLevel
-  const actualXpRemaining = Math.max(
-    0,
-    xpNeededForNextLevel - xpGainedInCurrentLevel,
-  )
+  // const xpAtCurrentLevel = getXpForLeveling(currentLevel)
+  // const xpGainedInCurrentLevel = (user?.xp || 0) - xpAtCurrentLevel
+  // const actualXpRemaining = Math.max(
+  //   0,
+  //   xpNeededForNextLevel - xpGainedInCurrentLevel,
+  // )
 
   return (
     <>
+      {/* <button onClick={updateUser}>updateUser</button> */}
       <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
         <h3 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
           {' '}
@@ -85,7 +97,7 @@ function Profile() {
             <p>Rank: </p>
             <p className="text-center capitalize text-white">{user?.rank}</p>
             <p>Level: </p>
-            <p className="text-center text-white">{currentLevel}</p>
+            <p className="text-center text-white">{user?.level}</p>
             <p>XP:</p>{' '}
             <div className="relative max-h-4">
               <div
@@ -93,13 +105,12 @@ function Profile() {
               >
                 <div
                   style={{
-                    width: `${(user?.xp / Math.floor(user?.xp + actualXpRemaining)) * 100}%`,
+                    width: `${(user?.xp / xpNeededForNextLevel) * 100}%`,
                   }}
                   className={`z-10 h-4 overflow-hidden bg-green-700`}
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
-                  {user?.xp + '/' + Math.floor(user?.xp + actualXpRemaining) ||
-                    0}
+                  {user?.xp + '/' + xpNeededForNextLevel || 0}
                 </p>
               </div>
             </div>
@@ -154,15 +165,15 @@ function Profile() {
           {' '}
           Achievements
         </h3>
-        {allAchievements ? (
+        {userAchievements ? (
           <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
             <p className="text-xs">
               <img
-                src={`/achievements/achievement${allAchievements[0]?.id}.webp`}
+                src={`/achievements/achievement${userAchievements[0]?.id}.webp`}
                 alt="achievement"
                 className="h-auto w-20"
               />
-              {allAchievements[0]?.title}
+              {userAchievements[0]?.title}
             </p>
           </div>
         ) : (
