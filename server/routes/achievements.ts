@@ -8,7 +8,6 @@ const router = Router()
 router.get('/', async (req, res) => {
   try {
     const data = await db.getAllAchievements()
-    console.log('routes', data)
     res.json(data)
   } catch (error) {
     console.log(error)
@@ -16,14 +15,25 @@ router.get('/', async (req, res) => {
   }
 })
 
-// router.get('/:id', async (req, res, next) => {
-//   try {
-//     const id = Number(req.params.id)
-//     const user = await db.getUserById(id)
-//     res.json({ user: user })
-//   } catch (err) {
-//     next(err)
-//   }
-// })
+router.get('/:id', async (req, res, next) => {
+  try {
+    const id = Number(req.params.id)
+    const data = await db.getAchievementsById(id)
+    res.json(data)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.post('/', async (req, res) => {
+  try {
+    const data = await db.addAchievements(req.body)
+    console.log('db', data)
+    res.json(data)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Something went wrong' })
+  }
+})
 
 export default router

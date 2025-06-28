@@ -1,4 +1,4 @@
-import { useAchievements } from '../hooks/achievements.ts'
+import { useAchievements, useAchievementsById } from '../hooks/achievements.ts'
 import { useUsers, useUser } from '../hooks/useUsers.ts'
 import {
   getLevelFromTotalXp,
@@ -12,6 +12,17 @@ function Profile() {
   const { data: user } = useUser({ id: 1 })
   const mutateUser = useUsers()
   const { data: allAchievements } = useAchievements()
+  const { data: userAchievements } = useAchievementsById(2)
+
+  const mutateAch = useAchievementsById(2)
+
+  function addAch() {
+    mutateAch.add.mutate({
+      id: 2,
+      user_id: 2,
+    })
+  }
+  console.log(userAchievements)
 
   // console.log('comp', allAchievements)
 
@@ -44,11 +55,9 @@ function Profile() {
     xpNeededForNextLevel - xpGainedInCurrentLevel,
   )
 
-  console.log(user?.xp)
-  console.log(actualXpRemaining)
-
   return (
     <>
+      <button onClick={addAch}>addAch</button>
       <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
         <h3 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
           {' '}
