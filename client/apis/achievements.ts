@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { AddAchievements } from '../../models/achievements'
+import { AchievementsData, AddAchievements } from '../../models/achievements'
 
 const rootUrl = '/api/v1'
 
@@ -15,7 +15,9 @@ export function getAchievementsById(id: number): Promise<unknown> {
   })
 }
 
-export function addAchievements(data: AddAchievements): Promise<unknown> {
+export function addAchievements(
+  data: AddAchievements,
+): Promise<AchievementsData[]> {
   return request
     .post(rootUrl + '/achievements')
     .send(data)
