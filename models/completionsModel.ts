@@ -30,9 +30,9 @@ export interface NewCompletion {
 
 // New results for level and XP
 export interface CompletionResult {
-  completionId: number
+  completionId?: number
   userNewXp: number
   userNewLevel: number
   levelUpHappened: boolean
-  message: string
+  message?: string
 }

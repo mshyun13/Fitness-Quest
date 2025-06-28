@@ -24,7 +24,7 @@ function Home() {
   const { data: challenges, isLoading, isError } = useChallenges()
 
   // ---------- //
-  const currentUserId = 4
+  const currentUserId = 2
   const {
     data: dbUser,
     isLoading: dbUserLoading,
