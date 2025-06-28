@@ -35,3 +35,42 @@ export function updateUser(data: UpdateUser): Promise<unknown> {
       return res.body
     })
 }
+
+// get user by auth0 ID
+
+interface Token {
+  token: string
+}
+
+export async function getUserByAuth0({ token }: Token) {
+  return await request
+    .get(`${rootUrl}/authuser`)
+    .set('Authorization', `Bearer ${token}`)
+    .then((res) => (res.body[0].name ? res.body[0].name : null))
+}
+
+// add user with auth0 ID
+
+interface NewUserData {
+  newUser: {
+    name: string
+    xp: number
+    level: number
+    rank: string
+    str: number
+    dex: number
+    int: number
+    missed: number
+    class: string
+    appearance: number
+  }
+  token: string
+}
+
+export function addUserByAuth0({ newUser, token }: NewUserData) {
+  return request
+    .post(`${rootUrl}/authuser`)
+    .set('Authorization', `Bearer ${token}`)
+    .send(newUser)
+    .then((res) => res.body.user)
+}
