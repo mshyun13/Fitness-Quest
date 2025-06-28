@@ -39,7 +39,8 @@ function ActivityLog() {
               <div className="w-full space-y-1 text-left text-base">
                 {' '}
                 <p className="text-sm text-gray-400">
-                  Completed on: {new Date(completion.completed_at).toString()}
+                  Completed on:{' '}
+                  {new Date(completion.completed_at).toLocaleDateString()}
                 </p>
                 <p>
                   <strong className="text-green-200">Description:</strong>{' '}
