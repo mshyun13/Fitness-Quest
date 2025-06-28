@@ -19,7 +19,8 @@ export function calculateXpToCompleteLevel(level: number): number {
     return 0
   }
   // Starting XP * (Growth Factor)^(Level - 1)
-  return Math.floor(XP_FOR_LEVELING * Math.pow(GROWTH_FACTOR, level - 1))
+  // return Math.floor(XP_FOR_LEVELING * Math.pow(GROWTH_FACTOR, level - 1))
+  return Math.floor(XP_FOR_LEVELING * GROWTH_FACTOR * level)
 }
 
 // Determines the level of a user based on their total XP
@@ -42,7 +43,7 @@ export function getLevelFromTotalXp(totalXp: number): number {
 }
 
 export function checkLevelUp(currentLevel: number, xp: number) {
-  if (xp >= calculateXpToCompleteLevel(currentLevel)) {
+  if (xp > calculateXpToCompleteLevel(currentLevel)) {
     return currentLevel + 1
   }
 }

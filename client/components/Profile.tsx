@@ -1,24 +1,50 @@
-import { useAchievements, useAchievementsById } from '../hooks/achievements.ts'
-import { useUsers, useUser } from '../hooks/useUsers.ts'
+import { useAuth0 } from '@auth0/auth0-react'
+import { useUserByAuth0 } from '../hooks/useUsers.ts'
+import { useAchievementsById } from '../hooks/achievements.ts'
+// import { useUsers, useUser } from '../hooks/useUsers.ts'
 import { getXpNeededForNextLevel } from '../../server/utils/xpLogic.ts'
 
+// const { data: allUsers } = useUsers()
+// const { data: user } = useUser({ id: 2 })
+// const mutateUser = useUsers()
+// const { data: allAchievements } = useAchievements()
+// const { data: userAchievements } = useAchievementsById(2)
+
+// const mutateAch = useAchievementsById(2)
+
+// function addAch() {
+//   mutateAch.add.mutate({
+//     id: 2,
+//     user_id: 2,
+//   })
+// }
+
 function Profile() {
-  const { data: allUsers } = useUsers()
-  const { data: user } = useUser({ id: 2 })
-  const mutateUser = useUsers()
-  const { data: allAchievements } = useAchievements()
-  const { data: userAchievements } = useAchievementsById(2)
+  const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
 
-  // const mutateAch = useAchievementsById(2)
+  const {
+    data: user,
+    isLoading: dbUserLoading,
+    isError: dbUserError,
+  } = useUserByAuth0()
 
-  // function addAch() {
-  //   mutateAch.add.mutate({
-  //     id: 2,
-  //     user_id: 2,
-  //   })
-  // }
+  const { data: userAchievements } = useAchievementsById(user?.id || 0)
 
-  // console.log('comp', allAchievements)
+  if (auth0Loading || dbUserLoading) {
+    return <p>Loading Profile...</p>
+  }
+
+  if (dbUserError) {
+    return <p>Error Loading Profile</p>
+  }
+
+  if (!isAuthenticated) {
+    return <p>Please log in to view your Profile</p>
+  }
+
+  if (!user) {
+    return <p>Profile not found</p>
+  }
 
   // mutateUser.add.mutate({
   //   auth_id: 'abcd',
@@ -139,15 +165,15 @@ function Profile() {
           {' '}
           Achievements
         </h3>
-        {allAchievements ? (
+        {userAchievements ? (
           <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
             <p className="text-xs">
               <img
-                src={`/achievements/achievement${allAchievements[0]?.id}.webp`}
+                src={`/achievements/achievement${userAchievements[0]?.id}.webp`}
                 alt="achievement"
                 className="h-auto w-20"
               />
-              {allAchievements[0]?.title}
+              {userAchievements[0]?.title}
             </p>
           </div>
         ) : (

@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { useChallenges } from '../hooks/useChallenges'
 import ChallengesModal from './ChallengesModal'
 import { Challenge } from '../../models/challenge'
-import { useUser } from '../hooks/useUsers'
-// import { useAuth0 } from '@auth0/auth0-react'
+import { useAuth0 } from '@auth0/auth0-react'
+import { useUserByAuth0 } from '../hooks/useUsers'
 
 type NotificationType = 'success' | 'error' | 'info'
 
@@ -13,24 +13,19 @@ interface AppNotification {
 }
 
 function Home() {
-  //  const {
-  //     user: auth0User,
-  //     isAuthenticated,
-  //     isLoading: auth0Loading,
-  //     loginWithRedirect,
-  //     logout,
-  //   } = useAuth0()
+  const {
+    user: auth0User,
+    isAuthenticated,
+    isLoading: auth0Loading,
+  } = useAuth0()
 
   const { data: challenges, isLoading, isError } = useChallenges()
 
-  // ---------- //
-  const currentUserId = 2
   const {
     data: dbUser,
     isLoading: dbUserLoading,
     isError: dbUserError,
-  } = useUser({ id: currentUserId })
-  // ---------- //
+  } = useUserByAuth0()
 
   const [showModal, setShowModal] = useState(false)
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
@@ -71,12 +66,16 @@ function Home() {
     setSelectedChallenge(null)
   }
 
-  if (isLoading || dbUserLoading /*|| auth0Loading*/) {
+  if (isLoading || dbUserLoading || auth0Loading) {
     return <p>Loading Challenges...</p>
   }
 
   if (isError || dbUserError) {
     return <p>Error Loading Challenges</p>
+  }
+
+  if (!isAuthenticated && !auth0Loading) {
+    return <p>Please log in to view Challenges</p>
   }
 
   // Notification CSS
@@ -103,10 +102,9 @@ function Home() {
 
           <h1 className="mb-6 text-5xl font-bold text-green-400">
             Welcome,{' '}
-            {
-              /*isAuthenticated ? (auth0User?.name || auth0User?.nickname || 'User') :*/ dbUser?.name ||
-                'User'
-            }
+            {isAuthenticated
+              ? auth0User?.name || auth0User?.nickname || 'User'
+              : dbUser?.name || 'User'}
           </h1>
 
           {dbUser && (
@@ -163,11 +161,11 @@ function Home() {
       </div>
 
       {/* Modal Conditional Render */}
-      {showModal && selectedChallenge && (
+      {showModal && selectedChallenge && dbUser && (
         <ChallengesModal
           challenge={selectedChallenge}
           onClose={handleCloseModal}
-          currentUserId={currentUserId}
+          currentUserId={dbUser.id}
           setAppNotification={setAppNotification}
         />
       )}
