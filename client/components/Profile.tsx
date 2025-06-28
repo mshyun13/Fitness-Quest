@@ -1,5 +1,8 @@
+import { useAuth0 } from '@auth0/auth0-react'
+import { useUserByAuth0 } from '../hooks/useUsers.ts'
 import { useAchievements, useAchievementsById } from '../hooks/achievements.ts'
 import { useUsers, useUser } from '../hooks/useUsers.ts'
+
 import {
   getLevelFromTotalXp,
   getXpNeededForNextLevel,
@@ -8,24 +11,30 @@ import {
 } from '../../server/utils/xpLogic.ts'
 
 function Profile() {
-  const { data: allUsers } = useUsers()
-  const { data: user } = useUser({ id: 1 })
-  const mutateUser = useUsers()
-  const { data: allAchievements } = useAchievements()
-  const { data: userAchievements } = useAchievementsById(2)
 
-  const mutateAch = useAchievementsById(2)
+  const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
 
-  function addAch() {
-    mutateAch.add.mutate({
-      id: 2,
-      user_id: 2,
-    })
+  const {
+    data: user,
+    isLoading: dbUserLoading,
+    isError: dbUserError,
+  } = useUserByAuth0()
+
+  if (auth0Loading || dbUserLoading) {
+    return <p>Loading Profile...</p>
   }
-  console.log(userAchievements)
 
-  // console.log('comp', allAchievements)
+  if (dbUserError) {
+    return <p>Error Loading Profile</p>
+  }
 
+  if (!isAuthenticated) {
+    return <p>Please log in to view your Profile</p>
+  }
+
+  if (!user) {
+    return <p>Profile not found</p>
+  }
   // mutateUser.add.mutate({
   //   auth_id: 'abcd',
   //   name: 'test',

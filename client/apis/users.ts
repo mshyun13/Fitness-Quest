@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { UpdateUser, User, UserData } from '../../models/users'
+import { User, UserData } from '../../models/users'
 
 const rootUrl = '/api/v1'
 
@@ -9,68 +9,50 @@ export function getAllUsers(): Promise<User[]> {
   })
 }
 
-export function getUserById(id: number): Promise<User> {
-  return request.get(rootUrl + `/users/${id}`).then((res) => {
-    return res.body.user as User
-  })
-}
-
-export function addUser(data: UserData) {
-  return request
-    .post(rootUrl + '/users')
-    .send(data)
-    .then((res) => {
-      return res.body
-    })
-}
-
-export function updateUser(data: UpdateUser): Promise<unknown> {
-  if (!data.id) {
-    console.log('API Error: No ID')
-  }
-  return request
-    .patch(rootUrl + `/users/${data.id}`)
-    .send(data)
-    .then((res) => {
-      return res.body
-    })
-}
-
 // get user by auth0 ID
-
 interface Token {
   token: string
 }
 
-export async function getUserByAuth0({ token }: Token) {
+export async function getUserByAuth0({ token }: Token): Promise<User> {
   return await request
-    .get(`${rootUrl}/authuser`)
+    .get(`${rootUrl}/users/currentuser`)
     .set('Authorization', `Bearer ${token}`)
-    .then((res) => (res.body[0].name ? res.body[0].name : null))
+    .then((res) => {
+      return res.body.user as User
+    })
 }
 
 // add user with auth0 ID
-
-interface NewUserData {
-  newUser: {
-    name: string
-    xp: number
-    level: number
-    rank: string
-    str: number
-    dex: number
-    int: number
-    missed: number
-    class: string
-    appearance: number
-  }
+interface AddAuth0User {
+  userData: UserData
   token: string
 }
 
-export function addUserByAuth0({ newUser, token }: NewUserData) {
+export function addUserByAuth0({
+  userData,
+  token,
+}: AddAuth0User): Promise<{ id: number }> {
+  const { name, class: userClass } = userData
+
   return request
-    .post(`${rootUrl}/authuser`)
+    .post(`${rootUrl}/users`)
     .set('Authorization', `Bearer ${token}`)
-    .send(newUser)
-    .then((res) => res.body.user)
+    .send({ name, class: userClass })
+    .then((res) => {
+      return res.body as { id: number }
+    })
+}
+
+export async function updateUserByAuth0(
+  updates: Partial<Omit<User, 'id' | 'auth_id'>>,
+  token: string,
+): Promise<number> {
+  return await request
+    .patch(`${rootUrl}/users/currentuser`)
+    .set('Authorization', `Bearer ${token}`)
+    .send(updates)
+    .then((res) => {
+      return res.status
+    })
 }
