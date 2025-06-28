@@ -167,14 +167,18 @@ function Profile() {
         </h3>
         {userAchievements ? (
           <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
-            <p className="text-xs">
-              <img
-                src={`/achievements/achievement${userAchievements[0]?.id}.webp`}
-                alt="achievement"
-                className="h-auto w-20"
-              />
-              {userAchievements[0]?.title}
-            </p>
+            {userAchievements.map((a) => {
+              return (
+                <p key={a.id} className="text-xs">
+                  <img
+                    src={`/achievements/achievement${a.id}.webp`}
+                    alt={a.title}
+                    className="h-auto w-20"
+                  />
+                  {a.title}
+                </p>
+              )
+            })}
           </div>
         ) : (
           <p>No achievements</p>
