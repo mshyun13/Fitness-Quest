@@ -1,23 +1,9 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers.ts'
 import { useAchievementsById } from '../hooks/achievements.ts'
-// import { useUsers, useUser } from '../hooks/useUsers.ts'
 import { getXpNeededForNextLevel } from '../../server/utils/xpLogic.ts'
-
-// const { data: allUsers } = useUsers()
-// const { data: user } = useUser({ id: 2 })
-// const mutateUser = useUsers()
-// const { data: allAchievements } = useAchievements()
-// const { data: userAchievements } = useAchievementsById(2)
-
-// const mutateAch = useAchievementsById(2)
-
-// function addAch() {
-//   mutateAch.add.mutate({
-//     id: 2,
-//     user_id: 2,
-//   })
-// }
+import { AchievementsData } from '../../models/achievements.ts'
+import { useEffect } from 'react'
 
 function Profile() {
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
@@ -28,7 +14,14 @@ function Profile() {
     isError: dbUserError,
   } = useUserByAuth0()
 
-  const { data: userAchievements } = useAchievementsById(user?.id || 0)
+  const { data: userAchievements, refetch } = useAchievementsById(user?.id || 0)
+
+  useEffect(() => {
+    refetch()
+    return () => {
+      userAchievements
+    }
+  }, [refetch, user, userAchievements])
 
   if (auth0Loading || dbUserLoading) {
     return <p>Loading Profile...</p>
@@ -46,38 +39,10 @@ function Profile() {
     return <p>Profile not found</p>
   }
 
-  // mutateUser.add.mutate({
-  //   auth_id: 'abcd',
-  //   name: 'test',
-  //   class: 'warrior',
-  // })
-
-  // function updateUser() {
-  //   mutateUser.update.mutate({ id: 2, xp: 0, level: 1, str: 0, dex: 0, int: 0 })
-  // }
-
-  // <button onClick={updateUser}>updateUser</button>
-
-  // console.log('component', user)
-  // console.log('component all users', allUsers)
-
-  //const currentLevel = getLevelFromTotalXp(user?.xp || 0)
-  // const progressPercentage = getProgressTowardsNextLevel(
-  //   user?.xp || 0,
-  //   currentLevel,
-  // )
   const xpNeededForNextLevel = getXpNeededForNextLevel(user?.level)
-
-  // const xpAtCurrentLevel = getXpForLeveling(currentLevel)
-  // const xpGainedInCurrentLevel = (user?.xp || 0) - xpAtCurrentLevel
-  // const actualXpRemaining = Math.max(
-  //   0,
-  //   xpNeededForNextLevel - xpGainedInCurrentLevel,
-  // )
 
   return (
     <>
-      {/* <button onClick={updateUser}>updateUser</button> */}
       <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
         <h3 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
           {' '}
@@ -167,14 +132,18 @@ function Profile() {
         </h3>
         {userAchievements ? (
           <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
-            <p className="text-xs">
-              <img
-                src={`/achievements/achievement${userAchievements[0]?.id}.webp`}
-                alt="achievement"
-                className="h-auto w-20"
-              />
-              {userAchievements[0]?.title}
-            </p>
+            {userAchievements.map((a: AchievementsData) => {
+              return (
+                <p key={a.id} className="text-xs">
+                  <img
+                    src={`/achievements/achievement${a.id}.webp`}
+                    alt={a.title}
+                    className="h-auto w-20"
+                  />
+                  {a.title}
+                </p>
+              )
+            })}
           </div>
         ) : (
           <p>No achievements</p>
@@ -185,3 +154,31 @@ function Profile() {
 }
 
 export default Profile
+
+// import { useUsers, useUser } from '../hooks/useUsers.ts'
+// const { data: allUsers } = useUsers()
+// const { data: user } = useUser({ id: 2 })
+// const mutateUser = useUsers()
+// const { data: allAchievements } = useAchievements()
+// const { data: userAchievements } = useAchievementsById(2)
+
+// const mutateAch = useAchievementsById(2)
+
+// function addAch() {
+//   mutateAch.add.mutate({
+//     id: 2,
+//     user_id: 2,
+//   })
+// }
+
+// mutateUser.add.mutate({
+//   auth_id: 'abcd',
+//   name: 'test',
+//   class: 'warrior',
+// })
+
+// function updateUser() {
+//   mutateUser.update.mutate({ id: 2, xp: 0, level: 1, str: 0, dex: 0, int: 0 })
+// }
+
+// <button onClick={updateUser}>updateUser</button>
