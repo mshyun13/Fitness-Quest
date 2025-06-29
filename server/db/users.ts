@@ -15,7 +15,7 @@ export async function getUserById(id: number) {
 export async function getUserByAuthId(
   authId: string,
 ): Promise<User | undefined> {
-  return connection('users')
+  return db('users')
     .where('auth_id', authId)
     .select(
       'id',
