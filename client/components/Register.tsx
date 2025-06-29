@@ -84,6 +84,20 @@ function Register() {
               className="mb-2 text-black"
             />
 
+            <label htmlFor="gender">Gender: </label>
+            <select
+              id="gender"
+              onChange={handleChange}
+              className="mb-2 text-black"
+            >
+              <option value="" disabled selected>
+                Select your option
+              </option>
+              <option value={'male'}>male</option>
+              <option value={'female'}>female</option>
+              <option value={'cat'}>cat</option>
+            </select>
+
             <label htmlFor="class" className="mb-2">
               Class:{' '}
             </label>
@@ -111,21 +125,27 @@ function Register() {
               Character:{' '}
             </label>
             <select
-              id="character"
+              id="appearance"
               onChange={handleCharacterChange}
               className="mb-2 text-black"
             >
               <option value="" disabled selected>
                 Select your option
               </option>
-              <option value={'warrior'}>Warrior</option>
+              <option value={'1'}>1</option>
+              <option value={'2'}>2</option>
+              <option value={'3'}>3</option>
+              <option value={'4'}>4</option>
+              <option value={'5'}>5</option>
             </select>
 
             <img
-              src={`${newCharacter}.webp`}
+              src={`/characters/${newUser.gender}${newUser.class}${newUser.appearance}.webp`}
               alt="new character"
               className="mb-2"
             />
+
+            {}
 
             <button
               type="submit"
