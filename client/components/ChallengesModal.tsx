@@ -21,10 +21,6 @@ const ChallengeModal: React.FC<ChallengeModalProps> = ({
   onClose,
   setAppNotification,
 }) => {
-  if (!challenge) {
-    return null
-  }
-
   const queryClient = useQueryClient()
   const { getAccessTokenSilently } = useAuth0()
 
@@ -64,6 +60,10 @@ const ChallengeModal: React.FC<ChallengeModalProps> = ({
       challengeId: challenge.id,
       status: 'completed',
     })
+  }
+
+  if (!challenge) {
+    return null
   }
 
   return (

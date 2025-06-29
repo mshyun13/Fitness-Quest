@@ -20,7 +20,8 @@ export async function seed(knex) {
       int: 10,
       missed: 0,
       class: 'warrior',
-      appearance: 3,
+      appearance: 5,
+      gender: 'male',
     },
     {
       id: 2,
@@ -35,6 +36,7 @@ export async function seed(knex) {
       missed: 0,
       class: 'rogue',
       appearance: 1,
+      gender: 'male',
     },
     {
       id: 3,
@@ -49,6 +51,7 @@ export async function seed(knex) {
       missed: 0,
       class: 'mage',
       appearance: 3,
+      gender: 'male',
     },
   ])
 
