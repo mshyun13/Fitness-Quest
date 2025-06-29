@@ -1,17 +1,10 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers.ts'
-import { useAchievements, useAchievementsById } from '../hooks/achievements.ts'
-import { useUsers, useUser } from '../hooks/useUsers.ts'
-
-import {
-  getLevelFromTotalXp,
-  getXpNeededForNextLevel,
-  getProgressTowardsNextLevel,
-  getXpForLeveling,
-} from '../../server/utils/xpLogic.ts'
+import { useAchievementsById } from '../hooks/achievements.ts'
+import { getXpNeededForNextLevel } from '../../server/utils/xpLogic.ts'
+import { useEffect } from 'react'
 
 function Profile() {
-
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
 
   const {
@@ -19,6 +12,15 @@ function Profile() {
     isLoading: dbUserLoading,
     isError: dbUserError,
   } = useUserByAuth0()
+
+  const { data: userAchievements, refetch } = useAchievementsById(user?.id || 0)
+
+  useEffect(() => {
+    refetch()
+    return () => {
+      userAchievements
+    }
+  }, [refetch, user, userAchievements])
 
   if (auth0Loading || dbUserLoading) {
     return <p>Loading Profile...</p>
@@ -35,34 +37,8 @@ function Profile() {
   if (!user) {
     return <p>Profile not found</p>
   }
-  // mutateUser.add.mutate({
-  //   auth_id: 'abcd',
-  //   name: 'test',
-  //   class: 'warrior',
-  // })
 
-  // function updateUser() {
-  //   mutateUser.update.mutate({ id: 1, xp: 10, str: 70, dex: 50, int: 12 })
-  // }
-
-  // <button onClick={updateUser}>updateUser</button>
-
-  // console.log('component', user)
-  // console.log('component all users', allUsers)
-
-  const currentLevel = getLevelFromTotalXp(user?.xp || 0)
-  const progressPercentage = getProgressTowardsNextLevel(
-    user?.xp || 0,
-    currentLevel,
-  )
-  const xpNeededForNextLevel = getXpNeededForNextLevel(currentLevel)
-
-  const xpAtCurrentLevel = getXpForLeveling(currentLevel)
-  const xpGainedInCurrentLevel = (user?.xp || 0) - xpAtCurrentLevel
-  const actualXpRemaining = Math.max(
-    0,
-    xpNeededForNextLevel - xpGainedInCurrentLevel,
-  )
+  const xpNeededForNextLevel = getXpNeededForNextLevel(user?.level)
 
   return (
     <>
@@ -71,11 +47,11 @@ function Profile() {
           {' '}
           Profile
         </h3>
-        <div className="justify-content-center mt-10 flex flex-wrap items-center gap-1.5 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:gap-4">
+        <div className="justify-content-center mt-10 flex flex-wrap items-center gap-1.5 justify-self-center rounded-2xl p-4 sm:gap-4">
           <img
-            src="/warrior.webp"
+            src={`/characters/${user.gender}${user.class}${user.appearance}.webp`}
             alt="character"
-            className="mx-auto h-auto w-40"
+            className="mx-auto h-auto w-48 sm:w-72"
           />
           <div className="mx-auto grid grid-cols-[1fr_2fr] gap-1 font-semibold">
             <p>Name: </p>
@@ -85,7 +61,7 @@ function Profile() {
             <p>Rank: </p>
             <p className="text-center capitalize text-white">{user?.rank}</p>
             <p>Level: </p>
-            <p className="text-center text-white">{currentLevel}</p>
+            <p className="text-center text-white">{user?.level}</p>
             <p>XP:</p>{' '}
             <div className="relative max-h-4">
               <div
@@ -93,13 +69,12 @@ function Profile() {
               >
                 <div
                   style={{
-                    width: `${(user?.xp / Math.floor(user?.xp + actualXpRemaining)) * 100}%`,
+                    width: `${(user?.xp / xpNeededForNextLevel) * 100}%`,
                   }}
                   className={`z-10 h-4 overflow-hidden bg-green-700`}
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
-                  {user?.xp + '/' + Math.floor(user?.xp + actualXpRemaining) ||
-                    0}
+                  {user?.xp + '/' + xpNeededForNextLevel || 0}
                 </p>
               </div>
             </div>
@@ -154,16 +129,20 @@ function Profile() {
           {' '}
           Achievements
         </h3>
-        {allAchievements ? (
+        {userAchievements ? (
           <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
-            <p className="text-xs">
-              <img
-                src={`/achievements/achievement${allAchievements[0]?.id}.webp`}
-                alt="achievement"
-                className="h-auto w-20"
-              />
-              {allAchievements[0]?.title}
-            </p>
+            {userAchievements.map((a) => {
+              return (
+                <p key={a.id} className="text-xs">
+                  <img
+                    src={`/achievements/achievement${a.id}.webp`}
+                    alt={a.title}
+                    className="h-auto w-20"
+                  />
+                  {a.title}
+                </p>
+              )
+            })}
           </div>
         ) : (
           <p>No achievements</p>
@@ -174,3 +153,31 @@ function Profile() {
 }
 
 export default Profile
+
+// import { useUsers, useUser } from '../hooks/useUsers.ts'
+// const { data: allUsers } = useUsers()
+// const { data: user } = useUser({ id: 2 })
+// const mutateUser = useUsers()
+// const { data: allAchievements } = useAchievements()
+// const { data: userAchievements } = useAchievementsById(2)
+
+// const mutateAch = useAchievementsById(2)
+
+// function addAch() {
+//   mutateAch.add.mutate({
+//     id: 2,
+//     user_id: 2,
+//   })
+// }
+
+// mutateUser.add.mutate({
+//   auth_id: 'abcd',
+//   name: 'test',
+//   class: 'warrior',
+// })
+
+// function updateUser() {
+//   mutateUser.update.mutate({ id: 2, xp: 0, level: 1, str: 0, dex: 0, int: 0 })
+// }
+
+// <button onClick={updateUser}>updateUser</button>

@@ -3,38 +3,33 @@ import {
   CompletionResult,
 } from '../../models/completionsModel.ts'
 
-// type GetAccessTokenSilently = (opts?: any) => Promise<string>
+type GetAccessTokenSilently = (opts?: unknown) => Promise<string>
 
 export async function getCompletions(
-  userId: string,
-  // getAccessTokenSilently?: GetAccessTokenSilently
+  getAccessTokenSilently?: GetAccessTokenSilently,
 ): Promise<CompletionOfChallenge[]> {
-  console.log(
-    'completionsApi.getCompletions: API function entered for userId:',
-    userId,
-  )
-  // let accessToken: string | undefined = undefined;
-  // if (getAccessTokenSilently) {
-  //   try {
-  //     accessToken = await getAccessTokenSilently();
-  //   } catch (tokenError) {
-  //     console.error('Failed to get access token in apiClient:', tokenError);
-  //     throw new Error('Authentication token required or failed to retrieve');
-  //   }
-  // }
+  console.log('completionsApi.getCompletions: API function entered for userId:')
+  let accessToken: string | undefined = undefined
+  if (getAccessTokenSilently) {
+    try {
+      accessToken = await getAccessTokenSilently()
+    } catch (tokenError) {
+      console.error('Failed to get access token in apiClient:', tokenError)
+      throw new Error('Authentication token required or failed to retrieve')
+    }
+  }
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   }
-  // if (accessToken) {
-  //   headers['Authorization'] = `Bearer ${accessToken}`;
-  // }
+  if (accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`
+  }
 
   console.log(
-    'completionsApi.getCompletions: About to fetch from /api/v1/completions/' +
-      userId,
+    'completionsApi.getCompletions: About to fetch from /api/v1/completions/',
   )
-  const response = await fetch(`/api/v1/completions/${userId}`, {
+  const response = await fetch(`/api/v1/completions/`, {
     method: 'GET',
     headers: headers,
   })
@@ -59,27 +54,26 @@ export async function getCompletions(
 
 export async function addCompletionApi(
   newCompletion: {
-    userId: number
     challengeId: number
     status: 'completed' | 'missed'
   },
-  // getAccessTokenSilently?: GetAccessTokenSilently,
+  getAccessTokenSilently?: GetAccessTokenSilently,
 ): Promise<CompletionResult> {
-  // let accessToken: string | undefined = undefined
-  // if (getAccessTokenSilently) {
-  //   try {
-  //     accessToken = await getAccessTokenSilently()
-  //   } catch (tokenError) {
-  //     throw new Error('Authentication token required or failed to retrieve.')
-  //   }
-  // }
+  let accessToken: string | undefined = undefined
+  if (getAccessTokenSilently) {
+    try {
+      accessToken = await getAccessTokenSilently()
+    } catch (tokenError) {
+      throw new Error('Authentication token required or failed to retrieve.')
+    }
+  }
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   }
-  // if (accessToken) {
-  //   headers['Authorization'] = `Bearer ${accessToken}`
-  // }
+  if (accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`
+  }
 
   const response = await fetch('/api/v1/completions', {
     method: 'POST',

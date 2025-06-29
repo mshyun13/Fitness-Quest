@@ -1,5 +1,5 @@
 export const XP_FOR_LEVELING = 10 // XP required to go from Level 1 to Level 2
-export const GROWTH_FACTOR = 1.05 // How much XP required increases per level (1.05 = 5% increase)
+export const GROWTH_FACTOR = 1.5 // How much XP required increases per level (1.05 = 5% increase)
 
 // Calculates XP required to reach the start of a given level
 export function getXpForLeveling(level: number): number {
@@ -19,7 +19,8 @@ export function calculateXpToCompleteLevel(level: number): number {
     return 0
   }
   // Starting XP * (Growth Factor)^(Level - 1)
-  return Math.floor(XP_FOR_LEVELING * Math.pow(GROWTH_FACTOR, level - 1))
+  // return Math.floor(XP_FOR_LEVELING * Math.pow(GROWTH_FACTOR, level - 1))
+  return Math.floor(XP_FOR_LEVELING * GROWTH_FACTOR * level)
 }
 
 // Determines the level of a user based on their total XP
@@ -39,6 +40,12 @@ export function getLevelFromTotalXp(totalXp: number): number {
     level++
   }
   return level
+}
+
+export function checkLevelUp(currentLevel: number, xp: number) {
+  if (xp > calculateXpToCompleteLevel(currentLevel)) {
+    return currentLevel + 1
+  }
 }
 
 // Calculates XP needed from users current XP to reach the next level

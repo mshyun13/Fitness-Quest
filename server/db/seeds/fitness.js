@@ -12,15 +12,16 @@ export async function seed(knex) {
       id: 1,
       auth_id: 'google-oauth2|102349456663427950864',
       name: 'Callum',
-      xp: 56,
-      level: 99,
+      xp: 0,
+      level: 1,
       rank: 'Master',
-      str: 99,
-      dex: 45,
+      str: 13,
+      dex: 26,
       int: 10,
       missed: 0,
       class: 'warrior',
-      appearance: 3,
+      appearance: 5,
+      gender: 'male',
     },
     {
       id: 2,
@@ -35,6 +36,7 @@ export async function seed(knex) {
       missed: 0,
       class: 'rogue',
       appearance: 1,
+      gender: 'male',
     },
     {
       id: 3,
@@ -49,6 +51,7 @@ export async function seed(knex) {
       missed: 0,
       class: 'mage',
       appearance: 3,
+      gender: 'male',
     },
   ])
 

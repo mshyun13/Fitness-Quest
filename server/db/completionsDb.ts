@@ -1,10 +1,9 @@
 import connection from './connection'
 import {
   CompletionOfChallenge,
-  NewCompletion,
   CompletionResult,
 } from '../../models/completionsModel'
-import { getLevelFromTotalXp } from '../utils/xpLogic'
+import { calculateXpToCompleteLevel, checkLevelUp } from '../utils/xpLogic'
 import { getSingleChallenge } from './challenges'
 import { User } from '../../models/users'
 
@@ -31,12 +30,14 @@ export async function getCompletionsByUserId(
 
 // Adds new completed challenge to DB
 export async function addCompletion(
-  newCompletion: NewCompletion,
+  userId: number,
+  challengeId: number,
+  status: 'completed' | 'missed',
 ): Promise<number[]> {
   return connection('completions').insert({
-    user_id: newCompletion.userId,
-    challenge_id: newCompletion.challengeId,
-    status: newCompletion.status,
+    user_id: userId,
+    challenge_id: challengeId,
+    status: status,
     completed_at: new Date(),
   })
 }
@@ -56,7 +57,7 @@ export async function getChallengesDoneToday(
     .then((rows) => rows.map((row) => row.challenge_id))
 }
 
-// Proesses challenge completion or miss, updating user stats in a transaction
+// Processes challenge completion or miss, updating user stats in a transaction
 export async function processChallengeCompletion(
   userId: number,
   challengeId: number,
@@ -75,7 +76,8 @@ export async function processChallengeCompletion(
       throw new Error('User not found')
     }
 
-    const updatedUser: Partial<User> = { ...user } as User
+    // eslint-disable-next-line prefer-const
+    let updatedUser: Partial<User> = { ...user } as User
 
     // Gets completed challenges
     if (status === 'completed') {
@@ -86,12 +88,18 @@ export async function processChallengeCompletion(
       }
 
       updatedUser.xp = (updatedUser.xp || 0) + challenge.xp_reward // Adds challenge xp
-      const newCalculatedLevel = getLevelFromTotalXp(updatedUser.xp) // Calculates new level based on new xp total
+      // const newCalculatedLevel = getLevelFromTotalXp(updatedUser.xp) // Calculates new level based on new xp total
 
       // Checks for level-up
-      if (newCalculatedLevel > (user.level || 0)) {
-        levelUpHappened = true
-        updatedUser.level = newCalculatedLevel
+      if (checkLevelUp(updatedUser.level, updatedUser.xp) > updatedUser.level) {
+        do {
+          levelUpHappened = true
+          updatedUser.level = checkLevelUp(updatedUser.level, updatedUser.xp)
+          const previousXP = calculateXpToCompleteLevel(updatedUser.level - 1)
+          updatedUser.xp = updatedUser.xp - previousXP
+        } while (
+          checkLevelUp(updatedUser.level, updatedUser.xp) > updatedUser.level
+        )
       }
 
       // Determines which attribute to update
@@ -110,12 +118,20 @@ export async function processChallengeCompletion(
 
         updatedUser.xp = (updatedUser.xp || 0) + bonusXpFromAttribute // add bonus xp
 
-        const reCalculatedLevel = getLevelFromTotalXp(updatedUser.xp) // recalculate level to account for bonus xp
+        //const reCalculatedLevel = getLevelFromTotalXp(updatedUser.xp) // recalculate level to account for bonus xp
+
+        const reCalculatedLevel = checkLevelUp(
+          updatedUser.level,
+          updatedUser.xp,
+        )
 
         // Checks for another level-up because of bonus xp
         if (reCalculatedLevel > (updatedUser.level || 0)) {
           levelUpHappened = true
           updatedUser.level = reCalculatedLevel
+          console.log('whoops')
+          const previousXP = calculateXpToCompleteLevel(newCalculatedLevel - 1)
+          updatedUser.xp -= previousXP
         }
       }
 

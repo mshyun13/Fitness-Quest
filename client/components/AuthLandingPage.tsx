@@ -13,7 +13,7 @@ const AuthLandingPage = () => {
     isSuccess: isDbUserSuccess,
     isError: isDbUserError,
     error: dbUserError,
-    mutate: addNewUserToDb,
+    add: addNewUserMutation,
   } = useUserByAuth0()
 
   useEffect(() => {
@@ -23,16 +23,14 @@ const AuthLandingPage = () => {
           // User exists in DB
           console.log('Existing user logged in, redirecting to home.')
           navigate('/')
-        } else if (isDbUserSuccess && !dbUser) {
+        } else if (isDbUserError && dbUserError?.response?.status === 404) {
           // User does NOT exist in DB (first time login)
           console.log('New user, adding to DB and redirecting to register')
 
-          addNewUserToDb({
-            userData: {
-              auth_id: auth0User.sub!,
-              name: auth0User.name || 'New User',
-              class: 'Bronze',
-            },
+          addNewUserMutation.mutate({
+            auth_id: auth0User.sub!,
+            name: auth0User.name || auth0User.nickname || 'New User',
+            class: 'Bronze',
           })
           navigate('/register')
         } else if (isDbUserError) {
@@ -54,19 +52,15 @@ const AuthLandingPage = () => {
     isDbUserSuccess,
     isDbUserError,
     dbUserError,
-    addNewUserToDb,
+    addNewUserMutation,
     navigate,
   ])
 
   return (
-    <section className="hero is-fullheight is-info">
-      <div className="hero-body">
-        <div className="has-text-centered container">
-          <h1 className="title has-text-white">Loading your profile...</h1>
-          <progress
-            className="progress is-small is-primary"
-            max="100"
-          ></progress>
+    <section>
+      <div>
+        <div>
+          <h1>Loading your profile...</h1>
         </div>
       </div>
     </section>

@@ -28,6 +28,7 @@ export async function getUserByAuthId(
       'missed',
       'class',
       'appearance',
+      'gender',
     )
     .where('auth_id', authId)
     .first()

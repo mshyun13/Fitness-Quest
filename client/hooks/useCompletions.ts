@@ -16,33 +16,17 @@ export function useCompletions(): UseCompletionsResult {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const { isAuthenticated, user /*getAccessTokenSilently*/ } = useAuth0()
+  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0()
 
   const getCompletions = async () => {
     console.log('getCompletions: Function called')
-    let userId: string | undefined = undefined
-    // let accessToken: string | undefined = undefined
 
-    if (isAuthenticated && user?.sub) {
-      userId = user.sub
-      console.log('getCompletions: Authenticated user, userId:', userId)
-      // try {
-      //   accessToken = await getAccessTokenSilently();
-      // } catch (tokenError) {
-      //   console.error('Failed to get access token:', tokenError);
-      //   setError('Failed to get authentication token');
-      //   setLoading(false);
-      //   return;
-      // }
-    } else {
-      userId = '2'
-      console.log('getCompletions: Hardcoded user, userId:', userId)
-    }
-
-    if (!userId) {
-      console.log('getCompletions: No userId available, stopping.')
+    if (!isAuthenticated || !user?.sub) {
+      console.log(
+        'getCompletions: User not authenticated or sub missing (expected if not logged in)',
+      )
       setLoading(false)
-      setError('Unauthenticated bro!')
+      setError('Authentication required to fetch completions.')
       return
     }
 
@@ -50,8 +34,7 @@ export function useCompletions(): UseCompletionsResult {
     setError(null)
 
     try {
-      console.log('getCompletions: Calling API function for userId:', userId)
-      const data = await getCompletionsApi(userId /*, getAccessTokenSilently */)
+      const data = await getCompletionsApi(getAccessTokenSilently)
       console.log('getCompletions: API call successful, data received:', data)
       setCompletions(data)
     } catch (err) {
@@ -75,10 +58,14 @@ export function useCompletions(): UseCompletionsResult {
       'user:',
       user,
     )
-    if (isAuthenticated || user === undefined) {
+    if (isAuthenticated && user?.sub) {
       getCompletions()
+    } else if (!isAuthenticated && !loading) {
+      setError('Not authenticated.')
+      setLoading(false)
+      setCompletions([]) // Clear completions if not authenticated
     }
-  }, [isAuthenticated, user?.sub /* , getAccessTokenSilently */])
+  }, [isAuthenticated, user?.sub, getAccessTokenSilently])
 
   return { completions, loading, error, refreshCompletions: getCompletions }
 }

@@ -11,12 +11,14 @@ export interface User {
   missed: number
   class: string
   appearance: number
+  gender: string
 }
 
 export interface UserData {
   auth_id: string
   name: string
   class: string
+  gender: string
 }
 
 export interface UpdateUser {
@@ -32,4 +34,5 @@ export interface UpdateUser {
   missed?: number
   class?: string
   appearance?: number
+  gender?: string
 }

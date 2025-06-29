@@ -1,7 +1,7 @@
 // Matching Completions Table
 export interface Completion {
   id: number
-  user_id: string
+  user_id: number
   challenge_id: number
   completed_at: string
   status: 'completed' | 'missed'
@@ -23,16 +23,13 @@ export interface CompletionOfChallenge {
 
 // For when adding to DB
 export interface NewCompletion {
-  userId: string
   challengeId: number
   status: 'completed' | 'missed'
 }
 
 // New results for level and XP
 export interface CompletionResult {
-  completionId: number
   userNewXp: number
   userNewLevel: number
   levelUpHappened: boolean
-  message: string
 }
