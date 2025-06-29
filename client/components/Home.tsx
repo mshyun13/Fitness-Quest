@@ -103,22 +103,32 @@ function Home() {
           <h1 className="mb-6 text-5xl font-bold text-green-400">
             Welcome,{' '}
             {isAuthenticated
-              ? auth0User?.name || auth0User?.nickname || 'User'
+              ? dbUser?.name || auth0User?.name || auth0User?.nickname || 'User'
               : dbUser?.name || 'User'}
           </h1>
 
           {dbUser && (
             <div className="mx-auto my-4 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl">
-              <p className="text-xl text-green-200">
-                Level:{' '}
-                <strong className="text-green-500">{dbUser.level}</strong>
-              </p>
-              <p className="text-xl text-green-200">
-                XP: <strong className="text-green-500">{dbUser.xp}</strong>
-              </p>
-              <p className="text-xl text-green-200">
-                Rank: <strong className="text-green-500">{dbUser.rank}</strong>
-              </p>
+              <div className="flex">
+                <img
+                  src={`/characters/${dbUser.gender}${dbUser.class}${dbUser.appearance}.webp`}
+                  alt="character"
+                  className="ml-4 h-auto w-32"
+                />
+                <div className="mx-auto self-center">
+                  <p className="text-xl text-green-200">
+                    Level:{' '}
+                    <strong className="text-green-500">{dbUser.level}</strong>
+                  </p>
+                  <p className="text-xl text-green-200">
+                    XP: <strong className="text-green-500">{dbUser.xp}</strong>
+                  </p>
+                  <p className="text-xl text-green-200">
+                    Rank:{' '}
+                    <strong className="text-green-500">{dbUser.rank}</strong>
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 

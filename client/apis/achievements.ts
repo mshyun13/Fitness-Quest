@@ -9,7 +9,7 @@ export function getAllAchievements(): Promise<unknown> {
   })
 }
 
-export function getAchievementsById(id: number): Promise<unknown> {
+export function getAchievementsById(id: number): Promise<AchievementsData[]> {
   return request.get(rootUrl + `/achievements/${id}`).then((res) => {
     return res.body
   })

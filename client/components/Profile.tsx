@@ -2,7 +2,6 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers.ts'
 import { useAchievementsById } from '../hooks/achievements.ts'
 import { getXpNeededForNextLevel } from '../../server/utils/xpLogic.ts'
-import { AchievementsData } from '../../models/achievements.ts'
 import { useEffect } from 'react'
 
 function Profile() {
@@ -48,11 +47,11 @@ function Profile() {
           {' '}
           Profile
         </h3>
-        <div className="justify-content-center mt-10 flex flex-wrap items-center gap-1.5 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:gap-4">
+        <div className="justify-content-center mt-10 flex flex-wrap items-center gap-1.5 justify-self-center rounded-2xl p-4 sm:gap-4">
           <img
-            src="/warrior.webp"
+            src={`/characters/${user.gender}${user.class}${user.appearance}.webp`}
             alt="character"
-            className="mx-auto h-auto w-40"
+            className="mx-auto h-auto w-48 sm:w-72"
           />
           <div className="mx-auto grid grid-cols-[1fr_2fr] gap-1 font-semibold">
             <p>Name: </p>
@@ -132,7 +131,7 @@ function Profile() {
         </h3>
         {userAchievements ? (
           <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
-            {userAchievements.map((a: AchievementsData) => {
+            {userAchievements.map((a) => {
               return (
                 <p key={a.id} className="text-xs">
                   <img

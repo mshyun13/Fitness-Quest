@@ -14,6 +14,7 @@ export interface AuthUser {
   missed: number
   class: string
   appearance: number
+  gender: string
 }
 
 export async function getUserByAuth(auth_id: string) {
@@ -34,5 +35,6 @@ export async function createUser(user: AuthUser) {
     missed: user.missed,
     class: user.class,
     appearance: user.appearance,
+    gender: user.gender,
   })
 }
