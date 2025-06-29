@@ -25,7 +25,7 @@ export async function seed(knex) {
     },
     {
       id: 2,
-      auth_id: 'google-oauth2|102141106120855017585',
+      auth_id: 'google-oauth2|1021411061208550175',
       name: 'Ben',
       xp: 0,
       level: 1,
