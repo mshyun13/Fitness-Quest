@@ -49,6 +49,17 @@ function Home() {
   // Clear notifications
   useEffect(() => {
     if (appNotification) {
+      if (
+        appNotification.type === 'info' &&
+        appNotification.message != 'Congratulations! You leveled up!'
+      ) {
+        new Audio('/audio/fitness.wav').play()
+      } else if (
+        appNotification.type === 'info' &&
+        appNotification.message === 'Congratulations! You leveled up!'
+      ) {
+        new Audio('/audio/fitness2.wav').play()
+      }
       const timer = setTimeout(() => {
         setAppNotificationState(null)
       }, 2500)
