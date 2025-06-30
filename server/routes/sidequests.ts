@@ -12,7 +12,7 @@ router.get('/:id', checkJwt, async (req: JwtRequest, res) => {
     res.sendStatus(401)
     return
   }
-  if (id === 0) return
+  if (id === 0) return res.sendStatus(404)
 
   try {
     const quests = await db.getSideQuestsById(id)

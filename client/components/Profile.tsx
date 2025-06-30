@@ -65,13 +65,13 @@ function Profile() {
             <p>XP:</p>{' '}
             <div className="relative max-h-4">
               <div
-                className={`relative z-0 h-4 w-full translate-y-1 bg-gray-700`}
+                className={`relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950`}
               >
                 <div
                   style={{
                     width: `${(user?.xp / xpNeededForNextLevel) * 100}%`,
                   }}
-                  className={`z-10 h-4 overflow-hidden bg-green-700`}
+                  className={`z-10 h-4 overflow-hidden rounded-md bg-green-700`}
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
                   {user?.xp + '/' + xpNeededForNextLevel || 0}
@@ -81,11 +81,11 @@ function Profile() {
             <p>Str:</p>{' '}
             <div className="relative max-h-4">
               <div
-                className={`relative z-0 h-4 w-full translate-y-1 bg-gray-700`}
+                className={`relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950`}
               >
                 <div
                   style={{ width: `${user?.str > 100 ? 100 : user?.str}%` }}
-                  className={`z-10  h-4 bg-green-700`}
+                  className={`z-10 h-4 rounded-md bg-green-700`}
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
                   {'LVL ' + user?.str}
@@ -95,11 +95,11 @@ function Profile() {
             <p>Dex:</p>{' '}
             <div className="relative max-h-4">
               <div
-                className={`relative z-0 h-4 w-full translate-y-1 bg-gray-700`}
+                className={`relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950`}
               >
                 <div
                   style={{ width: `${user?.dex > 100 ? 100 : user?.dex}%` }}
-                  className={`z-10 h-4 overflow-hidden bg-green-700`}
+                  className={`z-10 h-4 overflow-hidden rounded-md bg-green-700`}
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
                   {'LVL ' + user?.dex}
@@ -107,13 +107,13 @@ function Profile() {
               </div>
             </div>
             <p>Int:</p>{' '}
-            <div className="relative max-h-4">
+            <div className="relative ">
               <div
-                className={`relative z-0 h-4 w-full translate-y-1 bg-gray-700`}
+                className={`relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950`}
               >
                 <div
                   style={{ width: `${user?.int > 100 ? 100 : user?.int}%` }}
-                  className={`z-10 h-4 overflow-hidden bg-green-700`}
+                  className={`z-10 h-4 rounded-md bg-green-700`}
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
                   {'LVL ' + user?.int}

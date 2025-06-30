@@ -101,7 +101,7 @@ function Home() {
         : 'bg-blue-600' // info notification color
 
   return (
-    <section className="flex flex-col items-center justify-start bg-gray-900 pt-8 font-mono text-green-300">
+    <section className="flex flex-col items-center justify-start bg-gray-900 font-mono text-green-300">
       {appNotification && (
         <div className="absolute min-h-40 w-screen justify-items-center">
           <div

@@ -13,7 +13,7 @@ function ActivityLog() {
     refetch()
     //invalidate
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, showLog])
+  }, [user])
 
   if (loading) {
     return <p>Loading your activity log...</p>
