@@ -4,6 +4,7 @@ import ChallengesModal from './ChallengesModal'
 import { Challenge } from '../../models/challenge'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers'
+import ManualEntryForm from './ManualEntryForm'
 
 type NotificationType = 'success' | 'error' | 'info'
 
@@ -28,6 +29,7 @@ function Home() {
   } = useUserByAuth0()
 
   const [showModal, setShowModal] = useState(false)
+  const [showSideQuest, setShowSideQuest] = useState(false)
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
     null,
   )
@@ -47,6 +49,17 @@ function Home() {
   // Clear notifications
   useEffect(() => {
     if (appNotification) {
+      if (
+        appNotification.type === 'info' &&
+        appNotification.message != 'Congratulations! You leveled up!'
+      ) {
+        new Audio('/audio/fitness.wav').play()
+      } else if (
+        appNotification.type === 'info' &&
+        appNotification.message === 'Congratulations! You leveled up!'
+      ) {
+        new Audio('/audio/fitness2.wav').play()
+      }
       const timer = setTimeout(() => {
         setAppNotificationState(null)
       }, 2500)
@@ -64,6 +77,11 @@ function Home() {
   const handleCloseModal = () => {
     setShowModal(false)
     setSelectedChallenge(null)
+  }
+
+  // Show a Side Quest entry form
+  const handleSideQuest = () => {
+    setShowSideQuest(true)
   }
 
   if (isLoading || dbUserLoading || auth0Loading) {
@@ -108,7 +126,7 @@ function Home() {
           </h1>
 
           {dbUser && (
-            <div className="mx-auto my-4 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl">
+            <div className="mx-auto my-8 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl">
               <div className="flex">
                 <img
                   src={`/characters/${dbUser.gender}${dbUser.class}${dbUser.appearance}.webp`}
@@ -130,6 +148,17 @@ function Home() {
                 </div>
               </div>
             </div>
+          )}
+
+          {showSideQuest ? (
+            ''
+          ) : (
+            <button
+              className="rounded-lg bg-gray-700 p-2 text-xl font-bold text-green-400 ring-1 ring-gray-400 hover:bg-gray-500"
+              onClick={handleSideQuest}
+            >
+              Enter Side Quest
+            </button>
           )}
 
           <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl">
@@ -175,6 +204,15 @@ function Home() {
         <ChallengesModal
           challenge={selectedChallenge}
           onClose={handleCloseModal}
+          currentUserId={dbUser.id}
+          setAppNotification={setAppNotification}
+        />
+      )}
+
+      {/* Side Quest */}
+      {showSideQuest && dbUser && (
+        <ManualEntryForm
+          onClose={() => setShowSideQuest(false)}
           currentUserId={dbUser.id}
           setAppNotification={setAppNotification}
         />

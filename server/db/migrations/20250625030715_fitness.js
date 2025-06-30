@@ -44,6 +44,14 @@ export async function up(knex) {
       table.integer('user_id').references('id').inTable('users')
       table.unique(['user_id', 'id'])
     })
+    .createTable('sidequests', (table) => {
+      table.increments('id').primary()
+      table.integer('user_id').references('id').inTable('users')
+      table.string('title')
+      table.string('description')
+      table.enum('attribute', ['str', 'dex', 'int'])
+      table.datetime('completed_at')
+    })
 }
 
 export async function down(knex) {
@@ -53,4 +61,5 @@ export async function down(knex) {
     .dropTable('challenges')
     .dropTable('achievements')
     .dropTable('achievements_user')
+    .dropTable('sidequests')
 }
