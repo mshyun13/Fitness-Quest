@@ -15,7 +15,7 @@ export async function up(knex) {
       table.integer('int').defaultTo(0)
       table.integer('missed').defaultTo(0)
       table.string('class')
-      table.integer('appearance').defaultTo(0)
+      table.integer('appearance').defaultTo(1)
       table.string('gender')
     })
     .createTable('completions', (table) => {
