@@ -3,7 +3,7 @@ import {
   CompletionOfChallenge,
   CompletionResult,
 } from '../../models/completionsModel'
-import { calculateXpToCompleteLevel } from '../utils/xpLogic'
+import { calculateXpToCompleteLevel, checkLevelUp } from '../utils/xpLogic'
 import { getSingleChallenge } from './challenges'
 import { User } from '../../models/users'
 
