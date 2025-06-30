@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
         redirect_uri: window.location.origin,
         audience: 'https://fitness/api',
       }}
+      // stops auth0 logout when page refreshes
+      cacheLocation="localstorage"
+      useRefreshTokens={true}
     >
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
