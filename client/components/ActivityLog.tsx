@@ -11,7 +11,8 @@ function ActivityLog() {
 
   useEffect(() => {
     refetch()
-  }, [refetch, user, showLog])
+    //invalidate
+  }, [user, showLog])
 
   if (loading) {
     return <p>Loading your activity log...</p>
@@ -24,8 +25,6 @@ function ActivityLog() {
   if (completions.length === 0) {
     return <p>No challenges completed yet. Get started!</p>
   }
-
-  //const reversedCompletions = completions.toReversed()
 
   return (
     <>
