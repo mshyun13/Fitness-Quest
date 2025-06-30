@@ -154,6 +154,9 @@ function Profile() {
 
 export default Profile
 
+// const mutateUser = useUsers()
+// mutateUser.update.mutate({ id: 2, xp: 0, level: 1, str: 0, dex: 0, int: 0 })
+
 // import { useUsers, useUser } from '../hooks/useUsers.ts'
 // const { data: allUsers } = useUsers()
 // const { data: user } = useUser({ id: 2 })

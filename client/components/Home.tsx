@@ -115,7 +115,7 @@ function Home() {
           </h1>
 
           {dbUser && (
-            <div className="mx-auto my-4 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl">
+            <div className="mx-auto my-8 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl">
               <div className="flex">
                 <img
                   src={`/characters/${dbUser.gender}${dbUser.class}${dbUser.appearance}.webp`}
@@ -137,6 +137,17 @@ function Home() {
                 </div>
               </div>
             </div>
+          )}
+
+          {showSideQuest ? (
+            ''
+          ) : (
+            <button
+              className="rounded-lg bg-gray-700 p-2 text-xl font-bold text-green-400 ring-1 ring-gray-400 hover:bg-gray-500"
+              onClick={handleSideQuest}
+            >
+              Enter Side Quest
+            </button>
           )}
 
           <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl">
@@ -174,7 +185,6 @@ function Home() {
               )}
             </ul>
           </div>
-          <button onClick={handleSideQuest}>Side Quest</button>
         </div>
       </div>
 
@@ -191,7 +201,7 @@ function Home() {
       {/* Side Quest */}
       {showSideQuest && dbUser && (
         <ManualEntryForm
-          onClose={handleCloseModal}
+          onClose={() => setShowSideQuest(false)}
           currentUserId={dbUser.id}
           setAppNotification={setAppNotification}
         />
