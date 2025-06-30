@@ -74,7 +74,8 @@ const ManualEntryForm: React.FC<ManualEntryProps> = ({
   ) => {
     event.preventDefault()
     mutateSideQuests.add.mutate({ data: formData })
-
+    setAppNotification(`Side Quest ${formData.title} entered`)
+    onClose()
     setFormData({
       user_id: user?.id,
       title: '',
