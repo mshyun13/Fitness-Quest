@@ -6,11 +6,13 @@ import { useEffect } from 'react'
 
 function Profile() {
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
+  const mutateAch = useAchievementsById(1)
 
   const {
     data: user,
     isLoading: dbUserLoading,
     isError: dbUserError,
+    //update: dbuserUpdate,
   } = useUserByAuth0()
 
   const { data: userAchievements, refetch } = useAchievementsById(user?.id || 0)
@@ -40,8 +42,21 @@ function Profile() {
 
   const xpNeededForNextLevel = getXpNeededForNextLevel(user?.level)
 
+  // function updateUser() {
+  //   dbuserUpdate.mutate({ id: 1, rank: 'gold', level: 31, appearance: 3 })
+  // }
+
+  // function addAch() {
+  //   mutateAch.add.mutate({
+  //     id: 7,
+  //     user_id: 1,
+  //   })
+  // }
+
   return (
     <>
+      {/* <button onClick={updateUser}>updateUser</button> */}
+      {/* <button onClick={addAch}>updateAchievements</button> */}
       <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
         <h3 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
           {' '}
@@ -51,7 +66,7 @@ function Profile() {
           <img
             src={`/characters/${user.gender}${user.class}${user.appearance}.webp`}
             alt="character"
-            className="mx-auto h-auto w-48 sm:w-72"
+            className="mx-auto h-auto w-48 sm:w-72 "
           />
           <div className="mx-auto grid grid-cols-[1fr_2fr] gap-1 font-semibold">
             <p>Name: </p>
@@ -130,14 +145,14 @@ function Profile() {
           Achievements
         </h3>
         {userAchievements ? (
-          <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-300 sm:grid-cols-6">
+          <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-400 sm:grid-cols-6">
             {userAchievements.map((a) => {
               return (
-                <p key={a.id} className="text-xs">
+                <p key={a.id} className="min-h-32 text-xs">
                   <img
                     src={`/achievements/achievement${a.id}.webp`}
                     alt={a.title}
-                    className="h-auto w-20"
+                    className="h-auto w-20 rounded-xl"
                   />
                   {a.title}
                 </p>
@@ -155,11 +170,17 @@ function Profile() {
 export default Profile
 
 // const mutateUser = useUsers()
-// mutateUser.update.mutate({ id: 2, xp: 0, level: 1, str: 0, dex: 0, int: 0 })
+// mutateUser.update.mutate({ id: 1, xp: 0, level: 1, str: 0, dex: 0, int: 0 })
+
+// function updateUser() {
+//   mutateUser.update.mutate({ id: 2, xp: 0, level: 1, str: 0, dex: 0, int: 0 })
+// }
+
+// <button onClick={updateUser}>updateUser</button>
 
 // import { useUsers, useUser } from '../hooks/useUsers.ts'
 // const { data: allUsers } = useUsers()
-// const { data: user } = useUser({ id: 2 })
+// const { data: user } = useUser({ id: 1 })
 // const mutateUser = useUsers()
 // const { data: allAchievements } = useAchievements()
 // const { data: userAchievements } = useAchievementsById(2)
