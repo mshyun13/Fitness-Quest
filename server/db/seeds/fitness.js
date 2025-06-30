@@ -25,18 +25,18 @@ export async function seed(knex) {
     },
     {
       id: 2,
-      auth_id: 'google-oauth2|1021411061208550175',
+      auth_id: 'google-oauth2|10214110612085501758',
       name: 'Ben',
       xp: 0,
       level: 1,
-      rank: 'Beginner',
+      rank: '',
       str: 0,
       dex: 0,
       int: 0,
       missed: 0,
-      class: 'rogue',
+      class: '',
       appearance: 1,
-      gender: 'male',
+      gender: '',
     },
     {
       id: 3,
@@ -69,7 +69,7 @@ export async function seed(knex) {
       id: 2,
       title: 'Dodge Rolling for Dummies',
       description: '20m shuttle run (6 repetitions)',
-      xp_reward: 30,
+      xp_reward: 300,
       attribute: 'dex',
       difficulty: 'medium',
     },
@@ -77,7 +77,7 @@ export async function seed(knex) {
       id: 3,
       title: 'The Kings Gambit',
       description: 'win 3 chess games in a row',
-      xp_reward: 40,
+      xp_reward: 400,
       attribute: 'int',
       difficulty: 'hard',
     },
@@ -85,15 +85,16 @@ export async function seed(knex) {
       id: 4,
       title: 'Unskippable Cutscene',
       description: 'Force yourself through a leg day',
-      xp_reward: 30,
+      xp_reward: 300,
       attribute: 'str',
       difficulty: 'medium',
     },
     {
       id: 5,
       title: 'Newfound Power!',
-      description: 'Complete any PERSONALLY CHALLENGING workout circuit, must attempt to PR any two excercises',
-      xp_reward: 40,
+      description:
+        'Complete any PERSONALLY CHALLENGING workout circuit, must attempt to PR any two excercises',
+      xp_reward: 400,
       attribute: 'str',
       difficulty: 'hard',
     },
@@ -101,46 +102,51 @@ export async function seed(knex) {
       id: 6,
       title: 'Blazing a Trail',
       description: 'Go on a walk you havent been on before',
-      xp_reward: 25,
+      xp_reward: 250,
       attribute: 'dex',
       difficulty: 'easy',
     },
     {
       id: 7,
       title: 'Feel the Burnnnn',
-      description: 'Set a personal record or go to failure on any cardio machine (EG. stairmaster)',
-      xp_reward: 40,
+      description:
+        'Set a personal record or go to failure on any cardio machine (EG. stairmaster)',
+      xp_reward: 400,
       attribute: 'dex',
       difficulty: 'hard',
     },
     {
       id: 8,
       title: 'Thirst for Knowledge',
-      description: 'Read or watch an informative piece that introduces you to something new',
-      xp_reward: 25,
+      description:
+        'Read or watch an informative piece that introduces you to something new',
+      xp_reward: 250,
       attribute: 'int',
       difficulty: 'easy',
     },
     {
       id: 9,
       title: 'Into the Archives',
-      description: 'Quiz yourself on something you havent studied for at least a month untill complete recall',
-      xp_reward: 30,
+      description:
+        'Quiz yourself on something you havent studied for at least a month untill complete recall',
+      xp_reward: 300,
       attribute: 'int',
       difficulty: 'medium',
     },
     {
       id: 10,
       title: 'How Puzzling...',
-      description: 'Complete any of the New York Times daily puzzle games, such as Wordle',
-      xp_reward: 30,
+      description:
+        'Complete any of the New York Times daily puzzle games, such as Wordle',
+      xp_reward: 300,
       attribute: 'int',
       difficulty: 'medium',
     },
     {
       id: 11,
       title: 'Loosen up!',
-      description: 'Spend at least 30 minutes doing stretches and/or movements to work on range of motion',
+      description:
+        'Spend at least 30 minutes doing stretches and/or movements to work on range of motion',
       xp_reward: 25,
       attribute: 'dex',
       difficulty: 'easy',
@@ -148,7 +154,8 @@ export async function seed(knex) {
     {
       id: 12,
       title: 'Home Improvement',
-      description: 'Complete a decluttering/rearranging task, has to feel at least slightly strenuous',
+      description:
+        'Complete a decluttering/rearranging task, has to feel at least slightly strenuous',
       xp_reward: 25,
       attribute: 'str',
       difficulty: 'easy',
@@ -164,7 +171,8 @@ export async function seed(knex) {
     {
       id: 14,
       title: 'The Keeper of Balance',
-      description: 'Complete a workout where you do at least 3 extra reps per set with your weaker arm',
+      description:
+        'Complete a workout where you do at least 3 extra reps per set with your weaker arm',
       xp_reward: 30,
       attribute: 'str',
       difficulty: 'medium',
@@ -172,7 +180,8 @@ export async function seed(knex) {
     {
       id: 15,
       title: 'Accelerate!',
-      description: 'Complete a timed jog around your neighborhood, aim to increase pace each time',
+      description:
+        'Complete a timed jog around your neighborhood, aim to increase pace each time',
       xp_reward: 30,
       attribute: 'dex',
       difficulty: 'medium',
@@ -180,7 +189,8 @@ export async function seed(knex) {
     {
       id: 16,
       title: 'Winning is Everything!',
-      description: 'Host the most competetive game night possible with the smartest people you know',
+      description:
+        'Host the most competetive game night possible with the smartest people you know',
       xp_reward: 40,
       attribute: 'int',
       difficulty: 'hard',
@@ -212,7 +222,8 @@ export async function seed(knex) {
     {
       id: 20,
       title: 'Reach for the Stars!',
-      description: 'incorperate 20 pull ups into a workout (use resistance bands if needed)',
+      description:
+        'incorperate 20 pull ups into a workout (use resistance bands if needed)',
       xp_reward: 30,
       attribute: 'str',
       difficulty: 'medium',
@@ -220,7 +231,8 @@ export async function seed(knex) {
     {
       id: 21,
       title: 'Friendly Rivalries',
-      description: 'challenge a mate to a contest of strength (EG. arm wrestling)',
+      description:
+        'challenge a mate to a contest of strength (EG. arm wrestling)',
       xp_reward: 25,
       attribute: 'str',
       difficulty: 'easy',
@@ -252,7 +264,8 @@ export async function seed(knex) {
     {
       id: 25,
       title: 'Fleet Footwork',
-      description: 'Complete a low intensity running session focusing solely on form',
+      description:
+        'Complete a low intensity running session focusing solely on form',
       xp_reward: 25,
       attribute: 'dex',
       difficulty: 'easy',
@@ -273,7 +286,6 @@ export async function seed(knex) {
       attribute: 'dex',
       difficulty: 'hard',
     },
-
   ])
 
   await knex('completions').insert([
