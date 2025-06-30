@@ -28,37 +28,6 @@ const ManualEntryForm: React.FC<ManualEntryProps> = ({
 
   const mutateSideQuests = useAddSideQuestsQuery()
 
-  // Mutation to add a completed challenge
-  // const completeChallengeMutation = useMutation<
-  //   CompletionResult,
-  //   Error,
-  //   { challengeId: number; status: 'completed' | 'missed' }
-  // >({
-  //   mutationFn: (newCompletion) =>
-  //     addCompletionApi(newCompletion, getAccessTokenSilently),
-  //   onSuccess: (data) => {
-  //     console.log('Challenge completion successful:', data)
-  //     queryClient.invalidateQueries({ queryKey: ['user'] })
-  //     queryClient.invalidateQueries({ queryKey: ['challenges'] })
-  //     queryClient.invalidateQueries({ queryKey: ['completions'] })
-  //     onClose()
-  //     setAppNotification(
-  //       `Challenge completed! You are now Level ${data.userNewLevel} with ${data.userNewXp} XP.`,
-  //       'success',
-  //     )
-  //     if (data.levelUpHappened) {
-  //       setAppNotification('Congratulations! You leveled up!', 'info')
-  //     }
-  //   },
-  //   onError: (error) => {
-  //     console.error('Failed to complete challenge:', error)
-  //     setAppNotification(
-  //       `Error completing challenge: ${error.message}`,
-  //       'error',
-  //     )
-  //   },
-  // })
-
   const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, title: event.currentTarget.value })
   }
@@ -76,8 +45,9 @@ const ManualEntryForm: React.FC<ManualEntryProps> = ({
     mutateSideQuests.add.mutate({ data: formData })
     setAppNotification(`Side Quest ${formData.title} entered`, 'info')
     onClose()
+    if (!user) return
     setFormData({
-      user_id: user?.id,
+      user_id: user.id,
       title: '',
       attribute: '',
       description: '',

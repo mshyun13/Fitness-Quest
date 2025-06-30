@@ -5,6 +5,7 @@ import { Challenge } from '../../models/challenge'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers'
 import ManualEntryForm from './ManualEntryForm'
+import { getXpNeededForNextLevel } from '../../server/utils/xpLogic'
 
 type NotificationType = 'success' | 'error' | 'info'
 
@@ -100,8 +101,12 @@ function Home() {
         ? 'bg-red-600'
         : 'bg-blue-600' // info notification color
 
+  const xpNeededForNextLevel = getXpNeededForNextLevel(
+    dbUser ? dbUser.level : 0,
+  )
+
   return (
-    <section className="flex flex-col items-center justify-start bg-gray-900 pt-8 font-mono text-green-300">
+    <section className="flex flex-col items-center justify-start bg-gray-900 font-mono text-green-300">
       {appNotification && (
         <div className="absolute min-h-40 w-screen justify-items-center">
           <div
@@ -137,11 +142,16 @@ function Home() {
                     <strong className="text-green-500">{dbUser.level}</strong>
                   </p>
                   <p className="text-xl text-green-200">
-                    XP: <strong className="text-green-500">{dbUser.xp}</strong>
+                    XP:{' '}
+                    <strong className="text-green-500">
+                      {dbUser.xp + '/' + xpNeededForNextLevel}
+                    </strong>
                   </p>
                   <p className="text-xl text-green-200">
                     Rank:{' '}
-                    <strong className="text-green-500">{dbUser.rank}</strong>
+                    <strong className="uppercase text-green-500">
+                      {dbUser.rank}
+                    </strong>
                   </p>
                 </div>
               </div>
@@ -202,7 +212,7 @@ function Home() {
         <ChallengesModal
           challenge={selectedChallenge}
           onClose={handleCloseModal}
-          currentUserId={dbUser.id}
+          // currentUserId={dbUser.id}
           setAppNotification={setAppNotification}
         />
       )}
@@ -211,7 +221,6 @@ function Home() {
       {showSideQuest && dbUser && (
         <ManualEntryForm
           onClose={() => setShowSideQuest(false)}
-          currentUserId={dbUser.id}
           setAppNotification={setAppNotification}
         />
       )}

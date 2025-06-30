@@ -28,7 +28,7 @@ interface AddSideQuest {
 }
 
 interface SideQuestData {
-  user_id: number
+  user_id?: number
   title: string
   description: string
   attribute: string

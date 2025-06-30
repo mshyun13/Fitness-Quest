@@ -13,7 +13,7 @@ function ActivityLog() {
     refetch()
     //invalidate
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, showLog])
+  }, [user])
 
   if (loading) {
     return <p>Loading your activity log...</p>
@@ -55,9 +55,9 @@ function ActivityLog() {
                 {completions.map((completion) => (
                   <li
                     key={completion.completionId}
-                    className="flex flex-col rounded border border-gray-700 bg-gray-800 p-4 shadow"
+                    className="mr-2 flex flex-col rounded border border-gray-700 bg-gray-800 p-4 shadow"
                   >
-                    <span className="mb-2 w-full text-center text-xl font-semibold text-green-300">
+                    <span className="mb-2  w-full text-center text-xl font-semibold text-green-300">
                       Challenge: {completion.challengeTitle}
                     </span>{' '}
                     <span className="mb-4 w-full text-center text-lg text-blue-300">
@@ -110,7 +110,7 @@ function ActivityLog() {
                 {sideQuests.map((quest) => (
                   <li
                     key={quest.id}
-                    className="flex flex-col rounded border border-gray-700 bg-gray-800 p-4 shadow"
+                    className="mr-2 flex flex-col  rounded border border-gray-700 bg-gray-800 p-4 shadow"
                   >
                     <span className="mb-2 w-full text-center text-xl font-semibold capitalize text-green-300">
                       Side Quest: {quest.title}
