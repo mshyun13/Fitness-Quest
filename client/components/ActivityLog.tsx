@@ -12,6 +12,7 @@ function ActivityLog() {
   useEffect(() => {
     refetch()
     //invalidate
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, showLog])
 
   if (loading) {
