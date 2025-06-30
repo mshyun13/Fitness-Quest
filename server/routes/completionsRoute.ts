@@ -25,12 +25,12 @@ router.get('/', checkJwt, async (req: JwtRequest, res) => {
 
     if (!userId) {
       console.warn('userId missing')
-      return res.status(404).json({ message: 'AuthId missing' })
+      return res.status(404)
     }
     const completions = await dbCompletions.getCompletionsByUserId(userId)
     res.json(completions)
   } catch (error) {
-    console.error('Error getting Activity Log', error)
+    console.error('Error getting Activity Log')
     res.sendStatus(500)
   }
 })
