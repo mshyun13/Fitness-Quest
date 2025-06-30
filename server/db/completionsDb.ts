@@ -3,13 +3,17 @@ import {
   CompletionOfChallenge,
   CompletionResult,
 } from '../../models/completionsModel'
-import { calculateXpToCompleteLevel, checkLevelUp } from '../utils/xpLogic'
+import {
+  calculateXpToCompleteLevel,
+  getLevelFromTotalXp,
+  getXpForLeveling,
+} from '../utils/xpLogic'
 import { getSingleChallenge } from './challenges'
 import { User } from '../../models/users'
 
 // Determines rank based on level
 export function getRankByLevel(level: number): string {
-  if (level >= 1 && level <= 99) {
+  if (level >= 1 && level <= 19) {
     return 'Bronze'
   } else if (level >= 20 && level <= 39) {
     return 'Silver'
@@ -17,7 +21,7 @@ export function getRankByLevel(level: number): string {
     return 'Gold'
   } else if (level >= 60 && level <= 79) {
     return 'Platinum'
-  } else if (level >= 80 && level <= 99) {
+  } else if (level >= 80) {
     return 'Diamond'
   }
   return 'Unranked'
@@ -146,7 +150,7 @@ export async function processChallengeCompletion(
           levelUpHappened = true
           updatedUser.level = reCalculatedLevel
           console.log('whoops')
-          const previousXP = calculateXpToCompleteLevel(newCalculatedLevel - 1)
+          const previousXP = calculateXpToCompleteLevel(reCalculatedLevel - 1)
           updatedUser.xp -= previousXP
         }
       }
