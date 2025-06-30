@@ -120,8 +120,6 @@ function Register() {
       auth_id: auth0User.sub,
     }
 
-    console.log(dataToSend)
-
     try {
       const token = await getAccessTokenSilently()
       await addUserMutation.mutateAsync({ userData: dataToSend, token })
