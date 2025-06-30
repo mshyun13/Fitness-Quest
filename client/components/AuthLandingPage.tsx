@@ -10,10 +10,8 @@ const AuthLandingPage = () => {
   const {
     data: dbUser,
     isLoading: isDbUserLoading,
-    isSuccess: isDbUserSuccess,
     isError: isDbUserError,
     error: dbUserError,
-    add: addNewUserMutation,
   } = useUserByAuth0()
 
   useEffect(() => {
@@ -22,16 +20,10 @@ const AuthLandingPage = () => {
         if (dbUser) {
           // User exists in DB
           console.log('Existing user logged in, redirecting to home.')
-          navigate('/')
-        } else if (isDbUserError && dbUserError?.response?.status === 404) {
+          navigate('/home')
+        } else if (isDbUserError && (dbUserError as any)?.status === 404) {
           // User does NOT exist in DB (first time login)
           console.log('New user, adding to DB and redirecting to register')
-
-          addNewUserMutation.mutate({
-            auth_id: auth0User.sub!,
-            name: auth0User.name || auth0User.nickname || 'New User',
-            class: 'Bronze',
-          })
           navigate('/register')
         } else if (isDbUserError) {
           // Error check user in DB
@@ -41,7 +33,7 @@ const AuthLandingPage = () => {
       }
     } else if (!isLoading && !isAuthenticated) {
       console.log('Not authenticated, redirecting to login')
-      navigate('/login')
+      navigate('/')
     }
   }, [
     isLoading,
@@ -49,10 +41,8 @@ const AuthLandingPage = () => {
     auth0User,
     dbUser,
     isDbUserLoading,
-    isDbUserSuccess,
     isDbUserError,
     dbUserError,
-    addNewUserMutation,
     navigate,
   ])
 

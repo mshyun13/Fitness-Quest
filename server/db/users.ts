@@ -1,5 +1,6 @@
-import { UpdateUser, User, UserData } from '../../models/users.ts'
+import { UpdateUser, User } from '../../models/users.ts'
 import db from './connection.ts'
+import { UserData } from '../../models/users.ts'
 
 export async function getAllUsers() {
   const users = await db('users').select()
@@ -14,7 +15,8 @@ export async function getUserById(id: number) {
 export async function getUserByAuthId(
   authId: string,
 ): Promise<User | undefined> {
-  const user = await db('users')
+  return db('users')
+    .where('auth_id', authId)
     .select(
       'id',
       'auth_id',
@@ -30,9 +32,7 @@ export async function getUserByAuthId(
       'appearance',
       'gender',
     )
-    .where('auth_id', authId)
-    .first()
-  return user as User | undefined
+    .first() as Promise<UserData | undefined>
 }
 
 export async function addUser(data: UserData) {
@@ -40,6 +40,7 @@ export async function addUser(data: UserData) {
     auth_id: data.auth_id,
     name: data.name,
     class: data.class,
+    gender: data.gender,
 
     xp: 0,
     level: 1,

@@ -9,7 +9,7 @@ export async function up(knex) {
       table.string('name')
       table.integer('xp').defaultTo(0)
       table.integer('level').defaultTo(1)
-      table.string('rank').defaultTo('beginner')
+      table.string('rank').defaultTo('')
       table.integer('str').defaultTo(0)
       table.integer('dex').defaultTo(0)
       table.integer('int').defaultTo(0)

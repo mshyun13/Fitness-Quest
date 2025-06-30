@@ -18,9 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
       domain="kahikatea-2025-mark.au.auth0.com"
       clientId="mQDiO5z9Ae5ptJ5YAq5Csm4VczNW4FZz"
       authorizationParams={{
-        redirect_uri: window.location.origin,
+        redirect_uri: window.location.origin + '/auth-landing',
         audience: 'https://fitness/api',
       }}
+      // stops auth0 logout when page refreshes
+      cacheLocation="localstorage"
+      useRefreshTokens={true}
     >
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />

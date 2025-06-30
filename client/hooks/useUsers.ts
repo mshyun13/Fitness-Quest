@@ -42,10 +42,13 @@ export function useUserByAuth0() {
   const query = useQuery({
     queryKey: ['user'],
     queryFn: async () => {
+      if (!user || !user.sub) {
+        throw new Error('Auth0 user ID (sub) is not available.')
+      }
       const token = await getAccessTokenSilently()
-      return getUserByAuth0({ token })
+      return getUserByAuth0({ token, auth0Id: user.sub })
     },
-    enabled: !!user,
+    enabled: !!user?.sub,
     refetchOnWindowFocus: false,
     retry: false,
   })
