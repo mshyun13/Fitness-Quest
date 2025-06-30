@@ -12,12 +12,15 @@ router.get('/:id', checkJwt, async (req: JwtRequest, res) => {
     res.sendStatus(401)
     return
   }
-  if (id === 0) return
 
   try {
+    if (id === 0) {
+      res.sendStatus(404)
+      return
+    }
     const quests = await db.getSideQuestsById(id)
     console.log('routes', quests)
-    const reversedQuests = quests.toReversed()
+    const reversedQuests = quests.reverse()
     if (quests) {
       res.json({ sidequests: reversedQuests })
     } else {
