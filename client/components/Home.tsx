@@ -49,13 +49,9 @@ function Home() {
   // Clear notifications
   useEffect(() => {
     if (appNotification) {
-      if (
-        appNotification.type === 'info' &&
-        appNotification.message != 'Congratulations! You leveled up!'
-      ) {
+      if (appNotification.message != 'Congratulations! You leveled up!') {
         new Audio('/audio/fitness.wav').play()
       } else if (
-        appNotification.type === 'info' &&
         appNotification.message === 'Congratulations! You leveled up!'
       ) {
         new Audio('/audio/fitness2.wav').play()
@@ -106,17 +102,19 @@ function Home() {
 
   return (
     <section className="flex flex-col items-center justify-start bg-gray-900 pt-8 font-mono text-green-300">
+      {appNotification && (
+        <div className="absolute min-h-40 w-screen justify-items-center">
+          <div
+            className={`mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white ${notificationClass}`}
+            style={{ maxWidth: 'fit-content' }}
+          >
+            <p>{appNotification.message}</p>
+          </div>
+        </div>
+      )}
       <div className="flex w-full flex-grow items-center justify-center">
         <div className="w-full max-w-4xl text-center">
           {/* Notification */}
-          {appNotification && (
-            <div
-              className={`mx-auto mb-4 rounded p-3 text-white ${notificationClass}`}
-              style={{ maxWidth: 'fit-content' }}
-            >
-              <p>{appNotification.message}</p>
-            </div>
-          )}
 
           <h1 className="mb-6 text-5xl font-bold text-green-400">
             Welcome,{' '}
