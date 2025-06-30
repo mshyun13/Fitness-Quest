@@ -13,7 +13,6 @@ const AuthLandingPage = () => {
     isSuccess: isDbUserSuccess,
     isError: isDbUserError,
     error: dbUserError,
-    add: addNewUserMutation,
   } = useUserByAuth0()
 
   useEffect(() => {
@@ -26,12 +25,6 @@ const AuthLandingPage = () => {
         } else if (isDbUserError && dbUserError?.response?.status === 404) {
           // User does NOT exist in DB (first time login)
           console.log('New user, adding to DB and redirecting to register')
-
-          addNewUserMutation.mutate({
-            auth_id: auth0User.sub!,
-            name: auth0User.name || auth0User.nickname || 'New User',
-            class: 'Bronze',
-          })
           navigate('/register')
         } else if (isDbUserError) {
           // Error check user in DB
@@ -52,7 +45,6 @@ const AuthLandingPage = () => {
     isDbUserSuccess,
     isDbUserError,
     dbUserError,
-    addNewUserMutation,
     navigate,
   ])
 
