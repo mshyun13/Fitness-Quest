@@ -101,7 +101,9 @@ function Home() {
         ? 'bg-red-600'
         : 'bg-blue-600' // info notification color
 
-  const xpNeededForNextLevel = getXpNeededForNextLevel(dbUser?.level)
+  const xpNeededForNextLevel = getXpNeededForNextLevel(
+    dbUser ? dbUser.level : 0,
+  )
 
   return (
     <section className="flex flex-col items-center justify-start bg-gray-900 font-mono text-green-300">
