@@ -37,12 +37,12 @@ export function addUserByAuth0({
   userData,
   token,
 }: AddAuth0User): Promise<{ id: number }> {
-  const { name, class: userClass } = userData
+  const { name, class: userClass, gender } = userData
 
   return request
     .post(`${rootUrl}/users`)
     .set('Authorization', `Bearer ${token}`)
-    .send({ name, class: userClass })
+    .send({ name, class: userClass, gender })
     .then((res) => {
       return res.body as { id: number }
     })

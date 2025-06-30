@@ -40,6 +40,7 @@ export async function addUser(data: UserData) {
     auth_id: data.auth_id,
     name: data.name,
     class: data.class,
+    gender: data.gender,
 
     xp: 0,
     level: 1,

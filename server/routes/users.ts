@@ -74,8 +74,13 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
   }
 
   try {
-    const { name, class: userClass } = req.body
-    const newUserId = await db.addUser({ auth_id, name, class: userClass })
+    const { name, class: userClass, gender } = req.body
+    const newUserId = await db.addUser({
+      auth_id,
+      name,
+      class: userClass,
+      gender,
+    })
 
     res.status(StatusCodes.CREATED).json({ id: newUserId })
   } catch (err) {

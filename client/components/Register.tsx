@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react'
+import { ChangeEventHandler, useEffect, useState } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSubmit } from 'react-router-dom'
 import { useUserByAuth0 } from '../hooks/useUsers'
 import { UserData } from '../../models/users'
 
 const newUserData: UserData = {
   auth_id: '',
   name: '',
-  class: '',
-  gender: '', // user will get the rest once added to DB eg. XP, Level etc
+  class: 'warrior',
+  gender: 'male', // user will get the rest once added to DB eg. XP, Level etc
 }
 
 function Register() {
@@ -27,7 +27,11 @@ function Register() {
   } = useUserByAuth0()
   const navigate = useNavigate()
 
-  const { name: newName, class: newClass, gender: newGender } = newUser
+  const [isImage, setImage] = useState(false)
+  const [leftButton, setLeftButton] = useState(true)
+  const [rightButton, setRightButton] = useState(false)
+
+  const { name: newName } = newUser
 
   useEffect(() => {
     if (!isAuth0Loading && isAuthenticated && auth0User?.sub) {
@@ -63,6 +67,44 @@ function Register() {
       ...newUser,
       [id]: value,
     })
+
+    newUser.gender != '' && newUser.class != ''
+      ? setImage(true)
+      : setImage(false)
+  }
+
+  const handleLeftClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
+    const { id } = evt.target
+    if (rightButton) setRightButton(false)
+    if (newUser.class == 'mage') {
+      setNewUser({
+        ...newUser,
+        [id]: 'rogue',
+      })
+    } else if (newUser.class == 'rogue') {
+      setNewUser({
+        ...newUser,
+        [id]: 'warrior',
+      })
+      setLeftButton(true)
+    }
+  }
+
+  const handleRightClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
+    const { id } = evt.target
+    if (leftButton) setLeftButton(false)
+    if (newUser.class == 'warrior') {
+      setNewUser({
+        ...newUser,
+        [id]: 'rogue',
+      })
+    } else if (newUser.class == 'rogue') {
+      setNewUser({
+        ...newUser,
+        [id]: 'mage',
+      })
+      setRightButton(true)
+    }
   }
 
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
@@ -120,31 +162,60 @@ function Register() {
               className="mb-2 text-black"
               required
             />
-            {/* Class */}
-            <label htmlFor="class" className="mb-2">
-              Preferred Class:{' '}
-            </label>
-            <input
-              type="text"
-              id="class"
-              value={newClass}
-              onChange={handleChange}
-              className="mb-2 text-black"
-              required
-            />
+
             {/* Gender */}
             <label htmlFor="gender" className="mb-2">
               Gender:{' '}
             </label>
-            <input
-              type="text"
+            <select
               id="gender"
-              value={newGender}
               onChange={handleChange}
               className="mb-2 text-black"
-              required
-            />
-            {/* Buttons are Disabled when adding to DB */}
+            >
+              <option value="" disabled selected>
+                Select your option
+              </option>
+              <option value={'male'}>Male</option>
+              <option value={'female'}>Female</option>
+              <option value={'cat'}>Cat</option>
+            </select>
+
+            {/* Class and Image */}
+            {isImage == true ? (
+              <div>
+                <label htmlFor="class">
+                  <p>Choose your class ⚔️</p>
+                  <p>Your current class: {newUser.class}</p>
+                </label>
+                <div className="flex flex-row">
+                  <button
+                    id="class"
+                    type="button"
+                    onClick={handleLeftClick}
+                    disabled={leftButton}
+                  >
+                    {'<'}
+                  </button>
+
+                  <img
+                    src={`/characters/${newUser.gender}${newUser.class}1.webp`}
+                    alt="new character"
+                    className="mb-2"
+                  />
+
+                  <button
+                    id="class"
+                    type="button"
+                    onClick={handleRightClick}
+                    disabled={rightButton}
+                  >
+                    {'>'}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={addUserMutation.isPending}
@@ -153,6 +224,7 @@ function Register() {
             >
               {addUserMutation.isPending ? 'Registering...' : 'Register'}
             </button>
+
             {/* Mutation Error Messages */}
             {addUserMutation.isError && (
               <p className="mt-2 text-red-500">
