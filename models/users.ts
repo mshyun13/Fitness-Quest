@@ -19,6 +19,7 @@ export interface UserData {
   name: string
   class: string
   gender: string
+  appearance?: number
 }
 
 export interface UpdateUser {

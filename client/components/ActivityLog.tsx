@@ -6,7 +6,7 @@ import { useUserByAuth0 } from '../hooks/useUsers.ts'
 function ActivityLog() {
   const { completions, loading, error } = useCompletions()
   const { data: user } = useUserByAuth0()
-  const { data: sideQuests, refetch } = useSideQuests(user?.id)
+  const { data: sideQuests, refetch } = useSideQuests(user?.id || 0)
   const [showLog, setShowLog] = useState('challenge')
 
   useEffect(() => {
@@ -23,9 +23,9 @@ function ActivityLog() {
     return <p>Error loading bro! {error}</p>
   }
 
-  if (completions.length === 0) {
-    return <p>No challenges completed yet. Get started!</p>
-  }
+  // if (completions.length === 0) {
+  //   return <p>No challenges completed yet. Get started!</p>
+  // }
 
   return (
     <>
@@ -52,45 +52,55 @@ function ActivityLog() {
             </h3>
             <div className="h-[50rem] overflow-y-scroll ">
               <ul className="space-y-4 ">
-                {completions.map((completion) => (
-                  <li
-                    key={completion.completionId}
-                    className="mr-2 flex flex-col rounded border border-gray-700 bg-gray-800 p-4 shadow"
-                  >
-                    <span className="mb-2  w-full text-center text-xl font-semibold text-green-300">
-                      Challenge: {completion.challengeTitle}
-                    </span>{' '}
-                    <span className="mb-4 w-full text-center text-lg text-blue-300">
-                      Status:{' '}
-                      {completion.status.charAt(0).toUpperCase() +
-                        completion.status.slice(1)}
-                    </span>
-                    <div className="w-full space-y-1 text-left text-base">
-                      {' '}
-                      <p className="text-sm text-gray-400">
-                        Completed on:{' '}
-                        {new Date(completion.completed_at).toLocaleDateString()}
-                      </p>
-                      <p>
-                        <strong className="text-green-200">Description:</strong>{' '}
-                        {completion.challengeDescription}
-                      </p>
-                      <p>
-                        <strong className="text-green-200">XP Reward:</strong>{' '}
-                        {completion.xp_reward}
-                      </p>
-                      <p>
-                        <strong className="text-green-200">Attribute:</strong>{' '}
-                        {completion.attribute}
-                      </p>
-                      <p>
-                        <strong className="text-green-200">Difficulty:</strong>{' '}
-                        {completion.difficulty}
-                      </p>
-                    </div>
-                    <hr className="my-4 w-full border-t border-gray-700" />
-                  </li>
-                ))}
+                {completions.length === 0 ? (
+                  <p>No challenges completed yet. Get started!</p>
+                ) : (
+                  completions.map((completion) => (
+                    <li
+                      key={completion.completionId}
+                      className="mr-2 flex flex-col rounded border border-gray-700 bg-gray-800 p-4 shadow"
+                    >
+                      <span className="mb-2  w-full text-center text-xl font-semibold text-green-300">
+                        Challenge: {completion.challengeTitle}
+                      </span>{' '}
+                      <span className="mb-4 w-full text-center text-lg text-blue-300">
+                        Status:{' '}
+                        {completion.status.charAt(0).toUpperCase() +
+                          completion.status.slice(1)}
+                      </span>
+                      <div className="w-full space-y-1 text-left text-base">
+                        {' '}
+                        <p className="text-sm text-gray-400">
+                          Completed on:{' '}
+                          {new Date(
+                            completion.completed_at,
+                          ).toLocaleDateString()}
+                        </p>
+                        <p>
+                          <strong className="text-green-200">
+                            Description:
+                          </strong>{' '}
+                          {completion.challengeDescription}
+                        </p>
+                        <p>
+                          <strong className="text-green-200">XP Reward:</strong>{' '}
+                          {completion.xp_reward}
+                        </p>
+                        <p>
+                          <strong className="text-green-200">Attribute:</strong>{' '}
+                          {completion.attribute}
+                        </p>
+                        <p>
+                          <strong className="text-green-200">
+                            Difficulty:
+                          </strong>{' '}
+                          {completion.difficulty}
+                        </p>
+                      </div>
+                      <hr className="my-4 w-full border-t border-gray-700" />
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           </div>
@@ -107,36 +117,42 @@ function ActivityLog() {
             </h3>
             <div className="h-[50rem] overflow-y-scroll ">
               <ul className="space-y-4">
-                {sideQuests.map((quest) => (
-                  <li
-                    key={quest.id}
-                    className="mr-2 flex flex-col  rounded border border-gray-700 bg-gray-800 p-4 shadow"
-                  >
-                    <span className="mb-2 w-full text-center text-xl font-semibold capitalize text-green-300">
-                      Side Quest: {quest.title}
-                    </span>{' '}
-                    <div className="w-full space-y-1 text-left text-base">
-                      {' '}
-                      <p className="text-sm text-gray-400">
-                        Completed on:{' '}
-                        {new Date(quest.completed_at).toLocaleDateString()}
-                      </p>
-                      <p>
-                        <strong className="text-green-200">Description:</strong>{' '}
-                        {quest.description}
-                      </p>
-                      <p>
-                        <strong className="text-green-200">XP Reward:</strong>{' '}
-                        20
-                      </p>
-                      <p>
-                        <strong className="text-green-200">Attribute:</strong>{' '}
-                        {quest.attribute}
-                      </p>
-                    </div>
-                    <hr className="my-4 w-full border-t border-gray-700" />
-                  </li>
-                ))}
+                {sideQuests.length === 0 ? (
+                  <p>No side quests completed yet. Get started!</p>
+                ) : (
+                  sideQuests.map((quest) => (
+                    <li
+                      key={quest.id}
+                      className="mr-2 flex flex-col  rounded border border-gray-700 bg-gray-800 p-4 shadow"
+                    >
+                      <span className="mb-2 w-full text-center text-xl font-semibold capitalize text-green-300">
+                        Side Quest: {quest.title}
+                      </span>{' '}
+                      <div className="w-full space-y-1 text-left text-base">
+                        {' '}
+                        <p className="text-sm text-gray-400">
+                          Completed on:{' '}
+                          {new Date(quest.completed_at).toLocaleDateString()}
+                        </p>
+                        <p>
+                          <strong className="text-green-200">
+                            Description:
+                          </strong>{' '}
+                          {quest.description}
+                        </p>
+                        <p>
+                          <strong className="text-green-200">XP Reward:</strong>{' '}
+                          20
+                        </p>
+                        <p>
+                          <strong className="text-green-200">Attribute:</strong>{' '}
+                          {quest.attribute}
+                        </p>
+                      </div>
+                      <hr className="my-4 w-full border-t border-gray-700" />
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           </div>

@@ -3,15 +3,15 @@ import { AchievementsData, AddAchievements } from '../../models/achievements'
 
 const rootUrl = '/api/v1'
 
-export function getAllAchievements(): Promise<unknown> {
+export function getAllAchievements(): Promise<AchievementsData[]> {
   return request.get(rootUrl + '/achievements').then((res) => {
-    return res.body
+    return res.body as AchievementsData[]
   })
 }
 
 export function getAchievementsById(id: number): Promise<AchievementsData[]> {
   return request.get(rootUrl + `/achievements/${id}`).then((res) => {
-    return res.body
+    return (res.body as AchievementsData[]) || []
   })
 }
 

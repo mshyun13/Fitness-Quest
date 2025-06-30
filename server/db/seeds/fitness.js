@@ -290,7 +290,7 @@ export async function seed(knex) {
 
   await knex('completions').insert([
     {
-      user_id: 1,
+      user_id: 3,
       challenge_id: 1,
       completed_at: knex.fn.now(),
       status: 'completed',
@@ -369,15 +369,19 @@ export async function seed(knex) {
       id: 2,
       user_id: 1,
     },
-  ])
-  await knex('sidequests').insert([
     {
-      id: 1,
+      id: 5,
       user_id: 1,
-      title: 'test quest',
-      description: 'this is a test of the side quests',
-      attribute: 'int',
-      completed_at: knex.fn.now(),
     },
   ])
+  // await knex('sidequests').insert([
+  //   {
+  //     id: 1,
+  //     user_id: 1,
+  //     title: 'test quest',
+  //     description: 'this is a test of the side quests',
+  //     attribute: 'int',
+  //     completed_at: knex.fn.now(),
+  //   },
+  // ])
 }
