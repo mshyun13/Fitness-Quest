@@ -3,7 +3,7 @@ import {
   CompletionOfChallenge,
   CompletionResult,
 } from '../../models/completionsModel'
-import { calculateXpToCompleteLevel } from '../utils/xpLogic'
+import { calculateXpToCompleteLevel, checkLevelUp } from '../utils/xpLogic'
 import { getSingleChallenge } from './challenges'
 import { User } from '../../models/users'
 
@@ -155,7 +155,7 @@ export async function processChallengeCompletion(
     // Checks if rank up happens based on new level
     updatedUser.rank = getRankByLevel(updatedUser.level || 0)
 
-    // Updates user in DB using transaction
+    // Update users xp in DB using transaction
     await trx('users')
       .where('id', userId)
       .update({
