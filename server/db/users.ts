@@ -49,7 +49,7 @@ export async function addUser(data: UserData) {
     dex: 0,
     int: 0,
     missed: 0,
-    appearance: 0,
+    appearance: 1,
   })
   return id
 }

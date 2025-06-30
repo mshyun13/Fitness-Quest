@@ -80,7 +80,7 @@ function Profile() {
             <p>XP:</p>{' '}
             <div className="relative max-h-4">
               <div
-                className={`relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950`}
+                className={`relative z-0 h-4 w-full translate-y-1 overflow-hidden rounded-md bg-gray-700 ring-1 ring-gray-950`}
               >
                 <div
                   style={{
@@ -96,7 +96,7 @@ function Profile() {
             <p>Str:</p>{' '}
             <div className="relative max-h-4">
               <div
-                className={`relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950`}
+                className={`relative z-0 h-4 w-full translate-y-1 overflow-hidden rounded-md bg-gray-700 ring-1 ring-gray-950`}
               >
                 <div
                   style={{ width: `${user?.str > 100 ? 100 : user?.str}%` }}
@@ -110,7 +110,7 @@ function Profile() {
             <p>Dex:</p>{' '}
             <div className="relative max-h-4">
               <div
-                className={`relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950`}
+                className={`relative z-0 h-4 w-full translate-y-1 overflow-hidden rounded-md bg-gray-700 ring-1 ring-gray-950`}
               >
                 <div
                   style={{ width: `${user?.dex > 100 ? 100 : user?.dex}%` }}
@@ -124,7 +124,7 @@ function Profile() {
             <p>Int:</p>{' '}
             <div className="relative ">
               <div
-                className={`relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950`}
+                className={`relative z-0 h-4 w-full translate-y-1 overflow-hidden rounded-md bg-gray-700 ring-1 ring-gray-950`}
               >
                 <div
                   style={{ width: `${user?.int > 100 ? 100 : user?.int}%` }}
@@ -144,9 +144,9 @@ function Profile() {
           {' '}
           Achievements
         </h3>
-        {userAchievements ? (
+        {userAchievements?.length !== 0 ? (
           <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-400 sm:grid-cols-6">
-            {userAchievements.map((a) => {
+            {userAchievements?.map((a) => {
               return (
                 <p key={a.id} className="min-h-32 text-xs">
                   <img
@@ -160,7 +160,7 @@ function Profile() {
             })}
           </div>
         ) : (
-          <p>No achievements</p>
+          <p>No achievements yet, Get started!</p>
         )}
       </div>
     </>

@@ -2,7 +2,6 @@ import db from './connection.ts'
 
 export async function getSideQuestsById(id: number) {
   const quests = await db('sidequests').where('user_id', id).select()
-  console.log('db', quests)
   return quests
 }
 
