@@ -8,8 +8,8 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      console.log('Authenticated user. Redirecting to /')
-      navigate('/')
+      console.log('Authenticated user. Redirecting to /home')
+      navigate('/home')
     }
   }, [isAuthenticated, isLoading, navigate])
 
