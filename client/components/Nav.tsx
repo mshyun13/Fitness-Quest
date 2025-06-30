@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
 export default function Nav() {
   const { isAuthenticated, logout } = useAuth0()
+  const location = useLocation()
 
   const handleSignOut = () => {
     logout({
@@ -12,10 +13,17 @@ export default function Nav() {
     })
   }
 
+  const isOnLoginPage = location.pathname === '/'
+
   return (
     <div className="flex flex-wrap justify-around sm:text-xl">
-      <Link to={isAuthenticated ? '/home' : '/'}>Home</Link>
-      <p>-</p>
+      {!isOnLoginPage && (
+        <>
+          <Link to={isAuthenticated ? '/home' : '/'}>Home</Link>
+          <p>-</p>
+        </>
+      )}
+
       {isAuthenticated && (
         <>
           <Link to="/profile">Profile</Link>

@@ -36,9 +36,13 @@ function App() {
     }
   }, [isAuthenticated, isLoading, location.pathname, navigate])
 
+  const headerClasses = `select-none bg-gray-900 p-4 font-mono text-green-300 ${
+    location.pathname !== '/' ? 'border-b-2 border-green-700' : ''
+  }`
+
   return (
     <>
-      <header className="select-none border-b-2 border-green-700 bg-gray-900 p-4 font-mono text-green-300">
+      <header className={headerClasses}>
         <h1 className="pt-2 text-center font-['Real_Tatoem',_serif] text-6xl text-gray-200">
           Fit Quest
         </h1>
