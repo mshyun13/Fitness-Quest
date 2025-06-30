@@ -5,10 +5,12 @@ import Profile from './components/Profile.tsx'
 import ActivityLog from './components/ActivityLog.tsx'
 import Register from './components/Register.tsx'
 import AuthLandingPage from './components/AuthLandingPage.tsx'
+import LoginPage from './components/LandingPage.tsx'
 
 export default createRoutesFromElements(
   <Route path="/" element={<App />}>
-    <Route index element={<Home />} />
+    <Route index element={<LoginPage />} />
+    <Route path="/home" element={<Home />} />
     <Route path="/profile" element={<Profile />} />
     <Route path="/log" element={<ActivityLog />} />
     <Route path="/register" element={<Register />} />
