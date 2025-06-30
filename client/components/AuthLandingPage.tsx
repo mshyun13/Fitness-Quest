@@ -10,7 +10,6 @@ const AuthLandingPage = () => {
   const {
     data: dbUser,
     isLoading: isDbUserLoading,
-    isSuccess: isDbUserSuccess,
     isError: isDbUserError,
     error: dbUserError,
   } = useUserByAuth0()
@@ -21,8 +20,8 @@ const AuthLandingPage = () => {
         if (dbUser) {
           // User exists in DB
           console.log('Existing user logged in, redirecting to home.')
-          navigate('/')
-        } else if (isDbUserError && dbUserError?.response?.status === 404) {
+          navigate('/home')
+        } else if (isDbUserError && (dbUserError as any)?.status === 404) {
           // User does NOT exist in DB (first time login)
           console.log('New user, adding to DB and redirecting to register')
           navigate('/register')
@@ -34,7 +33,7 @@ const AuthLandingPage = () => {
       }
     } else if (!isLoading && !isAuthenticated) {
       console.log('Not authenticated, redirecting to login')
-      navigate('/login')
+      navigate('/')
     }
   }, [
     isLoading,
@@ -42,7 +41,6 @@ const AuthLandingPage = () => {
     auth0User,
     dbUser,
     isDbUserLoading,
-    isDbUserSuccess,
     isDbUserError,
     dbUserError,
     navigate,
