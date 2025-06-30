@@ -4,6 +4,7 @@ import ChallengesModal from './ChallengesModal'
 import { Challenge } from '../../models/challenge'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers'
+import ManualEntryForm from './ManualEntryForm'
 
 type NotificationType = 'success' | 'error' | 'info'
 
@@ -28,6 +29,7 @@ function Home() {
   } = useUserByAuth0()
 
   const [showModal, setShowModal] = useState(false)
+  const [showSideQuest, setShowSideQuest] = useState(false)
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
     null,
   )
@@ -64,6 +66,11 @@ function Home() {
   const handleCloseModal = () => {
     setShowModal(false)
     setSelectedChallenge(null)
+  }
+
+  // Show a Side Quest entry form
+  const handleSideQuest = () => {
+    setShowSideQuest(true)
   }
 
   if (isLoading || dbUserLoading || auth0Loading) {
@@ -167,6 +174,7 @@ function Home() {
               )}
             </ul>
           </div>
+          <button onClick={handleSideQuest}>Side Quest</button>
         </div>
       </div>
 
@@ -174,6 +182,15 @@ function Home() {
       {showModal && selectedChallenge && dbUser && (
         <ChallengesModal
           challenge={selectedChallenge}
+          onClose={handleCloseModal}
+          currentUserId={dbUser.id}
+          setAppNotification={setAppNotification}
+        />
+      )}
+
+      {/* Side Quest */}
+      {showSideQuest && dbUser && (
+        <ManualEntryForm
           onClose={handleCloseModal}
           currentUserId={dbUser.id}
           setAppNotification={setAppNotification}
