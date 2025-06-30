@@ -10,16 +10,20 @@ export function getAllUsers(): Promise<User[]> {
 }
 
 // get user by auth0 ID
-interface Token {
+interface GetUserByAuth0Params {
   token: string
+  auth0Id: string
 }
 
-export async function getUserByAuth0({ token }: Token): Promise<User> {
+export async function getUserByAuth0({
+  token,
+  auth0Id,
+}: GetUserByAuth0Params): Promise<User> {
   return await request
-    .get(`${rootUrl}/users/currentuser`)
+    .get(`${rootUrl}/users/byAuth0Id/${auth0Id}`)
     .set('Authorization', `Bearer ${token}`)
     .then((res) => {
-      return res.body.user as User
+      return res.body as User
     })
 }
 

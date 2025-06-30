@@ -7,6 +7,22 @@ import { calculateXpToCompleteLevel, checkLevelUp } from '../utils/xpLogic'
 import { getSingleChallenge } from './challenges'
 import { User } from '../../models/users'
 
+// Determines rank based on level
+export function getRankByLevel(level: number): string {
+  if (level >= 1 && level <= 99) {
+    return 'Bronze'
+  } else if (level >= 20 && level <= 39) {
+    return 'Silver'
+  } else if (level >= 40 && level <= 59) {
+    return 'Gold'
+  } else if (level >= 60 && level <= 79) {
+    return 'Platinum'
+  } else if (level >= 80 && level <= 99) {
+    return 'Diamond'
+  }
+  return 'Unranked'
+}
+
 // Gets users completed challenges, joins challenge details
 export async function getCompletionsByUserId(
   userId: number,
@@ -134,9 +150,10 @@ export async function processChallengeCompletion(
           updatedUser.xp -= previousXP
         }
       }
-
       updatedUser[attributeToUpdate] = newAttributeValue // Assigns new attribute values
     }
+    // Checks if rank up happens based on new level
+    updatedUser.rank = getRankByLevel(updatedUser.level || 0)
 
     // Update users xp in DB within transaction
     await trx('users')
@@ -147,6 +164,7 @@ export async function processChallengeCompletion(
         str: updatedUser.str || 0,
         dex: updatedUser.dex || 0,
         int: updatedUser.int || 0,
+        rank: updatedUser.rank || 0,
       })
 
     // Inserts completion into DB within transaction
