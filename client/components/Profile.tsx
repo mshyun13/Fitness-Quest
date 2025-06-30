@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 
 function Profile() {
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
-  const mutateAch = useAchievementsById(1)
+  //const mutateAch = useAchievementsById(1)
 
   const {
     data: user,
