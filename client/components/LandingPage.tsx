@@ -116,14 +116,14 @@ const LoginPage = () => {
             </button>
           </div>
           {/* Register Button */}
-          <div>
+          {/* <div>
             <button
               className="w-full rounded border border-transparent bg-transparent px-6 py-3 text-2xl font-bold text-white transition-all duration-300 hover:border-blue-500 hover:text-blue-300"
               onClick={handleRegister}
             >
               Register
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
