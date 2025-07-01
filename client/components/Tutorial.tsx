@@ -4,6 +4,16 @@ import { useState } from 'react'
 function Tutorial() {
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
   const [showChallenge, setShowChallenge] = useState(false)
+  const [levelNumber, setLevelNumber] = useState(0)
+  const [xpNumber, setXpNumber] = useState(0)
+  const [attNumber, setAttNumber] = useState({
+    str: 0,
+    dex: 0,
+    int: 0,
+  })
+
+  const totalXp = 1500
+  const amountXp = 2500
 
   const handleChallengeClick = () => {
     setShowChallenge(true)
@@ -17,7 +27,20 @@ function Tutorial() {
     alert(
       'Challenge completed! You can view all the completed challenges on the Profile page.',
     )
+    setXpNumber(xpNumber + amountXp)
     setShowChallenge(false)
+  }
+
+  if (xpNumber >= totalXp) {
+    const xpReminder = xpNumber % totalXp
+    setXpNumber(xpReminder)
+    const levelIncrease = Math.trunc(xpNumber / totalXp)
+    setLevelNumber(levelNumber + levelIncrease)
+    setAttNumber({
+      str: attNumber.str + levelIncrease,
+      dex: 0,
+      int: 0,
+    })
   }
 
   if (auth0Loading) {
@@ -35,6 +58,79 @@ function Tutorial() {
       <p>Increase your XP and level up by completing the challenges.</p>
 
       {/* Profile */}
+      <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
+        <h3 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
+          {' '}
+          Profile
+        </h3>
+        <div className="justify-content-center mt-10 flex flex-wrap items-center gap-1.5 justify-self-center rounded-2xl p-4 sm:gap-4">
+          <img
+            src="characters/catwarrior1.webp"
+            alt="tutorial profile character"
+            className="mx-auto h-auto w-48 sm:w-72"
+          />
+          <div className="mx-auto grid grid-cols-[1fr_2fr] gap-1 font-semibold">
+            <p>Name: </p>
+            <p className="text-center capitalize text-white">Meow</p>
+            <p>Class: </p>
+            <p className="text-center capitalize text-white">Meow Meow</p>
+            <p>Rank: </p>
+            <p className="text-center capitalize text-white">MEEEOOOOOW</p>
+            <p>Level: </p>
+            <p className="text-center text-white">{levelNumber}</p>
+            <p>XP: </p>
+            <div className="relative max-h-4">
+              <div className="relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950">
+                <div
+                  style={{
+                    width: `${(xpNumber / totalXp) * 100}%`,
+                  }}
+                  className="z-10 h-4 overflow-hidden rounded-md bg-green-700"
+                ></div>
+                <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
+                  {xpNumber}/{totalXp}
+                </p>
+              </div>
+            </div>
+            <p>Str: </p>
+            <div className="relative max-h-4">
+              <div className="relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950">
+                <div
+                  style={{ width: `${attNumber.str}%` }}
+                  className="z-10 h-4 rounded-md bg-green-700"
+                ></div>
+                <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
+                  LVL {attNumber.str}
+                </p>
+              </div>
+            </div>
+            <p>Dex: </p>
+            <div className="relative max-h-4">
+              <div className="relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950">
+                <div
+                  style={{ width: `${attNumber.dex}%` }}
+                  className="z-10 h-4 rounded-md bg-green-700"
+                ></div>
+                <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
+                  LVL {attNumber.dex}
+                </p>
+              </div>
+            </div>
+            <p>Int: </p>
+            <div className="relative max-h-4">
+              <div className="relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950">
+                <div
+                  style={{ width: `${attNumber.int}%` }}
+                  className="z-10 h-4 rounded-md bg-green-700"
+                ></div>
+                <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
+                  LVL {attNumber.int}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Challenge */}
       <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl">
@@ -87,7 +183,9 @@ function Tutorial() {
                 </strong>
               </p>
               <p className="text-xl">
-                <strong className="text-green-200">XP Reward: 2500 XP</strong>
+                <strong className="text-green-200">
+                  XP Reward: {amountXp} XP
+                </strong>
               </p>
               <div className="mt-6 text-center">
                 <p className="text-white">
