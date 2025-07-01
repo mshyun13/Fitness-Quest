@@ -60,3 +60,11 @@ export async function updateUserByAuth0(
       return res.status
     })
 }
+
+export function getLeaderboard(): Promise<User[]> {
+  return request.get(rootUrl + '/users').then((res) => {
+    const users = res.body
+    const leaderboard = users.sort((a: User, b: User) => a.level - b.level)
+    return leaderboard.reverse().slice(0, 3) as User[]
+  })
+}

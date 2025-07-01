@@ -61,7 +61,7 @@ const ManualEntryForm: React.FC<ManualEntryProps> = ({
         <div className="absolute">
           <form
             onSubmit={handleSubmit}
-            className="m-1 grid max-w-lg grid-cols-2 items-center place-self-center rounded-lg bg-gray-800 p-4 ring-2 ring-zinc-600"
+            className="m-1 grid max-w-lg grid-cols-2 items-center place-self-center rounded-lg bg-gray-800 p-4 shadow-xl shadow-gray-950 ring-2 ring-zinc-600"
           >
             <h2 className="col-span-2 mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
               Side Quest

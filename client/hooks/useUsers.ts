@@ -7,6 +7,7 @@ import {
 import {
   addUserByAuth0,
   getAllUsers,
+  getLeaderboard,
   getUserByAuth0,
   updateUserByAuth0,
 } from '../apis/users.ts'
@@ -15,6 +16,13 @@ import { User } from '../../models/users.ts'
 
 export function useUsers() {
   const query = useQuery({ queryKey: ['users'], queryFn: getAllUsers })
+  return {
+    ...query,
+  }
+}
+
+export function useLeaderboard() {
+  const query = useQuery({ queryKey: ['users'], queryFn: getLeaderboard })
   return {
     ...query,
   }

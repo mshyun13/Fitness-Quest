@@ -37,6 +37,12 @@ export default function Nav() {
         </>
       )}
       {isAuthenticated && (
+        <>
+          <Link to="/leaderboard">Leaderboard</Link>
+          <p>-</p>
+        </>
+      )}
+      {isAuthenticated && (
         <button
           onClick={handleSignOut}
           className="cursor-pointer border-none bg-transparent text-green-300 hover:text-green-200"
