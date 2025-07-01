@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useLeaderboard } from '../hooks/useUsers.ts'
 
-function Profile() {
+function Leaderboard() {
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
 
   const {
@@ -72,4 +72,4 @@ function Profile() {
   )
 }
 
-export default Profile
+export default Leaderboard

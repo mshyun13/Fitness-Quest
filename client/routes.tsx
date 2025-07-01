@@ -7,6 +7,7 @@ import Register from './components/Register.tsx'
 import AuthLandingPage from './components/AuthLandingPage.tsx'
 import LoginPage from './components/LandingPage.tsx'
 import Leaderboard from './components/Leaderboard.tsx'
+import Feed from './components/Feed.tsx'
 
 export default createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -17,6 +18,7 @@ export default createRoutesFromElements(
     <Route path="/register" element={<Register />} />
     <Route path="/auth-landing" element={<AuthLandingPage />} />
     <Route path="/leaderboard" element={<Leaderboard />} />
+    <Route path="/feed" element={<Feed />} />
     {/* <Route path="/character" element={<Character />} /> */}
   </Route>,
 )

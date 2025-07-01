@@ -374,6 +374,14 @@ export async function seed(knex) {
       user_id: 1,
     },
   ])
+
+  await knex('posts').insert([
+    {
+      id: 1,
+      user_id: 1,
+      content: 'this is a test post',
+    },
+  ])
   // await knex('sidequests').insert([
   //   {
   //     id: 1,

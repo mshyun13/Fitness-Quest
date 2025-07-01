@@ -52,6 +52,12 @@ export async function up(knex) {
       table.enum('attribute', ['str', 'dex', 'int'])
       table.datetime('completed_at')
     })
+    .createTable('posts', (table) => {
+      table.increments('id')
+      table.integer('user_id').references('id').inTable('users')
+      table.string('content')
+      table.timestamp('date').defaultTo(knex.fn.now())
+    })
 }
 
 export async function down(knex) {
@@ -62,4 +68,5 @@ export async function down(knex) {
     .dropTable('achievements')
     .dropTable('achievements_user')
     .dropTable('sidequests')
+    .dropTable('posts')
 }
