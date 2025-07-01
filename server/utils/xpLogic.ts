@@ -73,3 +73,19 @@ export function getProgressTowardsNextLevel(
   // Won't go past 100 per progress bar
   return Math.min(100, Math.max(0, progress))
 }
+
+// Determines rank based on level
+export function getRankByLevel(level: number): string {
+  if (level >= 1 && level <= 19) {
+    return 'Bronze'
+  } else if (level >= 20 && level <= 39) {
+    return 'Silver'
+  } else if (level >= 40 && level <= 59) {
+    return 'Gold'
+  } else if (level >= 60 && level <= 79) {
+    return 'Platinum'
+  } else if (level >= 80) {
+    return 'Diamond'
+  }
+  return 'Unranked'
+}

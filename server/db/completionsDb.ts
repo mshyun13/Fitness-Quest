@@ -3,25 +3,9 @@ import {
   CompletionOfChallenge,
   CompletionResult,
 } from '../../models/completionsModel'
-import { calculateXpToCompleteLevel, checkLevelUp } from '../utils/xpLogic'
 import { getSingleChallenge } from './challenges'
-import { User } from '../../models/users'
-
-// Determines rank based on level
-export function getRankByLevel(level: number): string {
-  if (level >= 1 && level <= 19) {
-    return 'Bronze'
-  } else if (level >= 20 && level <= 39) {
-    return 'Silver'
-  } else if (level >= 40 && level <= 59) {
-    return 'Gold'
-  } else if (level >= 60 && level <= 79) {
-    return 'Platinum'
-  } else if (level >= 80) {
-    return 'Diamond'
-  }
-  return 'Unranked'
-}
+// import { User } from '../../models/users'
+import { updateUserStats } from './sidequests'
 
 // Gets users completed challenges, joins challenge details
 export async function getCompletionsByUserId(
@@ -80,94 +64,36 @@ export async function processChallengeCompletion(
   status: 'completed' | 'missed',
 ): Promise<CompletionResult> {
   return connection.transaction(async (trx) => {
-    let levelUpHappened = false
+    let xpGain = 0
+    let attributeToIncrement: 'str' | 'dex' | 'int' | undefined = undefined
+    let statUpdateResult: {
+      userNewXp: number
+      userNewLevel: number
+      levelUpHappened: boolean
+    } = { userNewXp: 0, userNewLevel: 0, levelUpHappened: false }
 
-    // Gets users current stats in the transaction
-    const user = await trx('users')
-      .where('id', userId)
-      .select('xp', 'level', 'str', 'dex', 'int')
-      .first()
-
-    if (!user) {
-      throw new Error('User not found')
-    }
-
-    // eslint-disable-next-line prefer-const
-    let updatedUser: Partial<User> = { ...user } as User
-
-    // Gets completed challenges
     if (status === 'completed') {
       const challenge = await getSingleChallenge(challengeId, trx)
 
       if (!challenge) {
         throw new Error('Challenge not found')
       }
-
-      updatedUser.xp = (updatedUser.xp || 0) + challenge.xp_reward // Adds challenge xp
-      // const newCalculatedLevel = getLevelFromTotalXp(updatedUser.xp) // Calculates new level based on new xp total
-
-      // Checks for level-up
-      if (checkLevelUp(updatedUser.level, updatedUser.xp) > updatedUser.level) {
-        do {
-          levelUpHappened = true
-          updatedUser.level = checkLevelUp(updatedUser.level, updatedUser.xp)
-          const previousXP = calculateXpToCompleteLevel(updatedUser.level - 1)
-          updatedUser.xp = updatedUser.xp - previousXP
-        } while (
-          checkLevelUp(updatedUser.level, updatedUser.xp) > updatedUser.level
-        )
-      }
-
-      // Determines which attribute to update
-      const attributeToUpdate = challenge.attribute.toLowerCase() as
+      xpGain = challenge.xp_reward
+      attributeToIncrement = challenge.attribute.toLowerCase() as
         | 'str'
         | 'dex'
         | 'int'
 
-      const currentAttributeValue = user[attributeToUpdate] || 0
-      let newAttributeValue = currentAttributeValue + 1 // adds to the relevant attribute
-
-      // When str, dex or int get to 100, clear the bar and start again
-      if (newAttributeValue > 100) {
-        const bonusXpFromAttribute = newAttributeValue - 100 // bonus xp for filling the bar
-        newAttributeValue = 1
-
-        updatedUser.xp = (updatedUser.xp || 0) + bonusXpFromAttribute // add bonus xp
-
-        //const reCalculatedLevel = getLevelFromTotalXp(updatedUser.xp) // recalculate level to account for bonus xp
-
-        const reCalculatedLevel = checkLevelUp(
-          updatedUser.level,
-          updatedUser.xp,
-        )
-
-        // Checks for another level-up because of bonus xp
-        if (reCalculatedLevel > (updatedUser.level || 0)) {
-          levelUpHappened = true
-          updatedUser.level = reCalculatedLevel
-          console.log('whoops')
-          const previousXP = calculateXpToCompleteLevel(reCalculatedLevel - 1)
-          updatedUser.xp -= previousXP
-        }
-      }
-      updatedUser[attributeToUpdate] = newAttributeValue // Assigns new attribute values
+      // Call the unified helper function to update user stats
+      // db/sidequests.ts now handles all the calculations and DB updates
+      statUpdateResult = await updateUserStats(
+        trx,
+        userId,
+        xpGain,
+        attributeToIncrement,
+      )
     }
-    // Checks if rank up happens based on new level
-    updatedUser.rank = getRankByLevel(updatedUser.level || 0)
 
-    // Update users xp in DB using transaction
-    await trx('users')
-      .where('id', userId)
-      .update({
-        xp: updatedUser.xp || 0,
-        level: updatedUser.level || 0,
-        str: updatedUser.str || 0,
-        dex: updatedUser.dex || 0,
-        int: updatedUser.int || 0,
-        rank: updatedUser.rank || 0,
-      })
-
-    // Inserts completion into DB using transaction
     const [_completionId] = await trx('completions').insert({
       user_id: userId,
       challenge_id: challengeId,
@@ -175,11 +101,10 @@ export async function processChallengeCompletion(
       completed_at: new Date(),
     })
 
-    // returns newly calculated results
     return {
-      userNewXp: updatedUser.xp!,
-      userNewLevel: updatedUser.level!,
-      levelUpHappened: levelUpHappened,
+      userNewXp: statUpdateResult.userNewXp,
+      userNewLevel: statUpdateResult.userNewLevel,
+      levelUpHappened: statUpdateResult.levelUpHappened,
     }
   })
 }

@@ -10,11 +10,13 @@ type SetAppNotification = (
 interface ManualEntryProps {
   onClose: () => void
   setAppNotification: SetAppNotification
+  onUserUpdate: () => void
 }
 
 const ManualEntryForm: React.FC<ManualEntryProps> = ({
   onClose,
   setAppNotification,
+  onUserUpdate,
 }) => {
   const date = new Date().toISOString().slice(0, 10)
   const { data: user } = useUserByAuth0()
@@ -42,8 +44,9 @@ const ManualEntryForm: React.FC<ManualEntryProps> = ({
     event,
   ) => {
     event.preventDefault()
-    mutateSideQuests.add.mutate({ data: formData })
+    mutateSideQuests.add.mutateAsync({ data: formData })
     setAppNotification(`Side Quest ${formData.title} entered`, 'info')
+    onUserUpdate()
     onClose()
     if (!user) return
     setFormData({
