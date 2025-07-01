@@ -5,7 +5,10 @@ import { Challenge } from '../../models/challenge'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers'
 import ManualEntryForm from './ManualEntryForm'
-import { getXpNeededForNextLevel } from '../../server/utils/xpLogic'
+import {
+  getXpNeededForNextLevel,
+  getXpForLeveling,
+} from '../../server/utils/xpLogic'
 
 type NotificationType = 'success' | 'error' | 'info'
 
@@ -27,6 +30,7 @@ function Home() {
     data: dbUser,
     isLoading: dbUserLoading,
     isError: dbUserError,
+    refetch: refetchDbUser,
   } = useUserByAuth0()
 
   const [showModal, setShowModal] = useState(false)
@@ -110,7 +114,7 @@ function Home() {
       {appNotification && (
         <div className="absolute min-h-40 w-screen justify-items-center">
           <div
-            className={`mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white ${notificationClass}`}
+            className={`mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white shadow-xl shadow-gray-950 ${notificationClass}`}
             style={{ maxWidth: 'fit-content' }}
           >
             <p>{appNotification.message}</p>
@@ -129,7 +133,7 @@ function Home() {
           </h1>
 
           {dbUser && (
-            <div className="mx-auto my-8 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl">
+            <div className="mx-auto my-8 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl shadow-xl shadow-gray-950">
               <div className="flex">
                 <img
                   src={`/characters/${dbUser.gender}${dbUser.class}${dbUser.appearance}.webp`}
@@ -144,7 +148,10 @@ function Home() {
                   <p className="text-xl text-green-200">
                     XP:{' '}
                     <strong className="text-green-500">
-                      {dbUser.xp + '/' + xpNeededForNextLevel}
+                      {dbUser.xp -
+                        getXpForLeveling(dbUser.level) +
+                        '/' +
+                        xpNeededForNextLevel}
                     </strong>
                   </p>
                   <p className="text-xl text-green-200">
@@ -162,14 +169,14 @@ function Home() {
             ''
           ) : (
             <button
-              className="rounded-lg bg-gray-700 p-2 text-xl font-bold text-green-400 ring-1 ring-gray-400 hover:bg-gray-500"
+              className="rounded-lg bg-gray-700 p-2 text-xl font-bold text-green-400 shadow-xl shadow-gray-950 ring-1 ring-gray-400 hover:bg-gray-500"
               onClick={handleSideQuest}
             >
               Enter Side Quest
             </button>
           )}
 
-          <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl">
+          <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl shadow-gray-950">
             <h2 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
               Daily Challenges
             </h2>
@@ -222,6 +229,8 @@ function Home() {
         <ManualEntryForm
           onClose={() => setShowSideQuest(false)}
           setAppNotification={setAppNotification}
+          onUserUpdate={refetchDbUser}
+          userId={dbUser.id}
         />
       )}
     </section>

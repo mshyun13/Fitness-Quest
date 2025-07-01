@@ -5,6 +5,7 @@ export async function seed(knex) {
   await knex('completions').del()
   await knex('achievements').del()
   await knex('achievements_user').del()
+  await knex('posts').del()
 
   // Inserts seed entries
   await knex('users').insert([
@@ -12,15 +13,15 @@ export async function seed(knex) {
       id: 1,
       auth_id: 'google-oauth2|102349456663427950864',
       name: 'Callum',
-      xp: 0,
-      level: 1,
-      rank: 'Master',
+      xp: 20,
+      level: 42,
+      rank: 'gold',
       str: 13,
       dex: 26,
       int: 10,
       missed: 0,
       class: 'warrior',
-      appearance: 5,
+      appearance: 3,
       gender: 'male',
     },
     {
@@ -29,14 +30,14 @@ export async function seed(knex) {
       name: 'Ben',
       xp: 0,
       level: 1,
-      rank: '',
+      rank: 'bronze',
       str: 0,
       dex: 0,
       int: 0,
       missed: 0,
-      class: '',
+      class: 'rogue',
       appearance: 1,
-      gender: '',
+      gender: 'male',
     },
     {
       id: 3,
@@ -44,13 +45,13 @@ export async function seed(knex) {
       name: 'Mark',
       xp: 77,
       level: 99,
-      rank: 'Master',
+      rank: 'diamond',
       str: 99,
       dex: 99,
       int: 99,
       missed: 0,
       class: 'mage',
-      appearance: 3,
+      appearance: 5,
       gender: 'male',
     },
   ])
@@ -69,7 +70,7 @@ export async function seed(knex) {
       id: 2,
       title: 'Dodge Rolling for Dummies',
       description: '20m shuttle run (6 repetitions)',
-      xp_reward: 3000,
+      xp_reward: 950,
       attribute: 'dex',
       difficulty: 'medium',
     },
@@ -290,7 +291,7 @@ export async function seed(knex) {
 
   await knex('completions').insert([
     {
-      user_id: 1,
+      user_id: 3,
       challenge_id: 1,
       completed_at: knex.fn.now(),
       status: 'completed',
@@ -369,15 +370,27 @@ export async function seed(knex) {
       id: 2,
       user_id: 1,
     },
+    {
+      id: 5,
+      user_id: 1,
+    },
   ])
-  await knex('sidequests').insert([
+
+  await knex('posts').insert([
     {
       id: 1,
       user_id: 1,
-      title: 'test quest',
-      description: 'this is a test of the side quests',
-      attribute: 'int',
-      completed_at: knex.fn.now(),
+      content: 'Add posts with the button above',
     },
   ])
+  // await knex('sidequests').insert([
+  //   {
+  //     id: 1,
+  //     user_id: 1,
+  //     title: 'test quest',
+  //     description: 'this is a test of the side quests',
+  //     attribute: 'int',
+  //     completed_at: knex.fn.now(),
+  //   },
+  // ])
 }

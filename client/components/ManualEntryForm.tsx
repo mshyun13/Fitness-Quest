@@ -10,16 +10,20 @@ type SetAppNotification = (
 interface ManualEntryProps {
   onClose: () => void
   setAppNotification: SetAppNotification
+  onUserUpdate: () => void
+  userId: number
 }
 
 const ManualEntryForm: React.FC<ManualEntryProps> = ({
   onClose,
   setAppNotification,
+  onUserUpdate,
+  userId,
 }) => {
   const date = new Date().toISOString().slice(0, 10)
-  const { data: user } = useUserByAuth0()
+  // const { data: user } = useUserByAuth0()
   const [formData, setFormData] = useState({
-    user_id: user?.id,
+    user_id: userId,
     title: '',
     attribute: '',
     description: '',
@@ -42,17 +46,26 @@ const ManualEntryForm: React.FC<ManualEntryProps> = ({
     event,
   ) => {
     event.preventDefault()
-    mutateSideQuests.add.mutate({ data: formData })
-    setAppNotification(`Side Quest ${formData.title} entered`, 'info')
-    onClose()
-    if (!user) return
-    setFormData({
-      user_id: user.id,
-      title: '',
-      attribute: '',
-      description: '',
-      completed_at: date,
-    })
+
+    try {
+      const dataToSend = { ...formData, user_id: userId }
+      await mutateSideQuests.add.mutateAsync({ data: dataToSend })
+      setAppNotification(`Side Quest "${formData.title}" entered!`, 'success')
+      onUserUpdate()
+
+      onClose()
+      setFormData({
+        user_id: userId,
+        title: '',
+        attribute: '',
+        description: '',
+        completed_at: date,
+      })
+    } catch (error) {
+      // Handle errors during mutation
+      setAppNotification('Failed to add Side Quest')
+      console.error('Error adding side quest:', error)
+    }
   }
 
   return (
@@ -61,7 +74,7 @@ const ManualEntryForm: React.FC<ManualEntryProps> = ({
         <div className="absolute">
           <form
             onSubmit={handleSubmit}
-            className="m-1 grid max-w-lg grid-cols-2 items-center place-self-center rounded-lg bg-gray-800 p-4 ring-2 ring-zinc-600"
+            className="m-1 grid max-w-lg grid-cols-2 items-center place-self-center rounded-lg bg-gray-800 p-4 shadow-xl shadow-gray-950 ring-2 ring-zinc-600"
           >
             <h2 className="col-span-2 mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
               Side Quest

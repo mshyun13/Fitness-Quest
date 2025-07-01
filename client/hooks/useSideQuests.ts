@@ -9,16 +9,16 @@ import { addSideQuest, getSideQuestsById } from '../apis/sidequests.ts'
 
 // get side quest by auth0 ID
 
-export function useSideQuests(id: number) {
+export function useSideQuests(userId: number | undefined) {
   const { user, getAccessTokenSilently } = useAuth0()
 
   const query = useQuery({
-    queryKey: ['sidequests'],
+    queryKey: ['sidequests', userId],
     queryFn: async () => {
       const token = await getAccessTokenSilently()
-      return getSideQuestsById({ id, token })
+      return getSideQuestsById({ id: userId, token })
     },
-    enabled: !!user,
+    enabled: !!user && userId !== undefined && userId !== null && userId !== 0,
     refetchOnWindowFocus: false,
     retry: false,
   })
@@ -29,18 +29,7 @@ export function useSideQuests(id: number) {
 }
 
 export function useAddSideQuestsQuery() {
-  const { getAccessTokenSilently } = useAuth0()
-  const id = 0
-  const query = useQuery({
-    queryKey: ['sidequests'],
-    queryFn: async () => {
-      const token = await getAccessTokenSilently()
-      return getSideQuestsById({ id, token })
-    },
-  })
-
   return {
-    ...query,
     add: useAddSideQuest(),
   }
 }

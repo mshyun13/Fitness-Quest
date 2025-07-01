@@ -1,6 +1,6 @@
-import { ChangeEventHandler, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useNavigate, useSubmit } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useUserByAuth0 } from '../hooks/useUsers'
 import { UserData } from '../../models/users'
 
@@ -51,6 +51,7 @@ function Register() {
       console.log('User not found in DB. Redirecting to login')
       navigate('/login')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isDbUserLoading,
     isDbUserError,
@@ -144,7 +145,7 @@ function Register() {
 
   return (
     <>
-      <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
+      <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl shadow-gray-950">
         <h2 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
           Register
         </h2>
@@ -200,7 +201,7 @@ function Register() {
                   <img
                     src={`/characters/${newUser.gender}${newUser.class}1.webp`}
                     alt="new character"
-                    className="mb-2"
+                    className="mb-2 h-96 w-auto"
                   />
 
                   <button

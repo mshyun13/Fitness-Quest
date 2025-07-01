@@ -12,13 +12,11 @@ export async function getSideQuestsById({
   id,
   token,
 }: UserQuests): Promise<unknown> {
-  console.log(id)
   return await request
     .get(`${rootUrl}/sidequests/${id}`)
     .set('Authorization', `Bearer ${token}`)
     .then((res) => {
-      console.log('api', res.body.sidequests)
-      return res.body.sidequests
+      return res.body.sidequests as SideQuestData[]
     })
 }
 
