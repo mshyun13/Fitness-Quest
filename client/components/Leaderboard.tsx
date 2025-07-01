@@ -1,6 +1,12 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useLeaderboard } from '../hooks/useUsers.ts'
 
+// For file name convention
+const capFirstLetter = (str: string): string => {
+  if (!str) return ''
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
 function Leaderboard() {
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
 
@@ -30,6 +36,9 @@ function Leaderboard() {
           Leaderboard
         </h3>
         {leaderboard?.map((user, i) => {
+          // For file name convention
+          const capitalizedRank = capFirstLetter(user.rank)
+
           return (
             <>
               <h3
@@ -43,7 +52,7 @@ function Leaderboard() {
               >
                 {' '}
                 <img
-                  src={`/characters/${user.gender}${user.class}${user.appearance}${user.rank}.webp`}
+                  src={`/characters/${user.gender}${user.class}1${capitalizedRank}.webp`} // Used here
                   alt="character"
                   className="h-auto w-20 sm:mx-auto sm:w-32 "
                 />
