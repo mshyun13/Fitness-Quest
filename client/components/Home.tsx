@@ -136,7 +136,7 @@ function Home() {
             <div className="mx-auto my-8 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl shadow-gray-950">
               <div className="flex">
                 <img
-                  src={`/characters/${dbUser.gender}${dbUser.class}${dbUser.appearance}.webp`}
+                  src={`/characters/${dbUser.gender}${dbUser.class}${dbUser.appearance}${dbUser.rank}.webp`}
                   alt="character"
                   className="ml-4 h-auto w-32"
                 />

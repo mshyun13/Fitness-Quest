@@ -64,7 +64,7 @@ function Profile() {
         </h3>
         <div className="justify-content-center mt-10 flex flex-wrap items-center gap-1.5 justify-self-center rounded-2xl p-4 sm:gap-4">
           <img
-            src={`/characters/${user.gender}${user.class}${user.appearance}.webp`}
+            src={`/characters/${user.gender}${user.class}${user.appearance}${user.rank}.webp`}
             alt="character"
             className="mx-auto h-auto w-48 sm:w-72 "
           />
