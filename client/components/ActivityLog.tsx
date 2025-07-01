@@ -45,7 +45,7 @@ function ActivityLog() {
       </div>
       {showLog === 'challenge' ? (
         <div className="flex flex-col items-center justify-center bg-gray-900 pb-4 font-mono text-green-300">
-          <div className="mx-auto w-full max-w-2xl rounded-lg border border-gray-700 bg-gray-900 p-6 shadow-xl">
+          <div className="mx-auto w-full max-w-2xl rounded-lg border border-gray-700 bg-gray-900 p-6 shadow-xl shadow-gray-950">
             <h3 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
               {' '}
               Challenge Log
@@ -109,8 +109,8 @@ function ActivityLog() {
         ''
       )}
       {showLog === 'sidequest' && sideQuests ? (
-        <div className="flex flex-col items-center justify-center bg-gray-900 pb-4 font-mono text-green-300">
-          <div className="mx-auto w-full max-w-2xl rounded-lg border border-gray-700 bg-gray-900 p-6 shadow-xl">
+        <div className="flex flex-col items-center justify-center bg-gray-900 pb-4 font-mono text-green-300 ">
+          <div className="mx-auto w-full max-w-2xl rounded-lg border border-gray-700 bg-gray-900 p-6 shadow-xl shadow-gray-950">
             <h3 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
               {' '}
               Side Quest Log
