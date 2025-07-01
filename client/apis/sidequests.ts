@@ -16,7 +16,7 @@ export async function getSideQuestsById({
     .get(`${rootUrl}/sidequests/${id}`)
     .set('Authorization', `Bearer ${token}`)
     .then((res) => {
-      return res.body.sidequests
+      return res.body.sidequests as SideQuestData[]
     })
 }
 
