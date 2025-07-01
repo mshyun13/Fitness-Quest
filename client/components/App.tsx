@@ -20,6 +20,7 @@ function App() {
     '/log',
     '/feed',
     '/leaderboard',
+    '/tutorial',
   ]
   useEffect(() => {
     // Run if Auth0 has finished loading

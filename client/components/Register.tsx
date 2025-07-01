@@ -125,7 +125,7 @@ function Register() {
       const token = await getAccessTokenSilently()
       await addUserMutation.mutateAsync({ userData: dataToSend, token })
       console.log('New user registered successfully, redirecting to home.')
-      navigate('/')
+      navigate('/tutorial')
     } catch (error) {
       console.error('Failed to register new user:', error)
     }
