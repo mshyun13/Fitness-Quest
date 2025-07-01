@@ -110,7 +110,7 @@ function Home() {
   )
 
   return (
-    <section className="flex flex-col items-center justify-start bg-gray-900 font-mono text-green-300">
+    <section className="flex flex-col items-center justify-start font-mono text-green-300">
       {appNotification && (
         <div className="absolute min-h-40 w-screen justify-items-center">
           <div
@@ -125,7 +125,7 @@ function Home() {
         <div className="w-full max-w-4xl text-center">
           {/* Notification */}
 
-          <h1 className="mb-6 text-5xl font-bold text-green-400">
+          <h1 className="mb-6 text-5xl font-bold text-green-400 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">
             Welcome,{' '}
             {isAuthenticated
               ? dbUser?.name || auth0User?.name || auth0User?.nickname || 'User'
@@ -133,7 +133,7 @@ function Home() {
           </h1>
 
           {dbUser && (
-            <div className="mx-auto my-8 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl shadow-xl shadow-gray-950">
+            <div className="mx-auto my-8 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl shadow-gray-950">
               <div className="flex">
                 <img
                   src={`/characters/${dbUser.gender}${dbUser.class}${dbUser.appearance}.webp`}

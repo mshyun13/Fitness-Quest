@@ -9,6 +9,8 @@ const newUserData: UserData = {
   name: '',
   class: 'warrior',
   gender: 'male', // user will get the rest once added to DB eg. XP, Level etc
+  rank: 'bronze',
+  appearance: 1,
 }
 
 function Register() {
@@ -125,7 +127,7 @@ function Register() {
       const token = await getAccessTokenSilently()
       await addUserMutation.mutateAsync({ userData: dataToSend, token })
       console.log('New user registered successfully, redirecting to home.')
-      navigate('/')
+      navigate('/tutorial')
     } catch (error) {
       console.error('Failed to register new user:', error)
     }
@@ -199,7 +201,7 @@ function Register() {
                   </button>
 
                   <img
-                    src={`/characters/${newUser.gender}${newUser.class}1.webp`}
+                    src={`/characters/${newUser.gender}${newUser.class}${newUser.appearance}${newUser.rank}.webp`}
                     alt="new character"
                     className="mb-2 h-96 w-auto"
                   />
