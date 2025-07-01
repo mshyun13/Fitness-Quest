@@ -117,7 +117,7 @@ function ActivityLog() {
             </h3>
             <div className="h-[50rem] overflow-y-scroll ">
               <ul className="space-y-4">
-                {sideQuests.length === 0 ? (
+                {sideQuests.length === 0 || !sideQuests ? (
                   <p>No side quests completed yet. Get started!</p>
                 ) : (
                   sideQuests.map((quest) => (

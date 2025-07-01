@@ -33,7 +33,7 @@ function Leaderboard() {
           return (
             <>
               <h3
-                className={`mt-2 inline rounded-full p-2 text-2xl font-bold text-white shadow-md shadow-gray-950  ${i === 0 && ' bg-yellow-600 text-yellow-300 '} ${i === 1 && 'bg-slate-600 text-slate-300 '} ${i === 2 && ' bg-amber-950 text-amber-600 '}`}
+                className={`mt-2 inline rounded-full p-2 text-2xl font-bold text-white shadow-md shadow-gray-950  ${i === 0 && ' bg-yellow-600 text-yellow-300 '} ${i === 1 && ' bg-slate-600 text-slate-300 '} ${i === 2 && ' bg-amber-950 text-amber-600 '}`}
               >
                 #{i + 1}
               </h3>
