@@ -1,21 +1,65 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useState } from 'react'
 
+interface Challenge {
+  title: string
+  attribute: string
+  difficulty: string
+  description: string
+  xp_rewards: number
+}
+
+const challenges = [
+  {
+    title: 'Meow! 🏋',
+    attribute: 'Str',
+    difficulty: 'Easy',
+    description: 'Meow meow meow Meow! (translation: 10 pushups)',
+    xp_rewards: 1000,
+  },
+  {
+    title: 'meow MEOW!!! 🦮',
+    attribute: 'Dex',
+    difficulty: 'Medium',
+    description: 'meow Meow MEOW!!! (translation: Beat a dog next door)',
+    xp_rewards: 1500,
+  },
+  {
+    title: '...meow 🤳',
+    attribute: 'Int',
+    difficulty: 'Hard',
+    description:
+      'meow... meow meow... (translation: Watch youtube for 8 hours)',
+    xp_rewards: 2500,
+  },
+]
+
+const profile = {
+  name: 'Meow',
+  class: 'Meow Meow',
+  rank: 'MEEEOOOOOW',
+  level: 0,
+  xp: 0,
+  str: 0,
+  dex: 0,
+  int: 0,
+}
+
+const totalXp = 1500
+
 function Tutorial() {
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
   const [showChallenge, setShowChallenge] = useState(false)
-  const [levelNumber, setLevelNumber] = useState(0)
-  const [xpNumber, setXpNumber] = useState(0)
-  const [attNumber, setAttNumber] = useState({
-    str: 0,
-    dex: 0,
-    int: 0,
+  const [selectedChallenge, setSelectedChallenge] = useState({
+    title: '',
+    attribute: '',
+    difficulty: '',
+    description: '',
+    xp_rewards: 0,
   })
 
-  const totalXp = 1500
-  const amountXp = 2500
-
-  const handleChallengeClick = () => {
+  const handleChallengeClick = (challenge: Challenge) => {
+    setSelectedChallenge(challenge)
     setShowChallenge(true)
   }
 
@@ -27,20 +71,20 @@ function Tutorial() {
     alert(
       'Challenge completed! You can view all the completed challenges on the Profile page.',
     )
-    setXpNumber(xpNumber + amountXp)
+    profile.xp += selectedChallenge.xp_rewards
     setShowChallenge(false)
   }
 
-  if (xpNumber >= totalXp) {
-    const xpReminder = xpNumber % totalXp
-    setXpNumber(xpReminder)
-    const levelIncrease = Math.trunc(xpNumber / totalXp)
-    setLevelNumber(levelNumber + levelIncrease)
-    setAttNumber({
-      str: attNumber.str + levelIncrease,
-      dex: 0,
-      int: 0,
-    })
+  if (profile.xp >= totalXp) {
+    const levelIncrease = Math.trunc(profile.xp / totalXp)
+    profile.level += levelIncrease
+    const xpReminder = profile.xp % totalXp
+    profile.xp = xpReminder
+    if (selectedChallenge.attribute == 'Str') {
+      profile.str += levelIncrease
+    } else if (selectedChallenge.attribute == 'Dex') {
+      profile.dex += levelIncrease
+    } else profile.int += levelIncrease
   }
 
   if (auth0Loading) {
@@ -71,24 +115,24 @@ function Tutorial() {
           />
           <div className="mx-auto grid grid-cols-[1fr_2fr] gap-1 font-semibold">
             <p>Name: </p>
-            <p className="text-center capitalize text-white">Meow</p>
+            <p className="text-center capitalize text-white">{profile.name}</p>
             <p>Class: </p>
-            <p className="text-center capitalize text-white">Meow Meow</p>
+            <p className="text-center capitalize text-white">{profile.class}</p>
             <p>Rank: </p>
-            <p className="text-center capitalize text-white">MEEEOOOOOW</p>
+            <p className="text-center capitalize text-white">{profile.rank}</p>
             <p>Level: </p>
-            <p className="text-center text-white">{levelNumber}</p>
+            <p className="text-center text-white">{profile.level}</p>
             <p>XP: </p>
             <div className="relative max-h-4">
               <div className="relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950">
                 <div
                   style={{
-                    width: `${(xpNumber / totalXp) * 100}%`,
+                    width: `${(profile.xp / totalXp) * 100}%`,
                   }}
                   className="z-10 h-4 overflow-hidden rounded-md bg-green-700"
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
-                  {xpNumber}/{totalXp}
+                  {profile.xp}/{totalXp}
                 </p>
               </div>
             </div>
@@ -96,11 +140,11 @@ function Tutorial() {
             <div className="relative max-h-4">
               <div className="relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950">
                 <div
-                  style={{ width: `${attNumber.str}%` }}
+                  style={{ width: `${profile.str}%` }}
                   className="z-10 h-4 rounded-md bg-green-700"
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
-                  LVL {attNumber.str}
+                  LVL {profile.str}
                 </p>
               </div>
             </div>
@@ -108,11 +152,11 @@ function Tutorial() {
             <div className="relative max-h-4">
               <div className="relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950">
                 <div
-                  style={{ width: `${attNumber.dex}%` }}
+                  style={{ width: `${profile.dex}%` }}
                   className="z-10 h-4 rounded-md bg-green-700"
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
-                  LVL {attNumber.dex}
+                  LVL {profile.dex}
                 </p>
               </div>
             </div>
@@ -120,11 +164,11 @@ function Tutorial() {
             <div className="relative max-h-4">
               <div className="relative z-0 h-4 w-full translate-y-1 rounded-md bg-gray-700 ring-1 ring-gray-950">
                 <div
-                  style={{ width: `${attNumber.int}%` }}
+                  style={{ width: `${profile.int}%` }}
                   className="z-10 h-4 rounded-md bg-green-700"
                 ></div>
                 <p className="relative z-20 max-h-4 -translate-y-5 text-center text-white">
-                  LVL {attNumber.int}
+                  LVL {profile.int}
                 </p>
               </div>
             </div>
@@ -138,17 +182,21 @@ function Tutorial() {
           Daily Challenges
         </h2>
         <ul className="space-y-4">
-          <li
-            onClick={handleChallengeClick}
-            className="cursor-pointer rounded border border-gray-600 bg-gray-700 p-4 shadow
+          {challenges.map((challenge, index) => (
+            <li
+              key={index}
+              id={profile.class}
+              onClick={() => handleChallengeClick(challenge)}
+              className="cursor-pointer rounded border border-gray-600 bg-gray-700 p-4 shadow
                         transition duration-200 hover:bg-gray-600"
-          >
-            <p className="mb-1 text-xl font-bold text-green-200">
-              Pushin Through
-            </p>
-            <p className="text-lg text-gray-300">STR</p>
-            <p className="text-lg text-gray-300">Easy</p>
-          </li>
+            >
+              <p className="mb-1 text-xl font-bold text-green-200">
+                {challenge.title}
+              </p>
+              <p className="text-lg text-gray-300">{challenge.attribute}</p>
+              <p className="text-lg text-gray-300">{challenge.difficulty}</p>
+            </li>
+          ))}
         </ul>
       </div>
 
@@ -168,23 +216,27 @@ function Tutorial() {
               x
             </button>
             <h2 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-3xl font-bold text-green-400">
-              Pushin Through
+              {selectedChallenge.title}
             </h2>
             <div className="space-y-3 text-green-300">
               <p className="text-xl">
-                <strong className="text-green-200">Attribute: STR</strong>
-              </p>
-              <p className="text-xl">
-                <strong className="text-green-200">Difficulty: Easy</strong>
-              </p>
-              <p className="text-lg">
                 <strong className="text-green-200">
-                  Description: 10 pushups
+                  Attribute: {selectedChallenge.attribute}
                 </strong>
               </p>
               <p className="text-xl">
                 <strong className="text-green-200">
-                  XP Reward: {amountXp} XP
+                  Difficulty: {selectedChallenge.difficulty}
+                </strong>
+              </p>
+              <p className="text-lg">
+                <strong className="text-green-200">
+                  Description: {selectedChallenge.description}
+                </strong>
+              </p>
+              <p className="text-xl">
+                <strong className="text-green-200">
+                  XP Reward: {selectedChallenge.xp_rewards} XP
                 </strong>
               </p>
               <div className="mt-6 text-center">
