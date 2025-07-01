@@ -28,7 +28,7 @@ const LoginPage = () => {
       // Start zoomed in
       gsap.set(backgroundRef.current, {
         backgroundImage: `url(${bgImage})`,
-        backgroundSize: '800% 800%', // Zoomed in
+        backgroundSize: '250% 250%', // Zoomed in
         backgroundPosition: '50% 10%',
       })
 

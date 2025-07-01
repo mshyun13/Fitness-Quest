@@ -13,7 +13,14 @@ function App() {
 
   // Protected routes
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const protectedRoutes = ['/home', '/profile', '/log', '/feed', '/leaderboard']
+  const protectedRoutes = [
+    '/home',
+    '/profile',
+    '/register',
+    '/log',
+    '/feed',
+    '/leaderboard',
+  ]
   useEffect(() => {
     // Run if Auth0 has finished loading
     if (!isLoading) {
