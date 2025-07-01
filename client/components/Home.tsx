@@ -5,7 +5,10 @@ import { Challenge } from '../../models/challenge'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers'
 import ManualEntryForm from './ManualEntryForm'
-import { getXpNeededForNextLevel } from '../../server/utils/xpLogic'
+import {
+  getXpNeededForNextLevel,
+  getXpForLeveling,
+} from '../../server/utils/xpLogic'
 
 type NotificationType = 'success' | 'error' | 'info'
 
@@ -145,7 +148,10 @@ function Home() {
                   <p className="text-xl text-green-200">
                     XP:{' '}
                     <strong className="text-green-500">
-                      {dbUser.xp + '/' + xpNeededForNextLevel}
+                      {dbUser.xp -
+                        getXpForLeveling(dbUser.level) +
+                        '/' +
+                        xpNeededForNextLevel}
                     </strong>
                   </p>
                   <p className="text-xl text-green-200">
@@ -224,6 +230,7 @@ function Home() {
           onClose={() => setShowSideQuest(false)}
           setAppNotification={setAppNotification}
           onUserUpdate={refetchDbUser}
+          userId={dbUser.id}
         />
       )}
     </section>
