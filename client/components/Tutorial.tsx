@@ -12,25 +12,25 @@ interface Challenge {
 
 const challenges = [
   {
-    title: 'Meow! 🏋',
-    attribute: 'Str',
-    difficulty: 'Easy',
-    description: 'Meow meow meow Meow! (translation: 10 pushups)',
-    xp_rewards: 1000,
-  },
-  {
     title: 'meow MEOW!!! 🦮',
-    attribute: 'Dex',
+    attribute: 'Str',
     difficulty: 'Medium',
-    description: 'meow Meow MEOW!!! (translation: Beat a dog next door)',
+    description: 'meow Meow MEOW!!! (Translation: Beat the dog next door)',
     xp_rewards: 1500,
   },
   {
-    title: '...meow 🤳',
+    title: 'Meow! 👟',
+    attribute: 'Dex',
+    difficulty: 'Easy',
+    description: 'Meow meow meow Meow! (Translation: Parkour in the kitchen)',
+    xp_rewards: 1000,
+  },
+  {
+    title: '...meow 💩',
     attribute: 'Int',
     difficulty: 'Hard',
     description:
-      'meow... meow meow... (translation: Watch youtube for 8 hours)',
+      'meow... meow meow... (Translation: Find the perfect spot to poop)',
     xp_rewards: 2500,
   },
 ]
@@ -71,9 +71,9 @@ function Tutorial() {
   }
 
   const handleComplete = () => {
-    alert(
-      'Challenge completed! You can view all the completed challenges on the Profile page.',
-    )
+    // alert(
+    //   'Challenge completed! You can view all the completed challenges on the Profile page.',
+    // )
     profile.xp += selectedChallenge.xp_rewards
     setShowChallenge(false)
   }
@@ -123,7 +123,7 @@ function Tutorial() {
       <p>You will be able to view your profile details on the Profile page.</p>
       <p>It will shows your name, class, levels and progress on XP.</p>
       <br />
-      <p>{"Please find Meow's profile below as an example:"}</p>
+      <p>{"Please find Meow's profile below as an example."}</p>
       <br />
       {/* Profile */}
       <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
@@ -204,6 +204,7 @@ function Tutorial() {
       <br />
       <p>Click the challenge to view details of challenge.</p>
       <p>{"Increase Meow's XP and level up by completing the challenges."}</p>
+      <p>You can view all the completed challenges on the Activity Log page.</p>
       <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl">
         <h2 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
           Daily Challenges
@@ -228,6 +229,7 @@ function Tutorial() {
       </div>
       <p>🎉 Congratulation 🎉</p>
       <p>Now you have completed the basic tutorial for Fit Quest.</p>
+      <br />
       <p>Please click button below to start the game!</p>
 
       <div>
