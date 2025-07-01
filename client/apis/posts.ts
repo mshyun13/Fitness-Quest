@@ -5,7 +5,6 @@ const rootUrl = '/api/v1/posts'
 
 export async function getAllPosts(): Promise<unknown> {
   const res = await request.get(rootUrl)
-  console.log('api posts', res.body)
   return res.body.reverse()
 }
 
@@ -14,6 +13,5 @@ export async function addPost(data: PostData) {
     .post(rootUrl)
     .send(data)
     .then((res) => res.body)
-  console.log('api', res.body)
   return res.body
 }

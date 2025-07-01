@@ -2,7 +2,6 @@ import { PostData } from '../../models/posts.ts'
 import db from './connection.ts'
 
 export async function getAllPosts(): Promise<unknown> {
-  console.log('db all posts')
   return db('posts')
     .join('users', 'users.id', 'user_id')
     .select(
@@ -17,6 +16,5 @@ export async function getAllPosts(): Promise<unknown> {
 }
 
 export async function addPost(data: PostData): Promise<unknown> {
-  console.log('db', data)
   return db('posts').insert(data).returning('*')
 }
