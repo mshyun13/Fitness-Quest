@@ -1,5 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
 interface Challenge {
   title: string
@@ -43,6 +44,7 @@ const profile = {
   str: 0,
   dex: 0,
   int: 0,
+  appearance: 1,
 }
 
 const totalXp = 1500
@@ -57,6 +59,7 @@ function Tutorial() {
     description: '',
     xp_rewards: 0,
   })
+  const navigate = useNavigate()
 
   const handleChallengeClick = (challenge: Challenge) => {
     setSelectedChallenge(challenge)
@@ -75,6 +78,10 @@ function Tutorial() {
     setShowChallenge(false)
   }
 
+  const handleFinish = () => {
+    navigate('/home')
+  }
+
   if (profile.xp >= totalXp) {
     const levelIncrease = Math.trunc(profile.xp / totalXp)
     profile.level += levelIncrease
@@ -85,6 +92,16 @@ function Tutorial() {
     } else if (selectedChallenge.attribute == 'Dex') {
       profile.dex += levelIncrease
     } else profile.int += levelIncrease
+  }
+
+  if (profile.level >= 3 && profile.level < 6) {
+    profile.appearance = 2
+  } else if (profile.level >= 6 && profile.level < 9) {
+    profile.appearance = 3
+  } else if (profile.level >= 9 && profile.level < 12) {
+    profile.appearance = 4
+  } else if (profile.level >= 12) {
+    profile.appearance = 5
   }
 
   if (auth0Loading) {
@@ -98,9 +115,16 @@ function Tutorial() {
   return (
     <>
       <h1 className="mb-6 text-5xl font-bold text-green-400">Tutorial</h1>
-      <p>Click the challenge to view details of challenge.</p>
-      <p>Increase your XP and level up by completing the challenges.</p>
-
+      <p>Welcome to the Fit Quest tutorial!</p>
+      <p>
+        Thank you for the registration, and now you are a member of our Fit
+        Quest.
+      </p>
+      <p>You will be able to view your profile details on the Profile page.</p>
+      <p>It will shows your name, class, levels and progress on XP.</p>
+      <br />
+      <p>{"Please find Meow's profile below as an example:"}</p>
+      <br />
       {/* Profile */}
       <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
         <h3 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
@@ -109,7 +133,7 @@ function Tutorial() {
         </h3>
         <div className="justify-content-center mt-10 flex flex-wrap items-center gap-1.5 justify-self-center rounded-2xl p-4 sm:gap-4">
           <img
-            src="characters/catwarrior1.webp"
+            src={`characters/catrogue${profile.appearance}.webp`}
             alt="tutorial profile character"
             className="mx-auto h-auto w-48 sm:w-72"
           />
@@ -177,6 +201,9 @@ function Tutorial() {
       </div>
 
       {/* Challenge */}
+      <br />
+      <p>Click the challenge to view details of challenge.</p>
+      <p>{"Increase Meow's XP and level up by completing the challenges."}</p>
       <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl">
         <h2 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
           Daily Challenges
@@ -198,6 +225,18 @@ function Tutorial() {
             </li>
           ))}
         </ul>
+      </div>
+      <p>🎉 Congratulation 🎉</p>
+      <p>Now you have completed the basic tutorial for Fit Quest.</p>
+      <p>Please click button below to start the game!</p>
+
+      <div>
+        <button
+          onClick={handleFinish}
+          className="mb-24 mt-8 rounded bg-blue-600 px-6 py-2 font-bold text-white transition duration-200 hover:bg-blue-700"
+        >
+          Finish Tutorial
+        </button>
       </div>
 
       {/* Challenge Details */}
