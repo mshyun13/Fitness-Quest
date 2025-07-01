@@ -43,7 +43,7 @@ function Leaderboard() {
               >
                 {' '}
                 <img
-                  src={`/characters/${user.gender}${user.class}${user.appearance}.webp`}
+                  src={`/characters/${user.gender}${user.class}${user.appearance}${user.rank}.webp`}
                   alt="character"
                   className="h-auto w-20 sm:mx-auto sm:w-32 "
                 />
