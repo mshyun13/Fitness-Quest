@@ -1,8 +1,11 @@
 import db from './connection.ts'
-import { getLevelFromTotalXp, getXpForLeveling } from '../utils/xpLogic.ts'
-import { getRankByLevel } from './completionsDb.ts'
+import {
+  getLevelFromTotalXp,
+  getXpForLeveling,
+  getRankByLevel,
+} from '../utils/xpLogic.ts'
 import { User } from '../../models/users.ts'
-import { Challenge } from '../../models/challenge.ts'
+import { Knex } from 'knex'
 
 export async function getSideQuestsById(id: number) {
   const quests = await db('sidequests').where('user_id', id).select()
@@ -15,6 +18,90 @@ interface SideQuestData {
   description: string
   attribute: string
   completed_at: string
+}
+
+// --- //
+interface UserStatUpdate {
+  userNewXp: number
+  userNewLevel: number
+  levelUpHappened: boolean
+}
+
+export async function updateUserStats(
+  trx: Knex.Transaction,
+  userId: number,
+  xpGain: number,
+  attributeToIncrement?: 'str' | 'dex' | 'int',
+): Promise<UserStatUpdate> {
+  let levelUpHappened = false
+
+  // Get users current xp and attribute stats
+  const user = (await trx('users')
+    .where('id', userId)
+    .select('xp', 'level', 'str', 'dex', 'int')
+    .first()) as User
+
+  if (!user) {
+    throw new Error('User Not Found')
+  }
+
+  const updatedUser: User = { ...user }
+
+  // Add SideQuest XP
+  updatedUser.xp = (updatedUser.xp || 0) + xpGain
+  const originalLevel = updatedUser.level || 0
+
+  // Recalculate level based on total XP
+  const newCalculatedLevel = getLevelFromTotalXp(updatedUser.xp)
+  if (newCalculatedLevel > originalLevel) {
+    levelUpHappened = true
+  }
+  updatedUser.level = newCalculatedLevel
+
+  // Set XP relative to new level
+  const xpAtStartOfCurrentLevel = getXpForLeveling(updatedUser.level)
+  updatedUser.xp = updatedUser.xp - xpAtStartOfCurrentLevel
+
+  if (attributeToIncrement) {
+    const currentAttributeValue = updatedUser[attributeToIncrement]
+    let newAttributeValue = currentAttributeValue + 1
+
+    if (newAttributeValue > 100) {
+      const bonusXpFromAttribute = newAttributeValue - 100
+      newAttributeValue = 1
+
+      updatedUser.xp = (updatedUser.xp || 0) + bonusXpFromAttribute
+
+      const xpAfterBonus = getXpForLeveling(updatedUser.level) + updatedUser.xp
+
+      const levelAfterBonus = getLevelFromTotalXp(xpAfterBonus)
+      if (levelAfterBonus > updatedUser.level) {
+        levelUpHappened = true
+        updatedUser.level = levelAfterBonus
+        const xpAfterLevelBonus = getXpForLeveling(updatedUser.level)
+        updatedUser.xp = updatedUser.xp - xpAfterLevelBonus
+      }
+    }
+    updatedUser[attributeToIncrement] = newAttributeValue
+  }
+  updatedUser.rank = getRankByLevel(updatedUser.level)
+
+  await trx('users')
+    .where('id', userId)
+    .update({
+      xp: updatedUser.xp,
+      level: updatedUser.level,
+      str: updatedUser.str,
+      dex: updatedUser.dex,
+      int: updatedUser.int,
+      rank: updatedUser.rank || 'Unranked',
+    })
+
+  return {
+    userNewXp: updatedUser.xp,
+    userNewLevel: updatedUser.level,
+    levelUpHappened: levelUpHappened,
+  }
 }
 
 export async function addSideQuest(data: SideQuestData) {
@@ -43,44 +130,11 @@ export async function addSideQuestXp(data: SideQuestData) {
       attribute,
       completed_at,
     })
-
-    // Get users current xp and attribute stats
-    const user = await trx('users')
-      .where('id', user_id)
-      .select('xp', 'level', 'str', 'dex', 'int')
-      .first()
-
-    if (!user) {
-      throw new Error('User Not Found')
-    }
-
-    const updatedUser: Partial<User> = { ...user } as User
-
-    // Add SideQuest XP
-    updatedUser.xp = (updatedUser.xp || 0) + SIDE_QUEST_XP
-
-    // Recalculate level based on total XP
-    const newCalculatedLevel = getLevelFromTotalXp(updatedUser.xp)
-
-    // Set XP relative to new level
-    updatedUser.level = newCalculatedLevel
-    const xpAtStartOfNewLevel = getXpForLeveling(updatedUser.level)
-    updatedUser.xp = updatedUser.xp - xpAtStartOfNewLevel
-
-    // Which attribute to update? And apply update
-    const attributeToUpdate = attribute as 'str' | 'dex' | 'int'
-
-    const currentAttributeValue = user[attributeToUpdate]
-    let newAttributeValue = currentAttributeValue + 1
-    if (newAttributeValue > 100) {
-      const bonusXpFromAttribute = newAttributeValue - 100
-      newAttributeValue = 1
-
-      updatedUser.xp = (updatedUser.xp || 0) + bonusXpFromAttribute
-
-      const levelAfterBonus = getLevelFromTotalXp(
-        getXpForLeveling(updatedUser.level) + updatedUser.xp,
-      )
-    }
+    await updateUserStats(
+      trx,
+      user_id,
+      SIDE_QUEST_XP,
+      attribute as 'str' | 'dex' | 'int',
+    )
   })
 }

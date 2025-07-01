@@ -27,17 +27,17 @@ router.get('/:id', checkJwt, async (req: JwtRequest, res) => {
     }
   } catch (err) {
     console.error('Error getting quests', err)
-    res.status(500)
+    res.sendStatus(500)
   }
 })
 
 router.post('/', async (req, res) => {
   try {
-    await db.addSideQuest(req.body.data)
+    await db.addSideQuestXp(req.body.data)
     res.sendStatus(201)
   } catch (err) {
     console.error('Error adding side quest', err)
-    res.status(500)
+    res.sendStatus(500)
   }
 })
 

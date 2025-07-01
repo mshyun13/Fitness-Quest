@@ -27,6 +27,7 @@ function Home() {
     data: dbUser,
     isLoading: dbUserLoading,
     isError: dbUserError,
+    refetch: refetchDbUser,
   } = useUserByAuth0()
 
   const [showModal, setShowModal] = useState(false)
@@ -222,6 +223,7 @@ function Home() {
         <ManualEntryForm
           onClose={() => setShowSideQuest(false)}
           setAppNotification={setAppNotification}
+          onUserUpdate={refetchDbUser}
         />
       )}
     </section>
