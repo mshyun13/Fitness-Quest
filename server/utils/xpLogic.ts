@@ -1,5 +1,5 @@
 export const XP_FOR_LEVELING = 10 // XP required to go from Level 1 to Level 2
-export const GROWTH_FACTOR = 1.5 // How much XP required increases per level (1.05 = 5% increase)
+export const GROWTH_FACTOR = 1.15 // How much XP required increases per level (1.05 = 5% increase)
 
 // Calculates XP required to reach the start of a given level
 export function getXpForLeveling(level: number): number {

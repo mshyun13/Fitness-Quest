@@ -36,7 +36,7 @@ const LoginPage = () => {
   return (
     <section className="flex min-h-screen flex-col items-center justify-center bg-gray-900 p-4 font-mono text-green-300">
       <div className="w-full max-w-4xl text-center">
-        <div className="mx-auto my-4 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-8 shadow-2xl">
+        <div className="mx-auto my-4 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-8 shadow-2xl shadow-gray-950">
           {/* Login */}
           <div className="mb-4">
             <button

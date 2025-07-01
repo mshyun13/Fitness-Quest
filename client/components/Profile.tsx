@@ -57,7 +57,7 @@ function Profile() {
     <>
       {/* <button onClick={updateUser}>updateUser</button> */}
       {/* <button onClick={addAch}>updateAchievements</button> */}
-      <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
+      <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl shadow-gray-950">
         <h3 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
           {' '}
           Profile
@@ -139,7 +139,7 @@ function Profile() {
         </div>
       </div>
 
-      <div className="mx-auto mt-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
+      <div className="mx-auto mt-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl shadow-gray-950">
         <h3 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
           {' '}
           Achievements
