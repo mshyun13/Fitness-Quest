@@ -38,6 +38,12 @@ export default function Nav() {
       )}
       {isAuthenticated && (
         <>
+          <Link to="/feed">Feed</Link>
+          <p>-</p>
+        </>
+      )}
+      {isAuthenticated && (
+        <>
           <Link to="/leaderboard">Leaderboard</Link>
           <p>-</p>
         </>
