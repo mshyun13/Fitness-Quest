@@ -84,7 +84,6 @@ export async function processChallengeCompletion(
         | 'dex'
         | 'int'
 
-      // Call the unified helper function to update user stats
       // db/sidequests.ts now handles all the calculations and DB updates
       statUpdateResult = await updateUserStats(
         trx,

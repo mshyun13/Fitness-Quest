@@ -1,9 +1,5 @@
 import db from './connection.ts'
-import {
-  getLevelFromTotalXp,
-  getXpForLeveling,
-  getRankByLevel,
-} from '../utils/xpLogic.ts'
+import { getLevelFromTotalXp, getRankByLevel } from '../utils/xpLogic.ts'
 import { User } from '../../models/users.ts'
 import { Knex } from 'knex'
 
@@ -20,7 +16,6 @@ interface SideQuestData {
   completed_at: string
 }
 
-// --- //
 interface UserStatUpdate {
   userNewXp: number
   userNewLevel: number
@@ -34,72 +29,111 @@ export async function updateUserStats(
   attributeToIncrement?: 'str' | 'dex' | 'int',
 ): Promise<UserStatUpdate> {
   let levelUpHappened = false
+  console.log(
+    `[updateUserStats] Called for userId: ${userId}, xpGain: ${xpGain}, attribute: ${attributeToIncrement}`,
+  )
 
-  // Get users current xp and attribute stats
+  // Get users current XP from DB
   const user = (await trx('users')
     .where('id', userId)
     .select('xp', 'level', 'str', 'dex', 'int')
     .first()) as User
 
   if (!user) {
+    console.error(`[updateUserStats] User Not Found for userId: ${userId}`)
     throw new Error('User Not Found')
   }
 
-  const updatedUser: User = { ...user }
+  // User stats before update
+  console.log(
+    `[updateUserStats] User BEFORE update (from DB): Total XP=${user.xp}, Level=${user.level}, STR=${user.str}, DEX=${user.dex}, INT=${user.int}`,
+  )
 
-  // Add SideQuest XP
-  updatedUser.xp = (updatedUser.xp || 0) + xpGain
-  const originalLevel = updatedUser.level || 0
+  // Calculate new total xp
+  let newTotalXp = (user.xp || 0) + xpGain
+  console.log(
+    `[updateUserStats] Calculated New Total XP after adding xpGain: ${newTotalXp}`,
+  )
 
-  // Recalculate level based on total XP
-  const newCalculatedLevel = getLevelFromTotalXp(updatedUser.xp)
+  // Determine new level based on new total XP
+  const originalLevel = user.level || 0
+  const newCalculatedLevel = getLevelFromTotalXp(newTotalXp)
+
   if (newCalculatedLevel > originalLevel) {
     levelUpHappened = true
   }
-  updatedUser.level = newCalculatedLevel
 
-  // Set XP relative to new level
-  const xpAtStartOfCurrentLevel = getXpForLeveling(updatedUser.level)
-  updatedUser.xp = updatedUser.xp - xpAtStartOfCurrentLevel
+  const finalXpToStore = newTotalXp
+  let finalLevelToStore = newCalculatedLevel
+  let finalRankToStore = getRankByLevel(finalLevelToStore)
+
+  const updatedAttributes = {
+    str: user.str,
+    dex: user.dex,
+    int: user.int,
+  }
 
   if (attributeToIncrement) {
-    const currentAttributeValue = updatedUser[attributeToIncrement]
+    const currentAttributeValue = updatedAttributes[attributeToIncrement]
     let newAttributeValue = currentAttributeValue + 1
 
     if (newAttributeValue > 100) {
       const bonusXpFromAttribute = newAttributeValue - 100
       newAttributeValue = 1
 
-      updatedUser.xp = (updatedUser.xp || 0) + bonusXpFromAttribute
+      // Add bonus XP to total XP
+      newTotalXp += bonusXpFromAttribute
+      console.log(
+        `[updateUserStats] Bonus XP added. Current TOTAL XP after bonus: ${newTotalXp}`,
+      )
 
-      const xpAfterBonus = getXpForLeveling(updatedUser.level) + updatedUser.xp
-
-      const levelAfterBonus = getLevelFromTotalXp(xpAfterBonus)
-      if (levelAfterBonus > updatedUser.level) {
+      // Recalculate level and rank based on the new total XP
+      const levelAfterBonus = getLevelFromTotalXp(newTotalXp)
+      if (levelAfterBonus > finalLevelToStore) {
         levelUpHappened = true
-        updatedUser.level = levelAfterBonus
-        const xpAfterLevelBonus = getXpForLeveling(updatedUser.level)
-        updatedUser.xp = updatedUser.xp - xpAfterLevelBonus
       }
+      finalLevelToStore = levelAfterBonus
+      finalRankToStore = getRankByLevel(finalLevelToStore)
+      console.log(
+        `[updateUserStats] Level/Rank updated after bonus XP. New Level: ${finalLevelToStore}, New Rank: ${finalRankToStore}`,
+      )
     }
-    updatedUser[attributeToIncrement] = newAttributeValue
+    updatedAttributes[attributeToIncrement] = newAttributeValue
+    console.log(
+      `[updateUserStats] Attribute ${attributeToIncrement} updated to: ${updatedAttributes[attributeToIncrement]}`,
+    )
   }
-  updatedUser.rank = getRankByLevel(updatedUser.level)
 
-  await trx('users')
+  console.log(
+    `[updateUserStats] Final values before DB write: TOTAL XP=${finalXpToStore}, Level=${finalLevelToStore}, Rank=${finalRankToStore}`,
+  )
+
+  await trx('users').where('id', userId).update({
+    xp: finalXpToStore,
+    level: finalLevelToStore,
+    str: updatedAttributes.str,
+    dex: updatedAttributes.dex,
+    int: updatedAttributes.int,
+    rank: finalRankToStore,
+  })
+
+  console.log(
+    `[updateUserStats] Database update command executed for userId: ${userId}`,
+  )
+  // --- //
+  const verifiedUser = (await trx('users')
     .where('id', userId)
-    .update({
-      xp: updatedUser.xp,
-      level: updatedUser.level,
-      str: updatedUser.str,
-      dex: updatedUser.dex,
-      int: updatedUser.int,
-      rank: updatedUser.rank || 'Unranked',
-    })
+    .select('xp', 'level', 'str', 'dex', 'int', 'rank')
+    .first()) as User
+  // --- //
+
+  console.log(
+    `[updateUserStats] User stats read back (within transaction): Total XP=${verifiedUser.xp}, Level=${verifiedUser.level}, Rank=${verifiedUser.rank}`,
+  )
 
   return {
-    userNewXp: updatedUser.xp,
-    userNewLevel: updatedUser.level,
+    userNewXp: finalXpToStore,
+    userNewLevel: finalLevelToStore,
     levelUpHappened: levelUpHappened,
   }
 }
