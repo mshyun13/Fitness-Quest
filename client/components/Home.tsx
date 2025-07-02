@@ -114,7 +114,7 @@ function Home() {
       {appNotification && (
         <div className="absolute min-h-40 w-screen justify-items-center">
           <div
-            className={`mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white shadow-xl shadow-gray-950 ${notificationClass}`}
+            className={`z-50 mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white shadow-xl shadow-gray-950 ${notificationClass}`}
             style={{ maxWidth: 'fit-content' }}
           >
             <p>{appNotification.message}</p>

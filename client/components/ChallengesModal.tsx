@@ -67,7 +67,7 @@ const ChallengeModal: React.FC<ChallengeModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75 font-mono">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-gray-800 bg-opacity-75 font-mono">
       <div className="relative mx-4 w-full max-w-lg rounded-lg border border-gray-700 bg-gray-800 p-8 shadow-xl shadow-gray-950">
         <button
           onClick={onClose}
