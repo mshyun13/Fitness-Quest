@@ -92,7 +92,7 @@ const LoginPage = () => {
   return (
     <section
       ref={backgroundRef}
-      className="flex min-h-screen flex-col items-center justify-center bg-cover bg-fixed bg-no-repeat p-4 font-mono text-green-300"
+      className="flex min-h-screen flex-col items-center justify-center bg-cover bg-fixed bg-no-repeat font-mono text-green-300"
       style={{
         backgroundSize: 'cover',
         backgroundPosition: 'center',
