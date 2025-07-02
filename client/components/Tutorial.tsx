@@ -115,16 +115,20 @@ function Tutorial() {
   return (
     <>
       <h1 className="mb-6 text-5xl font-bold text-green-400">Tutorial</h1>
-      <p>Welcome to the Fit Quest tutorial!</p>
-      <p>
-        Thank you for the registration, and now you are a member of our Fit
-        Quest.
-      </p>
-      <p>You will be able to view your profile details on the Profile page.</p>
-      <p>It will shows your name, class, levels and progress on XP.</p>
-      <br />
-      <p>{"Please find Meow's profile below as an example."}</p>
-      <br />
+      <div className="w-max justify-self-center rounded-lg bg-zinc-700 bg-opacity-40 p-4 backdrop-blur-sm">
+        <p>Welcome to the Fit Quest tutorial!</p>
+        <p>
+          Thank you for the registration, and now you are a member of our Fit
+          Quest.
+        </p>
+        <p>
+          You will be able to view your profile details on the Profile page.
+        </p>
+        <p>It will shows your name, class, levels and progress on XP.</p>
+        <br />
+        <p>{"Please find Meow's profile below as an example."}</p>
+        <br />
+      </div>
       {/* Profile */}
       <div className="mx-auto max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 py-8 font-mono text-green-300 shadow-xl">
         <h3 className="mb-4 border-b-2 border-green-700 pb-4 text-center text-2xl font-bold text-green-400">
