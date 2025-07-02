@@ -27,8 +27,10 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res) => {
   try {
-    const data = await db.addAchievements(req.body)
-    res.json(data)
+    // const data = await db.addAchievements(req.body)
+    // res.json(data)
+    await db.addAchievements(req.body)
+    res.sendStatus(201)
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: 'Something went wrong' })

@@ -42,7 +42,7 @@ export async function up(knex) {
     .createTable('achievements_user', (table) => {
       table.integer('id').references('id').inTable('achievements')
       table.integer('user_id').references('id').inTable('users')
-      table.unique(['user_id', 'id'])
+      // table.unique(['user_id', 'id'])
     })
     .createTable('sidequests', (table) => {
       table.increments('id').primary()
