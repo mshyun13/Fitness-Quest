@@ -2,11 +2,19 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers.ts'
 import { useAchievementsById } from '../hooks/achievements.ts'
 import { getXpNeededForNextLevel } from '../../server/utils/xpLogic.ts'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import AchievementsCard from './AchievementCard.tsx'
 
 function Profile() {
   const { isAuthenticated, isLoading: auth0Loading } = useAuth0()
   //const mutateAch = useAchievementsById(1)
+  const [showAchievement, setShowAchievement] = useState(false)
+  const [selectedAchievement, setSelectedAchievement] = useState({
+    id: 0,
+    title: '',
+    description: '',
+    reward: 0,
+  })
 
   const {
     data: user,
@@ -52,6 +60,11 @@ function Profile() {
   //     user_id: 1,
   //   })
   // }
+
+  function showAchievementCard(a) {
+    setSelectedAchievement(a)
+    setShowAchievement(true)
+  }
 
   return (
     <>
@@ -148,14 +161,16 @@ function Profile() {
           <div className="mt-10 grid grid-cols-3 items-center justify-start gap-8 justify-self-center rounded-2xl p-4 ring-2 ring-gray-400 sm:grid-cols-6">
             {userAchievements?.map((a) => {
               return (
-                <p key={a.id} className="min-h-32 text-xs">
-                  <img
-                    src={`/achievements/achievement${a.id}.webp`}
-                    alt={a.title}
-                    className="h-auto w-20 rounded-xl"
-                  />
-                  {a.title}
-                </p>
+                <button key={a.id} onClick={() => showAchievementCard(a)}>
+                  <p className="min-h-32 text-xs">
+                    <img
+                      src={`/achievements/achievement${a.id}.webp`}
+                      alt={a.title}
+                      className="h-auto w-20 rounded-xl"
+                    />
+                    {a.title}
+                  </p>
+                </button>
               )
             })}
           </div>
@@ -163,6 +178,13 @@ function Profile() {
           <p>No achievements yet, Get started!</p>
         )}
       </div>
+
+      {showAchievement && (
+        <AchievementsCard
+          onClose={() => setShowAchievement(false)}
+          achievement={selectedAchievement}
+        />
+      )}
     </>
   )
 }
