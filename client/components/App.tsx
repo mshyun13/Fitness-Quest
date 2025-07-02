@@ -75,17 +75,19 @@ function App() {
     location.pathname !== '/' ? 'border-b-2 border-green-700' : ''
   }`
 
-  const mainClasses = `min-h-[87vh] text-center text-white ${
+  const mainClasses = `min-h-[87vh] text-center text-white pt-8 pb-20 ${
     !isOnLandingPage
-      ? 'bg-[url(/backgrounds/landingpage_bg_dark.png)] pt-8 pb-20 bg-no-repeat bg-cover bg-center'
-      : ''
+    // ? 'bg-[url(/backgrounds/landingpage_bg_dark.png)] pt-8 pb-20'
+    //:
+    // ''
   }`
 
   return (
     <>
+      <div className="fixed -z-10 h-screen w-screen bg-[url(/backgrounds/landingpage_bg_dark.png)] bg-cover pb-20 pt-8"></div>
       {protectedRoutes.includes(location.pathname) && (
         <header className={headerClasses}>
-          <div className="flex max-w-max grid-cols-2 items-center justify-self-center">
+          <div className="flex max-w-max grid-cols-2 items-center justify-self-center ">
             <img src="/logo.webp" alt="logo" className="inline h-auto w-16" />
             <h1 className="inline pt-2 text-center font-['Real_Tatoem',_serif] text-4xl text-gray-200 sm:text-6xl">
               Fit Quest

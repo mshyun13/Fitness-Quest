@@ -21,7 +21,7 @@ export async function seed(knex) {
       int: 10,
       missed: 0,
       class: 'warrior',
-      appearance: 3,
+      appearance: 1,
       gender: 'male',
     },
     {
