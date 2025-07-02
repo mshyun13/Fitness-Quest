@@ -125,7 +125,7 @@ function Home() {
         <div className="w-full max-w-4xl text-center">
           {/* Notification */}
 
-          <h1 className="mb-6 text-5xl font-bold text-green-400 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">
+          <h1 className="z-10 mb-6 text-5xl font-bold text-green-400 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">
             Welcome,{' '}
             {isAuthenticated
               ? dbUser?.name || auth0User?.name || auth0User?.nickname || 'User'
