@@ -44,7 +44,7 @@ const profile = {
   str: 0,
   dex: 0,
   int: 0,
-  appearance: 'bronze',
+  appearance: 'Bronze',
 }
 
 const totalXp = 1500

@@ -44,7 +44,7 @@ export async function addUser(data: UserData) {
 
     xp: 0,
     level: 1,
-    rank: 'bronze',
+    rank: 'Bronze',
     str: 0,
     dex: 0,
     int: 0,
