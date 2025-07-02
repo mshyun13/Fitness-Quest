@@ -142,7 +142,7 @@ function ActivityLog() {
                         </p>
                         <p>
                           <strong className="text-green-200">XP Reward:</strong>{' '}
-                          20
+                          25
                         </p>
                         <p>
                           <strong className="text-green-200">Attribute:</strong>{' '}
