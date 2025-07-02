@@ -1,7 +1,15 @@
 import db from './connection.ts'
-import { getLevelFromTotalXp, getRankByLevel } from '../utils/xpLogic.ts'
+import {
+  checkLevelUp,
+  getLevelFromTotalXp,
+  getRankByLevel,
+  getXpNeededForNextLevel,
+} from '../utils/xpLogic.ts'
 import { User } from '../../models/users.ts'
 import { Knex } from 'knex'
+import { addAchievements } from './achievements.ts'
+import { addPost } from './posts.ts'
+import { User } from '@auth0/auth0-react'
 
 export async function getSideQuestsById(id: number) {
   const quests = await db('sidequests').where('user_id', id).select()
@@ -36,7 +44,7 @@ export async function updateUserStats(
   // Get users current XP from DB
   const user = (await trx('users')
     .where('id', userId)
-    .select('xp', 'level', 'str', 'dex', 'int')
+    .select('xp', 'level', 'str', 'dex', 'int', 'class')
     .first()) as User
 
   if (!user) {
@@ -57,15 +65,31 @@ export async function updateUserStats(
 
   // Determine new level based on new total XP
   const originalLevel = user.level || 0
-  const newCalculatedLevel = getLevelFromTotalXp(newTotalXp)
+  //const newCalculatedLevel = getLevelFromTotalXp(newTotalXp)
+  const newCalculatedLevel = checkLevelUp(user.level, newTotalXp)
+
+  let finalXpToStore = newTotalXp
 
   if (newCalculatedLevel > originalLevel) {
+    console.log('level up')
     levelUpHappened = true
+    finalXpToStore = newTotalXp - getXpNeededForNextLevel(user.level)
   }
 
-  const finalXpToStore = newTotalXp
+  console.log(
+    `xp from level ${getXpNeededForNextLevel(newCalculatedLevel - 1)}`,
+  )
+
   let finalLevelToStore = newCalculatedLevel
   let finalRankToStore = getRankByLevel(finalLevelToStore)
+
+  while (finalXpToStore > getXpNeededForNextLevel(finalLevelToStore)) {
+    console.log('while')
+    finalXpToStore =
+      finalXpToStore - getXpNeededForNextLevel(finalLevelToStore - 1)
+    finalLevelToStore = checkLevelUp(finalLevelToStore, finalXpToStore)
+    finalRankToStore = getRankByLevel(finalLevelToStore)
+  }
 
   const updatedAttributes = {
     str: user.str,
@@ -88,10 +112,12 @@ export async function updateUserStats(
       )
 
       // Recalculate level and rank based on the new total XP
-      const levelAfterBonus = getLevelFromTotalXp(newTotalXp)
+      //const levelAfterBonus = getLevelFromTotalXp(newTotalXp)
+      const levelAfterBonus = checkLevelUp(finalLevelToStore, newTotalXp)
       if (levelAfterBonus > finalLevelToStore) {
         levelUpHappened = true
       }
+      finalXpToStore = newTotalXp - getXpNeededForNextLevel(levelAfterBonus - 1)
       finalLevelToStore = levelAfterBonus
       finalRankToStore = getRankByLevel(finalLevelToStore)
       console.log(
@@ -107,6 +133,9 @@ export async function updateUserStats(
   console.log(
     `[updateUserStats] Final values before DB write: TOTAL XP=${finalXpToStore}, Level=${finalLevelToStore}, Rank=${finalRankToStore}`,
   )
+  // if user.level < 20 and final level to store >20 add achievement
+  // check class too
+  checkAchievements(user.level, finalLevelToStore, userId, user)
 
   await trx('users').where('id', userId).update({
     xp: finalXpToStore,
@@ -152,7 +181,7 @@ export async function addSideQuest(data: SideQuestData) {
 
 export async function addSideQuestXp(data: SideQuestData) {
   return db.transaction(async (trx) => {
-    const SIDE_QUEST_XP = 20 // Fixed XP per SideQuest
+    const SIDE_QUEST_XP = 25 // Fixed XP per SideQuest
 
     const { user_id, title, description, attribute, completed_at } = data
 
@@ -171,4 +200,44 @@ export async function addSideQuestXp(data: SideQuestData) {
       attribute as 'str' | 'dex' | 'int',
     )
   })
+}
+
+// if user.level < 20 and final level to store >20 add achievement
+// check class too
+function checkAchievements(current, final, userId, user) {
+  if (current < 2 && final >= 2) {
+    addAchievements({ id: 1, user_id: userId })
+    const content = 'Earned the Achievement: First Time For Everything'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 5 && final >= 5 && user.class == 'warrior') {
+    addAchievements({ id: 2, user_id: userId })
+    const content = 'Earned the Achievement: Path Of The Warrior'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 5 && final >= 5 && user.class == 'mage') {
+    addAchievements({ id: 3, user_id: userId })
+    const content = 'Earned the Achievement: Path Of The Mage'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 5 && final >= 5 && user.class == 'rogue') {
+    addAchievements({ id: 4, user_id: userId })
+    const content = 'Earned the Achievement: Path Of The Rogue'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 20 && final >= 20 && user.class == 'warrior') {
+    addAchievements({ id: 5, user_id: userId })
+    const content = 'Earned the Achievement: Adept Warrior'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 20 && final >= 20 && user.class == 'mage') {
+    addAchievements({ id: 6, user_id: userId })
+    const content = 'Earned the Achievement: Adept Mage'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 20 && final >= 20 && user.class == 'rogue') {
+    addAchievements({ id: 7, user_id: userId })
+    const content = 'Earned the Achievement: Adept Rogue'
+    addPost({ user_id: userId, content: content })
+  }
 }

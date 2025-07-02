@@ -9,7 +9,7 @@ const newUserData: UserData = {
   name: '',
   class: 'warrior',
   gender: 'male', // user will get the rest once added to DB eg. XP, Level etc
-  rank: 'bronze',
+  rank: 'Bronze',
   appearance: 1,
 }
 

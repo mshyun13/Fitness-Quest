@@ -55,21 +55,45 @@ function App() {
     protectedRoutes,
   ])
 
+  // App.tsx conditional rendering
+  useEffect(() => {
+    if (isOnLandingPage) {
+      document.body.style.overflow = 'hidden' // Hide scrollbars
+      document.documentElement.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+  }, [isOnLandingPage])
+
   const headerClasses = `select-none bg-gray-900 p-4 font-mono text-green-300 ${
     location.pathname !== '/' ? 'border-b-2 border-green-700' : ''
   }`
 
+  const mainClasses = `min-h-[87vh] text-center text-white ${
+    !isOnLandingPage ? 'pt-8 pb-20' : ''
+  }`
+
   return (
     <>
+      <div className="fixed -z-10 h-screen w-screen bg-[url(/backgrounds/landingpage_bg_dark.png)] bg-cover pb-20 pt-8"></div>
       {protectedRoutes.includes(location.pathname) && (
         <header className={headerClasses}>
-          <h1 className="pt-2 text-center font-['Real_Tatoem',_serif] text-6xl text-gray-200">
-            Fit Quest
-          </h1>
+          <div className="flex max-w-max grid-cols-2 items-center justify-self-center ">
+            <img src="/logo.webp" alt="logo" className="inline h-auto w-16" />
+            <h1 className="inline pt-2 text-center font-['Real_Tatoem',_serif] text-4xl text-gray-200 sm:text-6xl">
+              Fit Quest
+            </h1>
+          </div>
           <Nav />
         </header>
       )}
-      <main className="min-h-[87vh] bg-[url(/backgrounds/landingpage_bg.png)] pb-20 pt-8 text-center text-white">
+      <main className={mainClasses}>
         <Outlet />
       </main>
     </>

@@ -86,15 +86,15 @@ function Home() {
   }
 
   if (isLoading || dbUserLoading || auth0Loading) {
-    return <p>Loading Challenges...</p>
+    return <p>Loading Quests...</p>
   }
 
   if (isError || dbUserError) {
-    return <p>Error Loading Challenges</p>
+    return <p>Error Loading Quests</p>
   }
 
   if (!isAuthenticated && !auth0Loading) {
-    return <p>Please log in to view Challenges</p>
+    return <p>Please log in to view Quests</p>
   }
 
   // Notification CSS
@@ -148,10 +148,7 @@ function Home() {
                   <p className="text-xl text-green-200">
                     XP:{' '}
                     <strong className="text-green-500">
-                      {dbUser.xp -
-                        getXpForLeveling(dbUser.level) +
-                        '/' +
-                        xpNeededForNextLevel}
+                      {dbUser.xp + '/' + xpNeededForNextLevel}
                     </strong>
                   </p>
                   <p className="text-xl text-green-200">
@@ -178,11 +175,11 @@ function Home() {
 
           <div className="mx-auto my-8 max-w-2xl rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-xl shadow-gray-950">
             <h2 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
-              Daily Challenges
+              Daily Quests
             </h2>
             <ul className="space-y-4">
               {challenges && challenges.length > 0 ? (
-                challenges.map((challenge) => (
+                challenges.slice(0, 3).map((challenge) => (
                   // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
                   <li
                     key={challenge.id}

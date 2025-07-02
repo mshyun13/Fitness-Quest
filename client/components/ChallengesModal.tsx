@@ -108,7 +108,7 @@ const ChallengeModal: React.FC<ChallengeModalProps> = ({
           >
             {completeChallengeMutation.isPending
               ? 'Completing...'
-              : 'Complete Challenge'}
+              : 'Complete Quest'}
           </button>
 
           {completeChallengeMutation.isError && (
