@@ -69,7 +69,7 @@ function App() {
           <Nav />
         </header>
       )}
-      <main className="min-h-[87vh] bg-[url(/backgrounds/landingpage_bg.png)] pt-8 text-center text-white">
+      <main className="min-h-[87vh] bg-[url(/backgrounds/landingpage_bg.png)] pb-20 pt-8 text-center text-white">
         <Outlet />
       </main>
     </>
