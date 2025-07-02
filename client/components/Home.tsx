@@ -182,7 +182,7 @@ function Home() {
             </h2>
             <ul className="space-y-4">
               {challenges && challenges.length > 0 ? (
-                challenges.map((challenge) => (
+                challenges.slice(0, 3).map((challenge) => (
                   // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
                   <li
                     key={challenge.id}
