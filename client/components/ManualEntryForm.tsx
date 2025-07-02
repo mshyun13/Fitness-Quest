@@ -11,17 +11,19 @@ interface ManualEntryProps {
   onClose: () => void
   setAppNotification: SetAppNotification
   onUserUpdate: () => void
+  userId: number
 }
 
 const ManualEntryForm: React.FC<ManualEntryProps> = ({
   onClose,
   setAppNotification,
   onUserUpdate,
+  userId,
 }) => {
   const date = new Date().toISOString().slice(0, 10)
-  const { data: user } = useUserByAuth0()
+  // const { data: user } = useUserByAuth0()
   const [formData, setFormData] = useState({
-    user_id: user?.id,
+    user_id: userId,
     title: '',
     attribute: '',
     description: '',
@@ -44,18 +46,26 @@ const ManualEntryForm: React.FC<ManualEntryProps> = ({
     event,
   ) => {
     event.preventDefault()
-    mutateSideQuests.add.mutateAsync({ data: formData })
-    setAppNotification(`Side Quest ${formData.title} entered`, 'info')
-    onUserUpdate()
-    onClose()
-    if (!user) return
-    setFormData({
-      user_id: user.id,
-      title: '',
-      attribute: '',
-      description: '',
-      completed_at: date,
-    })
+
+    try {
+      const dataToSend = { ...formData, user_id: userId }
+      await mutateSideQuests.add.mutateAsync({ data: dataToSend })
+      setAppNotification(`Side Quest "${formData.title}" entered!`, 'success')
+      onUserUpdate()
+
+      onClose()
+      setFormData({
+        user_id: userId,
+        title: '',
+        attribute: '',
+        description: '',
+        completed_at: date,
+      })
+    } catch (error) {
+      // Handle errors during mutation
+      setAppNotification('Failed to add Side Quest')
+      console.error('Error adding side quest:', error)
+    }
   }
 
   return (

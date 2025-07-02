@@ -31,20 +31,20 @@ function ActivityLog() {
     <>
       <div className="mx-auto flex max-w-2xl flex-row items-center justify-center gap-10 rounded font-mono text-xl text-white">
         <button
-          className={`rounded-t-lg p-4 ring-2 ring-gray-400 ${showLog === 'challenge' ? 'bg-gray-600 bg-opacity-50' : ''}`}
+          className={`rounded-t-lg bg-gray-800 p-4 ring-2 ring-gray-400 ${showLog === 'challenge' ? 'bg-gray-700 bg-opacity-50' : ''}`}
           onClick={() => setShowLog('challenge')}
         >
           Challenge Log
         </button>
         <button
-          className={`rounded-t-lg p-4 ring-2 ring-gray-400 ${showLog === 'sidequest' ? 'bg-gray-600 bg-opacity-50' : ''}`}
+          className={`rounded-t-lg bg-gray-800 p-4 ring-2 ring-gray-400 ${showLog === 'sidequest' ? 'bg-gray-700 bg-opacity-50' : ''}`}
           onClick={() => setShowLog('sidequest')}
         >
           Side Quest Log
         </button>
       </div>
       {showLog === 'challenge' ? (
-        <div className="flex flex-col items-center justify-center bg-gray-900 pb-4 font-mono text-green-300">
+        <div className="flex flex-col items-center justify-center pb-4 font-mono text-green-300">
           <div className="mx-auto w-full max-w-2xl rounded-lg border border-gray-700 bg-gray-900 p-6 shadow-xl shadow-gray-950">
             <h3 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
               {' '}
@@ -109,7 +109,7 @@ function ActivityLog() {
         ''
       )}
       {showLog === 'sidequest' && sideQuests ? (
-        <div className="flex flex-col items-center justify-center bg-gray-900 pb-4 font-mono text-green-300 ">
+        <div className="flex flex-col items-center justify-center pb-4 font-mono text-green-300 ">
           <div className="mx-auto w-full max-w-2xl rounded-lg border border-gray-700 bg-gray-900 p-6 shadow-xl shadow-gray-950">
             <h3 className="mb-4 border-b-2 border-green-700 pb-2 text-center text-2xl font-bold text-green-400">
               {' '}

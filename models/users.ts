@@ -20,6 +20,7 @@ export interface UserData {
   class: string
   gender: string
   appearance?: number
+  rank: string
 }
 
 export interface UpdateUser {

@@ -8,10 +8,21 @@ function App() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Protected routes
-  useEffect(() => {
-    const protectedRoutes = ['/home', '/profile', '/log']
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const isOnLandingPage = location.pathname === '/'
 
+  // Protected routes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const protectedRoutes = [
+    '/home',
+    '/profile',
+    '/register',
+    '/log',
+    '/feed',
+    '/leaderboard',
+    '/tutorial',
+  ]
+  useEffect(() => {
     // Run if Auth0 has finished loading
     if (!isLoading) {
       // If the user isn't authenticated
@@ -28,13 +39,21 @@ function App() {
       }
       // Else, if the user is authenticated
       else {
-        if (location.pathname === '/') {
+        const fromAuthRedirect = location.state?.fromAuthRedirect
+        if (location.pathname === '/' && !fromAuthRedirect) {
           console.log('Authenticated! Redirecting to home')
           navigate('/home') // Redirect to Home
         }
       }
     }
-  }, [isAuthenticated, isLoading, location.pathname, navigate])
+  }, [
+    isAuthenticated,
+    isLoading,
+    location.pathname,
+    navigate,
+    location.state,
+    protectedRoutes,
+  ])
 
   const headerClasses = `select-none bg-gray-900 p-4 font-mono text-green-300 ${
     location.pathname !== '/' ? 'border-b-2 border-green-700' : ''
@@ -42,13 +61,15 @@ function App() {
 
   return (
     <>
-      <header className={headerClasses}>
-        <h1 className="pt-2 text-center font-['Real_Tatoem',_serif] text-6xl text-gray-200">
-          Fit Quest
-        </h1>
-        <Nav />
-      </header>
-      <main className="min-h-[87vh] bg-gray-900 pt-8 text-center text-white">
+      {protectedRoutes.includes(location.pathname) && (
+        <header className={headerClasses}>
+          <h1 className="pt-2 text-center font-['Real_Tatoem',_serif] text-6xl text-gray-200">
+            Fit Quest
+          </h1>
+          <Nav />
+        </header>
+      )}
+      <main className="min-h-[87vh] bg-[url(/backgrounds/landingpage_bg.png)] pb-20 pt-8 text-center text-white">
         <Outlet />
       </main>
     </>

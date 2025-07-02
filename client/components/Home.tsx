@@ -5,7 +5,10 @@ import { Challenge } from '../../models/challenge'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUserByAuth0 } from '../hooks/useUsers'
 import ManualEntryForm from './ManualEntryForm'
-import { getXpNeededForNextLevel } from '../../server/utils/xpLogic'
+import {
+  getXpNeededForNextLevel,
+  getXpForLeveling,
+} from '../../server/utils/xpLogic'
 
 type NotificationType = 'success' | 'error' | 'info'
 
@@ -107,11 +110,11 @@ function Home() {
   )
 
   return (
-    <section className="flex flex-col items-center justify-start bg-gray-900 font-mono text-green-300">
+    <section className="flex flex-col items-center justify-start font-mono text-green-300">
       {appNotification && (
         <div className="absolute min-h-40 w-screen justify-items-center">
           <div
-            className={`mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white shadow-xl shadow-gray-950 ${notificationClass}`}
+            className={`z-50 mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white shadow-xl shadow-gray-950 ${notificationClass}`}
             style={{ maxWidth: 'fit-content' }}
           >
             <p>{appNotification.message}</p>
@@ -122,7 +125,7 @@ function Home() {
         <div className="w-full max-w-4xl text-center">
           {/* Notification */}
 
-          <h1 className="mb-6 text-5xl font-bold text-green-400">
+          <h1 className="mb-6 text-5xl font-bold text-green-400 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">
             Welcome,{' '}
             {isAuthenticated
               ? dbUser?.name || auth0User?.name || auth0User?.nickname || 'User'
@@ -130,10 +133,10 @@ function Home() {
           </h1>
 
           {dbUser && (
-            <div className="mx-auto my-8 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl shadow-xl shadow-gray-950">
+            <div className="mx-auto my-8 max-w-md rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-xl shadow-gray-950">
               <div className="flex">
                 <img
-                  src={`/characters/${dbUser.gender}${dbUser.class}${dbUser.appearance}.webp`}
+                  src={`/characters/${dbUser.gender}${dbUser.class}${dbUser.appearance}${dbUser.rank}.webp`}
                   alt="character"
                   className="ml-4 h-auto w-32"
                 />
@@ -145,7 +148,10 @@ function Home() {
                   <p className="text-xl text-green-200">
                     XP:{' '}
                     <strong className="text-green-500">
-                      {dbUser.xp + '/' + xpNeededForNextLevel}
+                      {dbUser.xp -
+                        getXpForLeveling(dbUser.level) +
+                        '/' +
+                        xpNeededForNextLevel}
                     </strong>
                   </p>
                   <p className="text-xl text-green-200">
@@ -224,6 +230,7 @@ function Home() {
           onClose={() => setShowSideQuest(false)}
           setAppNotification={setAppNotification}
           onUserUpdate={refetchDbUser}
+          userId={dbUser.id}
         />
       )}
     </section>
