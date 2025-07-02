@@ -77,7 +77,7 @@ function App() {
 
   const mainClasses = `min-h-[87vh] text-center text-white ${
     !isOnLandingPage
-      ? 'bg-[url(/backgrounds/landingpage_bg_dark.png)] pt-8 pb-20'
+      ? 'bg-[url(/backgrounds/landingpage_bg_dark.png)] pt-8 pb-20 bg-no-repeat bg-cover bg-center'
       : ''
   }`
 
