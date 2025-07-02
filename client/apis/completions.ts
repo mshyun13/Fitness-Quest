@@ -2,8 +2,11 @@ import {
   CompletionOfChallenge,
   CompletionResult,
 } from '../../models/completionsModel.ts'
+import { GetTokenSilentlyOptions } from '@auth0/auth0-react'
 
-type GetAccessTokenSilently = (opts?: unknown) => Promise<string>
+type GetAccessTokenSilently = (
+  opts?: GetTokenSilentlyOptions,
+) => Promise<string>
 
 export async function getCompletions(
   getAccessTokenSilently?: GetAccessTokenSilently,
