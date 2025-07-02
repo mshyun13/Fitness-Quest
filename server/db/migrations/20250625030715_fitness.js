@@ -18,13 +18,6 @@ export async function up(knex) {
       table.integer('appearance').defaultTo(1)
       table.string('gender')
     })
-    .createTable('completions', (table) => {
-      table.increments('id').primary()
-      table.integer('user_id').references('id').inTable('users')
-      table.integer('challenge_id').references('id').inTable('challenges')
-      table.datetime('completed_at')
-      table.enum('status', ['completed', 'missed'])
-    })
     .createTable('challenges', (table) => {
       table.increments('id').primary()
       table.string('title')
@@ -32,6 +25,13 @@ export async function up(knex) {
       table.integer('xp_reward')
       table.enum('attribute', ['str', 'dex', 'int'])
       table.enum('difficulty', ['easy', 'medium', 'hard', 'rand'])
+    })
+    .createTable('completions', (table) => {
+      table.increments('id').primary()
+      table.integer('user_id').references('id').inTable('users')
+      table.integer('challenge_id').references('id').inTable('challenges')
+      table.datetime('completed_at')
+      table.enum('status', ['completed', 'missed'])
     })
     .createTable('achievements', (table) => {
       table.increments('id').primary()
@@ -42,7 +42,6 @@ export async function up(knex) {
     .createTable('achievements_user', (table) => {
       table.integer('id').references('id').inTable('achievements')
       table.integer('user_id').references('id').inTable('users')
-      // table.unique(['user_id', 'id'])
     })
     .createTable('sidequests', (table) => {
       table.increments('id').primary()
@@ -63,8 +62,8 @@ export async function up(knex) {
 export async function down(knex) {
   return knex.schema
     .dropTable('users')
-    .dropTable('completions')
     .dropTable('challenges')
+    .dropTable('completions')
     .dropTable('achievements')
     .dropTable('achievements_user')
     .dropTable('sidequests')
