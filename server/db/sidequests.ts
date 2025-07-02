@@ -3,6 +3,7 @@ import { getLevelFromTotalXp, getRankByLevel } from '../utils/xpLogic.ts'
 import { User } from '../../models/users.ts'
 import { Knex } from 'knex'
 import { addAchievements } from './achievements.ts'
+import { addPost } from './posts.ts'
 
 export async function getSideQuestsById(id: number) {
   const quests = await db('sidequests').where('user_id', id).select()
@@ -110,7 +111,7 @@ export async function updateUserStats(
   )
   // if user.level < 20 and final level to store >20 add achievement
   // check class too
-  checkAchievements(user.level, finalLevelToStore, userId)
+  checkAchievements(user.level, finalLevelToStore, userId, user)
 
   await trx('users').where('id', userId).update({
     xp: finalXpToStore,
@@ -179,8 +180,40 @@ export async function addSideQuestXp(data: SideQuestData) {
 
 // if user.level < 20 and final level to store >20 add achievement
 // check class too
-function checkAchievements(current, final, userId) {
+function checkAchievements(current, final, userId, user) {
   if (current < 2 && final >= 2) {
     addAchievements({ id: 1, user_id: userId })
+    const content = 'Earned the Achievement: First Time For Everything'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 5 && final >= 5 && user.class == 'warrior') {
+    addAchievements({ id: 2, user_id: userId })
+    const content = 'Earned the Achievement: Path Of The Warrior'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 5 && final >= 5 && user.class == 'mage') {
+    addAchievements({ id: 3, user_id: userId })
+    const content = 'Earned the Achievement: Path Of The Mage'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 5 && final >= 5 && user.class == 'rogue') {
+    addAchievements({ id: 4, user_id: userId })
+    const content = 'Earned the Achievement: Path Of The Rogue'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 20 && final >= 20 && user.class == 'warrior') {
+    addAchievements({ id: 5, user_id: userId })
+    const content = 'Earned the Achievement: Adept Warrior'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 20 && final >= 20 && user.class == 'mage') {
+    addAchievements({ id: 6, user_id: userId })
+    const content = 'Earned the Achievement: Adept Mage'
+    addPost({ user_id: userId, content: content })
+  }
+  if (current < 20 && final >= 20 && user.class == 'rogue') {
+    addAchievements({ id: 7, user_id: userId })
+    const content = 'Earned the Achievement: Adept Rogue'
+    addPost({ user_id: userId, content: content })
   }
 }
