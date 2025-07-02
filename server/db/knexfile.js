@@ -34,8 +34,9 @@ export default {
   },
 
   production: {
-    client: 'sqlite3',
-    useNullAsDefault: true,
+    //client: 'sqlite3',
+    //useNullAsDefault: true,
+    client: 'postgresql',
     connection: {
       //filename: '/app/storage/prod.sqlite3',
       host: process.env.DB_HOST,
