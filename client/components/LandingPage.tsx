@@ -109,21 +109,12 @@ const LoginPage = () => {
           {/* Login Button */}
           <div className="mb-4">
             <button
-              className="w-full rounded border border-transparent bg-transparent px-6 py-3 text-2xl font-bold text-white transition-all duration-300 hover:border-green-500 hover:text-green-300"
+              className="w-full rounded-xl border-2 bg-white/30 px-6 py-3 text-2xl font-bold text-white transition-all duration-300 hover:backdrop-blur-sm"
               onClick={handleLogin}
             >
               Login
             </button>
           </div>
-          {/* Register Button */}
-          {/* <div>
-            <button
-              className="w-full rounded border border-transparent bg-transparent px-6 py-3 text-2xl font-bold text-white transition-all duration-300 hover:border-blue-500 hover:text-blue-300"
-              onClick={handleRegister}
-            >
-              Register
-            </button>
-          </div> */}
         </div>
       </div>
     </section>
