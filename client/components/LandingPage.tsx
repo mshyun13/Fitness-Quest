@@ -178,7 +178,7 @@ const LoginPage = () => {
       </div>
       <div className="absolute bottom-0 mb-4">
         <button
-          className="w-full rounded border border-transparent bg-transparent px-6 py-3 text-xl font-bold text-white transition-all duration-300 hover:border-purple-500 hover:text-purple-300"
+          className="w-full rounded-xl border-2 bg-white/30 px-6 py-3 text-xl font-bold text-white transition-all duration-300 hover:backdrop-blur-sm"
           onClick={handleToggleMusic}
         >
           {isPlaying ? 'Music ⏸️' : 'Music ▶️'}
