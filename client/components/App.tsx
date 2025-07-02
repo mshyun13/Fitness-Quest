@@ -75,11 +75,8 @@ function App() {
     location.pathname !== '/' ? 'border-b-2 border-green-700' : ''
   }`
 
-  const mainClasses = `min-h-[87vh] text-center text-white pt-8 pb-20 ${
-    !isOnLandingPage
-    // ? 'bg-[url(/backgrounds/landingpage_bg_dark.png)] pt-8 pb-20'
-    //:
-    // ''
+  const mainClasses = `min-h-[87vh] text-center text-white ${
+    !isOnLandingPage ? 'pt-8 pb-20' : ''
   }`
 
   return (
