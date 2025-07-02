@@ -93,7 +93,7 @@ export async function processChallengeCompletion(
       )
     }
 
-    const [_completionId] = await trx('completions').insert({
+    await trx('completions').insert({
       user_id: userId,
       challenge_id: challengeId,
       status: status,
