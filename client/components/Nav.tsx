@@ -22,7 +22,7 @@ export default function Nav() {
 
   if (!mql.matches) {
     return (
-      <div className="flex flex-wrap justify-around sm:text-xl">
+      <div className="z-40 flex flex-wrap justify-around sm:text-xl">
         {!isOnLoginPage && (
           <>
             <Link to={isAuthenticated ? '/home' : '/'}>Home</Link>
@@ -68,7 +68,7 @@ export default function Nav() {
 
   if (mql.matches) {
     return (
-      <div className="fixed bottom-0 left-0 flex h-16 w-screen flex-wrap items-center justify-around border-t-2 border-green-400 bg-gray-900 pt-2 sm:text-xl">
+      <div className="fixed bottom-0 left-0 z-40 flex h-16 w-screen flex-wrap items-center justify-around border-t-2 border-green-400 bg-gray-900 pt-2 sm:text-xl">
         {!isOnLoginPage && (
           <>
             <Link to={isAuthenticated ? '/home' : '/'} className="w-14">
