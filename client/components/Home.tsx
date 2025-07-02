@@ -112,9 +112,9 @@ function Home() {
   return (
     <section className="flex flex-col items-center justify-start font-mono text-green-300">
       {appNotification && (
-        <div className="absolute min-h-40 w-screen justify-items-center">
+        <div className="absolute z-50 min-h-40 w-screen justify-items-center">
           <div
-            className={`z-50 mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white shadow-xl shadow-gray-950 ${notificationClass}`}
+            className={` mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white shadow-xl shadow-gray-950 ${notificationClass}`}
             style={{ maxWidth: 'fit-content' }}
           >
             <p>{appNotification.message}</p>

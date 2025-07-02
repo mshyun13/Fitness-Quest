@@ -70,7 +70,7 @@ const ManualEntryForm: React.FC<ManualEntryProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+      <div className="fixed inset-0 z-40 flex items-center justify-center bg-gray-800 bg-opacity-75">
         <div className="absolute">
           <form
             onSubmit={handleSubmit}
