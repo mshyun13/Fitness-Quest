@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { gsap } from 'gsap'
 import bgImage from '/backgrounds/landingpage_bg.png'
+import fqLogo from '/logo.webp'
 
 const LoginPage = () => {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
@@ -101,8 +102,15 @@ const LoginPage = () => {
       <div className="w-full max-w-4xl text-center">
         <h1
           ref={titleRef}
-          className="mb-8 font-['Real_Tatoem',_serif] text-8xl font-bold text-white drop-shadow-lg"
+          className="mb-8 flex flex-wrap items-center justify-center font-['Real_Tatoem',_serif] text-8xl font-bold text-white drop-shadow-lg"
         >
+          <div>
+            <img
+              src={fqLogo}
+              alt="Fit Quest Logo"
+              className="mr-4 h-32 w-auto self-center"
+            />
+          </div>
           Fit Quest
         </h1>
         <div ref={buttonsContainerRef} className="mx-auto my-4 max-w-md p-8">
