@@ -37,6 +37,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^2.1.5",
     "knex": "^2.5.1",
+    "pg": "^8.16.3",
     "react-router": "^7.6.2",
     "sqlite3": "^5.1.7",
     "superagent": "^8.1.2"
