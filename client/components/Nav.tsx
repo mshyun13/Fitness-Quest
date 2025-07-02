@@ -14,7 +14,7 @@ export default function Nav() {
   }
 
   // eslint-disable-next-line prefer-const
-  let mql = window.matchMedia('(max-width: 999px)')
+  let mql = window.matchMedia('(max-width: 1025px)')
 
   console.log(mql.matches)
 
@@ -68,10 +68,10 @@ export default function Nav() {
 
   if (mql.matches) {
     return (
-      <div className="fixed bottom-0 left-0 flex h-14 w-screen flex-wrap items-center justify-around bg-gray-900 sm:text-xl">
+      <div className="fixed bottom-0 left-0 flex h-16 w-screen flex-wrap items-center justify-around border-t-2 border-green-400 bg-gray-900 pt-2 sm:text-xl">
         {!isOnLoginPage && (
           <>
-            <Link to={isAuthenticated ? '/home' : '/'}>
+            <Link to={isAuthenticated ? '/home' : '/'} className="w-14">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -101,7 +101,7 @@ export default function Nav() {
 
         {isAuthenticated && (
           <>
-            <Link to="/profile">
+            <Link to="/profile" className="w-14">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -112,10 +112,11 @@ export default function Nav() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="lucide lucide-user-icon lucide-user justify-self-center"
+                className="lucide lucide-shield-user-icon lucide-shield-user justify-self-center"
               >
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
+                <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+                <path d="M6.376 18.91a6 6 0 0 1 11.249.003" />
+                <circle cx="12" cy="11" r="4" />
               </svg>
               <p className="text-center text-[0.7rem]">Profile</p>
             </Link>
@@ -123,7 +124,7 @@ export default function Nav() {
         )}
         {isAuthenticated && (
           <>
-            <Link to="/log">
+            <Link to="/log" className="w-14">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -147,7 +148,7 @@ export default function Nav() {
         )}
         {isAuthenticated && (
           <>
-            <Link to="/feed">
+            <Link to="/feed" className="w-14">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -170,7 +171,7 @@ export default function Nav() {
         )}
         {isAuthenticated && (
           <>
-            <Link to="/leaderboard">
+            <Link to="/leaderboard" className="w-14">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -193,7 +194,7 @@ export default function Nav() {
         {isAuthenticated && (
           <button
             onClick={handleSignOut}
-            className="cursor-pointer border-none bg-transparent text-green-300 hover:text-green-200"
+            className="w-14 cursor-pointer border-none bg-transparent text-green-300 hover:text-green-200"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
