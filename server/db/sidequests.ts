@@ -157,7 +157,7 @@ export async function addSideQuest(data: SideQuestData) {
 
 export async function addSideQuestXp(data: SideQuestData) {
   return db.transaction(async (trx) => {
-    const SIDE_QUEST_XP = 20 // Fixed XP per SideQuest
+    const SIDE_QUEST_XP = 25 // Fixed XP per SideQuest
 
     const { user_id, title, description, attribute, completed_at } = data
 
