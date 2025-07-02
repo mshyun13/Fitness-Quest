@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { gsap } from 'gsap'
 import bgImage from '/backgrounds/landingpage_bg.png'
+import fqLogo from '/logo.webp'
 
 const LoginPage = () => {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
@@ -133,7 +134,7 @@ const LoginPage = () => {
   return (
     <section
       ref={backgroundRef}
-      className="flex min-h-screen flex-col items-center justify-center bg-cover bg-fixed bg-no-repeat p-4 font-mono text-green-300"
+      className="flex min-h-screen flex-col items-center justify-center bg-cover bg-fixed bg-no-repeat font-mono text-green-300"
       style={{
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -142,15 +143,22 @@ const LoginPage = () => {
       <div className="w-full max-w-4xl text-center">
         <h1
           ref={titleRef}
-          className="mb-8 font-['Real_Tatoem',_serif] text-8xl font-bold text-white drop-shadow-lg"
+          className="mb-8 flex flex-wrap items-center justify-center font-['Real_Tatoem',_serif] text-8xl font-bold text-white drop-shadow-lg"
         >
+          <div>
+            <img
+              src={fqLogo}
+              alt="Fit Quest Logo"
+              className="mr-4 h-32 w-auto self-center"
+            />
+          </div>
           Fit Quest
         </h1>
         <div ref={buttonsContainerRef} className="mx-auto my-4 max-w-md p-8">
           {/* Login Button */}
           <div className="mb-4">
             <button
-              className="w-full rounded border border-transparent bg-transparent px-6 py-3 text-2xl font-bold text-white transition-all duration-300 hover:border-green-500 hover:text-green-300"
+              className="w-full rounded-xl border-2 bg-white/30 px-6 py-3 text-2xl font-bold text-white transition-all duration-300 hover:backdrop-blur-sm"
               onClick={handleLogin}
             >
               Login

@@ -55,8 +55,30 @@ function App() {
     protectedRoutes,
   ])
 
+  // App.tsx conditional rendering
+  useEffect(() => {
+    if (isOnLandingPage) {
+      document.body.style.overflow = 'hidden' // Hide scrollbars
+      document.documentElement.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+  }, [isOnLandingPage])
+
   const headerClasses = `select-none bg-gray-900 p-4 font-mono text-green-300 ${
     location.pathname !== '/' ? 'border-b-2 border-green-700' : ''
+  }`
+
+  const mainClasses = `min-h-[87vh] text-center text-white ${
+    !isOnLandingPage
+      ? 'bg-[url(/backgrounds/landingpage_bg_dark.png)] pt-8 pb-20 bg-no-repeat bg-cover bg-center'
+      : ''
   }`
 
   return (
@@ -72,7 +94,7 @@ function App() {
           <Nav />
         </header>
       )}
-      <main className="min-h-[87vh] bg-[url(/backgrounds/landingpage_bg_dark.png)] pb-20 pt-8 text-center text-white">
+      <main className={mainClasses}>
         <Outlet />
       </main>
     </>
