@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { gsap } from 'gsap'
@@ -12,6 +12,43 @@ const LoginPage = () => {
   const backgroundRef = useRef(null)
   const titleRef = useRef(null)
   const buttonsContainerRef = useRef(null)
+
+  const [audio] = useState(() => {
+    const sound = new Audio('/audio/fitness3.wav')
+    sound.loop = true // Set audio to loop
+    return sound
+  })
+  const [isPlaying, setIsPlaying] = useState(false) // State to control play/pause
+
+  // Effect to play or pause audio based on isPlaying state
+  useEffect(() => {
+    if (isPlaying) {
+      audio.play().catch((error) => {
+        // Handle potential errors if play() fails (e.g., user hasn't interacted yet, though button click should prevent this)
+        console.error('Audio play failed:', error)
+      })
+    } else {
+      audio.pause()
+    }
+    // No cleanup needed for play/pause, as audio object persists
+  }, [isPlaying, audio]) // Dependencies: re-run effect when isPlaying or audio changes
+
+  // Optional: Handle audio ending if not looping (though you set loop=true)
+  // This useEffect is still good practice if you ever decide not to loop.
+  useEffect(() => {
+    const handleEnded = () => setIsPlaying(false)
+    audio.addEventListener('ended', handleEnded)
+
+    return () => {
+      audio.removeEventListener('ended', handleEnded)
+    }
+  }, [audio])
+
+  // useEffect(() => {
+  //   const audio = new Audio('fitness3.wav')
+  //   audio.loop = true
+  //   audio.play()
+  // }, [])
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -81,6 +118,10 @@ const LoginPage = () => {
     })
   }
 
+  const handleToggleMusic = () => {
+    setIsPlaying((prev) => !prev) // Toggle the playing state
+  }
+
   if (isLoading) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-gray-900 text-green-300">
@@ -115,6 +156,7 @@ const LoginPage = () => {
               Login
             </button>
           </div>
+
           {/* Register Button */}
           {/* <div>
             <button
@@ -125,6 +167,14 @@ const LoginPage = () => {
             </button>
           </div> */}
         </div>
+      </div>
+      <div className="absolute bottom-0 mb-4">
+        <button
+          className="w-full rounded border border-transparent bg-transparent px-6 py-3 text-xl font-bold text-white transition-all duration-300 hover:border-purple-500 hover:text-purple-300"
+          onClick={handleToggleMusic}
+        >
+          {isPlaying ? 'Music ⏸️' : 'Music ▶️'}
+        </button>
       </div>
     </section>
   )
