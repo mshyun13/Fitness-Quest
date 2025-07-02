@@ -112,9 +112,9 @@ function Home() {
   return (
     <section className="flex flex-col items-center justify-start font-mono text-green-300">
       {appNotification && (
-        <div className="absolute min-h-40 w-screen justify-items-center">
+        <div className="absolute z-50 min-h-40 w-screen justify-items-center">
           <div
-            className={`z-50 mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white shadow-xl shadow-gray-950 ${notificationClass}`}
+            className={` mx-auto mb-4 justify-self-center rounded p-3 text-xl text-white shadow-xl shadow-gray-950 ${notificationClass}`}
             style={{ maxWidth: 'fit-content' }}
           >
             <p>{appNotification.message}</p>
@@ -125,7 +125,7 @@ function Home() {
         <div className="w-full max-w-4xl text-center">
           {/* Notification */}
 
-          <h1 className="mb-6 text-5xl font-bold text-green-400 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">
+          <h1 className="z-10 mb-6 text-5xl font-bold text-green-400 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">
             Welcome,{' '}
             {isAuthenticated
               ? dbUser?.name || auth0User?.name || auth0User?.nickname || 'User'
