@@ -63,9 +63,12 @@ function App() {
     <>
       {protectedRoutes.includes(location.pathname) && (
         <header className={headerClasses}>
-          <h1 className="pt-2 text-center font-['Real_Tatoem',_serif] text-6xl text-gray-200">
-            Fit Quest
-          </h1>
+          <div className="flex max-w-max grid-cols-2 items-center justify-self-center">
+            <img src="/logo.webp" alt="logo" className="inline h-auto w-16" />
+            <h1 className="inline pt-2 text-center font-['Real_Tatoem',_serif] text-4xl text-gray-200 sm:text-6xl">
+              Fit Quest
+            </h1>
+          </div>
           <Nav />
         </header>
       )}
