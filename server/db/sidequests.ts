@@ -1,9 +1,15 @@
 import db from './connection.ts'
-import { getLevelFromTotalXp, getRankByLevel } from '../utils/xpLogic.ts'
+import {
+  checkLevelUp,
+  getLevelFromTotalXp,
+  getRankByLevel,
+  getXpNeededForNextLevel,
+} from '../utils/xpLogic.ts'
 import { User } from '../../models/users.ts'
 import { Knex } from 'knex'
 import { addAchievements } from './achievements.ts'
 import { addPost } from './posts.ts'
+import { User } from '@auth0/auth0-react'
 
 export async function getSideQuestsById(id: number) {
   const quests = await db('sidequests').where('user_id', id).select()
@@ -59,15 +65,31 @@ export async function updateUserStats(
 
   // Determine new level based on new total XP
   const originalLevel = user.level || 0
-  const newCalculatedLevel = getLevelFromTotalXp(newTotalXp)
+  //const newCalculatedLevel = getLevelFromTotalXp(newTotalXp)
+  const newCalculatedLevel = checkLevelUp(user.level, newTotalXp)
+
+  let finalXpToStore = newTotalXp
 
   if (newCalculatedLevel > originalLevel) {
+    console.log('level up')
     levelUpHappened = true
+    finalXpToStore = newTotalXp - getXpNeededForNextLevel(user.level)
   }
 
-  const finalXpToStore = newTotalXp
+  console.log(
+    `xp from level ${getXpNeededForNextLevel(newCalculatedLevel - 1)}`,
+  )
+
   let finalLevelToStore = newCalculatedLevel
   let finalRankToStore = getRankByLevel(finalLevelToStore)
+
+  while (finalXpToStore > getXpNeededForNextLevel(finalLevelToStore)) {
+    console.log('while')
+    finalXpToStore =
+      finalXpToStore - getXpNeededForNextLevel(finalLevelToStore - 1)
+    finalLevelToStore = checkLevelUp(finalLevelToStore, finalXpToStore)
+    finalRankToStore = getRankByLevel(finalLevelToStore)
+  }
 
   const updatedAttributes = {
     str: user.str,
@@ -90,10 +112,12 @@ export async function updateUserStats(
       )
 
       // Recalculate level and rank based on the new total XP
-      const levelAfterBonus = getLevelFromTotalXp(newTotalXp)
+      //const levelAfterBonus = getLevelFromTotalXp(newTotalXp)
+      const levelAfterBonus = checkLevelUp(finalLevelToStore, newTotalXp)
       if (levelAfterBonus > finalLevelToStore) {
         levelUpHappened = true
       }
+      finalXpToStore = newTotalXp - getXpNeededForNextLevel(levelAfterBonus - 1)
       finalLevelToStore = levelAfterBonus
       finalRankToStore = getRankByLevel(finalLevelToStore)
       console.log(

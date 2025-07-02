@@ -13,12 +13,12 @@ export async function seed(knex) {
       id: 1,
       auth_id: 'google-oauth2|102349456663427950864',
       name: 'Callum',
-      xp: 20,
-      level: 42,
-      rank: 'Gold',
-      str: 13,
-      dex: 26,
-      int: 10,
+      xp: 0,
+      level: 1,
+      rank: 'Bronze',
+      str: 0,
+      dex: 0,
+      int: 0,
       missed: 0,
       class: 'warrior',
       appearance: 1,
@@ -43,12 +43,12 @@ export async function seed(knex) {
       id: 3,
       auth_id: 'google-oauth2|103269307431160616510',
       name: 'Mark',
-      xp: 77,
-      level: 99,
+      xp: 0,
+      level: 1,
       rank: 'Diamond',
-      str: 99,
-      dex: 99,
-      int: 99,
+      str: 0,
+      dex: 0,
+      int: 0,
       missed: 0,
       class: 'mage',
       appearance: 1,
@@ -59,7 +59,7 @@ export async function seed(knex) {
   await knex('challenges').insert([
     {
       id: 1,
-      title: 'Pushin Through',
+      title: "Pushin' Through",
       description: '10 pushups',
       xp_reward: 50,
       attribute: 'str',
@@ -94,7 +94,7 @@ export async function seed(knex) {
       id: 5,
       title: 'Newfound Power!',
       description:
-        'Complete any PERSONALLY CHALLENGING workout circuit, must attempt to PR any two excercises',
+        'Complete any PERSONALLY CHALLENGING workout circuit, must attempt to PR any two exercises',
       xp_reward: 100,
       attribute: 'str',
       difficulty: 'hard',
@@ -102,7 +102,7 @@ export async function seed(knex) {
     {
       id: 6,
       title: 'Blazing a Trail',
-      description: 'Go on a walk you havent been on before',
+      description: "Go on a walk you haven't been on before",
       xp_reward: 50,
       attribute: 'dex',
       difficulty: 'easy',
@@ -129,7 +129,7 @@ export async function seed(knex) {
       id: 9,
       title: 'Into the Archives',
       description:
-        'Quiz yourself on something you havent studied for at least a month untill complete recall',
+        "Quiz yourself on something you haven't studied for at least a month until complete recall",
       xp_reward: 75,
       attribute: 'int',
       difficulty: 'medium',
@@ -156,7 +156,7 @@ export async function seed(knex) {
       id: 12,
       title: 'Home Improvement',
       description:
-        'Complete a decluttering/rearranging task, has to feel at least slightly strenuous',
+        'Complete a de-cluttering/rearranging task, has to feel at least slightly strenuous',
       xp_reward: 50,
       attribute: 'str',
       difficulty: 'easy',
@@ -191,7 +191,7 @@ export async function seed(knex) {
       id: 16,
       title: 'Winning is Everything!',
       description:
-        'Host the most competetive game night possible with the smartest people you know',
+        'Host the most competitive game night possible with the smartest people you know',
       xp_reward: 100,
       attribute: 'int',
       difficulty: 'hard',
@@ -224,7 +224,7 @@ export async function seed(knex) {
       id: 20,
       title: 'Reach for the Stars!',
       description:
-        'incorperate 20 pull ups into a workout (use resistance bands if needed)',
+        'Incorporate 20 pull ups into a workout (use resistance bands if needed)',
       xp_reward: 75,
       attribute: 'str',
       difficulty: 'medium',
@@ -233,7 +233,7 @@ export async function seed(knex) {
       id: 21,
       title: 'Friendly Rivalries',
       description:
-        'challenge a mate to a contest of strength (EG. arm wrestling)',
+        'Challenge a mate to a contest of strength (EG. arm wrestling)',
       xp_reward: 50,
       attribute: 'str',
       difficulty: 'easy',
@@ -241,7 +241,7 @@ export async function seed(knex) {
     {
       id: 22,
       title: 'A Spark of Creativity',
-      description: 'Create a fun or purposeful artpiece',
+      description: 'Create a fun or purposeful art piece',
       xp_reward: 50,
       attribute: 'int',
       difficulty: 'easy',
@@ -249,7 +249,7 @@ export async function seed(knex) {
     {
       id: 23,
       title: 'Speaking in Tongues',
-      description: 'Complete a lesson for a language you dont speak',
+      description: "Complete a lesson for a language you don't speak",
       xp_reward: 75,
       attribute: 'int',
       difficulty: 'medium',
@@ -302,7 +302,7 @@ export async function seed(knex) {
     {
       id: 1,
       title: 'First Time for Everything',
-      description: 'leveled up for the first time',
+      description: 'Leveled up for the first time',
       reward: 20,
     },
     {
@@ -361,20 +361,20 @@ export async function seed(knex) {
     },
   ])
 
-  await knex('achievements_user').insert([
-    {
-      id: 1,
-      user_id: 1,
-    },
-    {
-      id: 2,
-      user_id: 1,
-    },
-    {
-      id: 5,
-      user_id: 1,
-    },
-  ])
+  // await knex('achievements_user').insert([
+  //   {
+  //     id: 1,
+  //     user_id: 1,
+  //   },
+  //   {
+  //     id: 2,
+  //     user_id: 1,
+  //   },
+  //   {
+  //     id: 5,
+  //     user_id: 1,
+  //   },
+  // ])
 
   await knex('posts').insert([
     {

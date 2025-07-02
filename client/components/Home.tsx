@@ -148,10 +148,7 @@ function Home() {
                   <p className="text-xl text-green-200">
                     XP:{' '}
                     <strong className="text-green-500">
-                      {dbUser.xp -
-                        getXpForLeveling(dbUser.level) +
-                        '/' +
-                        xpNeededForNextLevel}
+                      {dbUser.xp + '/' + xpNeededForNextLevel}
                     </strong>
                   </p>
                   <p className="text-xl text-green-200">
