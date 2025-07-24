@@ -1,36 +1,45 @@
-# Boilerplate: Fullstack with Sass
+# Final Group Project from Dev-Academy
 
-## Setup
+## Fitness Quest
 
-### What's included
+### Project Overview
 
-This repo includes:
+Our application allows users to:
+- Sign up and log in securely using AUTH0
+- Create a personalized profile by choosing a character and tracking their level, total XP, and attribute stats
+- Explore and complete daily challenges, as well as create custom challenges
+- Earn achievements for their progress
+- Review their completed challenges through the challenge log
+- Share posts and browse posts shared by other users
+- Check their ranking on the leaderboard
 
-* a single, simple API endpoint (`/api/v1/fruits`)
-* frontend routing via react-router
-* an auth0 setup waiting to be configured
-* an example database module (`server/db/fruits.js`)
-* an API client module (`client/apis/fruits.js`)
-* configuration for Vitest and testing library
-* configuration for server-side debugging in VS Code
-* configuration for preprocessing css with tailwind support
+### User Stories
+
+As someone who wants to become more active but struggles to stay motivated with traditional workouts, I want an app that turns physical activity into a fun and engaging game so that I stay consistent and achieve my fitness goals.
 
 ### Installation
 
-#### **From the Github UI**
-
-See the instructions [here](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) to use Github's feature to create a new repo from a template.
-
 #### **From the command line**
 
+1. Clone the repo
 ```
-git clone https://github.com/dev-academy-challenges/boilerplate-fullstack [your-project-name]
-cd [your-project-name]
+git clone git@github.com:mshyun13/Fitness-Quest.git # to clone down repository
+```
+2. Move into the directory
+```
+cd Fitness-Quest
+```
+3. Install NPM packages
+```
 npm install # to install dependencies
+```
+4. Start the server
+```
 npm run dev # to start the dev server
 ```
 
 You can find the server running on [http://localhost:3000](http://localhost:3000) and the client running on [http://localhost:5173](http://localhost:5173).
 
----
-[Provide feedback on this repo](https://docs.google.com/forms/d/e/1FAIpQLSfw4FGdWkLwMLlUaNQ8FtP2CTJdGDUv6Xoxrh19zIrJSkvT4Q/viewform?usp=pp_url&entry.1958421517=boilerplate-fullstack)
+### Deployment
+
+Our application is now live! You can check it out at: https://fitquest-wupo.onrender.com/
